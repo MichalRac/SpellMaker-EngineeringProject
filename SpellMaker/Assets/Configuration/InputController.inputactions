@@ -12,6 +12,14 @@
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "Execute",
+                    "type": "Button",
+                    "id": "b08fa8a2-114a-450a-9981-b06c0ae30ad0",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -67,6 +75,66 @@
                     "processors": "",
                     "groups": "",
                     "action": "Any",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "8cbb1380-ddb9-48a8-ab42-e17122c2b750",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Execute",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "CameraController",
+            "id": "cf704e3b-980d-4d15-b10e-78165ef7b93e",
+            "actions": [
+                {
+                    "name": "Rotation",
+                    "type": "Button",
+                    "id": "846b039b-fec1-41c4-a7ba-f9681260b111",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "1D Axis",
+                    "id": "384e99b4-26c5-483c-8399-198cf146376e",
+                    "path": "1DAxis",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Rotation",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "negative",
+                    "id": "5e2d33aa-da3e-441c-9828-869047155938",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Rotation",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "positive",
+                    "id": "c8a09656-d6ba-45ae-bf5e-3a7026320496",
+                    "path": "<Keyboard>/q",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Rotation",
                     "isComposite": false,
                     "isPartOfComposite": true
                 }
