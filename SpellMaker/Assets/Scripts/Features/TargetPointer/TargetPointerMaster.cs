@@ -61,15 +61,23 @@ public class TargetPointerMaster : MonoBehaviour
         transform.position = deltaMovement;
     }
 
+    private IUnit selectedUnit;
 
     private void Execute()
     {
         //Send position event
         Debug.Log(transform.position.x + ", " + transform.position.z);
 
-        if(selectedUnit != null)
+        if(selectedUnit == null && highLightedUnit != null)
         {
+            selectedUnit = highLightedUnit;
             selectedUnit.SetHighlight(true);
+        }
+
+        if(selectedUnit != null && highLightedUnit == null)
+        {
+            selectedUnit.SetHighlight(false);
+            selectedUnit = null;
         }
     }
 
@@ -82,23 +90,26 @@ public class TargetPointerMaster : MonoBehaviour
 
     }
 
-    private IUnit selectedUnit;
+    private IUnit highLightedUnit;
 
     private void OnTriggerEnter(Collider other)
     {
-        if(selectedUnit == null)
+        if(highLightedUnit == null)
         {
-            selectedUnit = other.GetComponent<IUnit>();
-            selectedUnit?.SetSelect(true);
+            highLightedUnit = other.GetComponent<IUnit>();
+            if(highLightedUnit != null)
+            {
+                highLightedUnit.SetSelect(true);
+            }
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if(selectedUnit != null)
+        if(highLightedUnit != null)
         {
-            selectedUnit.SetSelect(false);
-            selectedUnit = null;
+            highLightedUnit.SetSelect(false);
+            highLightedUnit = null;
         }
     }
 }
