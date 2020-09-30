@@ -50,6 +50,8 @@ MonoBehaviour:
   selectionProjector: {fileID: 2542165508998198783}
   highlightProjector: {fileID: 7715538383649447692}
   shadowProjector: {fileID: 6500036725758341955}
+  characterMeshRenderer: {fileID: 5069629506600748068}
+  materialToSetup: {fileID: 0}
 --- !u!1001 &3308542428124150307
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -361,6 +363,11 @@ PrefabInstance:
 --- !u!4 &5069629506588890440 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400078, guid: 5a35c5f0a89b9654d897ccd7c8f81bd0, type: 3}
+  m_PrefabInstance: {fileID: 5069629506589282182}
+  m_PrefabAsset: {fileID: 0}
+--- !u!137 &5069629506600748068 stripped
+SkinnedMeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 13700002, guid: 5a35c5f0a89b9654d897ccd7c8f81bd0, type: 3}
   m_PrefabInstance: {fileID: 5069629506589282182}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &6500036725758244321

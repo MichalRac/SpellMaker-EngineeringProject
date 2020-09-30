@@ -19,7 +19,7 @@ public class BaseCharacterMaster : MonoBehaviour, IUnit
     // Start is called before the first frame update
     void Start()
     {
-        
+        baseCharacterPresenter.Setup(Random.Range(1, 4));
     }
 
     // Update is called once per frame
