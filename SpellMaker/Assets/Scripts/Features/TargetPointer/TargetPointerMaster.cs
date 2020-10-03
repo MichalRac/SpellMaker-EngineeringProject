@@ -66,8 +66,6 @@ public class TargetPointerMaster : MonoBehaviour
     private void Execute()
     {
         //Send position event
-        Debug.Log(transform.position.x + ", " + transform.position.z);
-
         if(selectedUnit == null && highLightedUnit != null)
         {
             selectedUnit = highLightedUnit;
