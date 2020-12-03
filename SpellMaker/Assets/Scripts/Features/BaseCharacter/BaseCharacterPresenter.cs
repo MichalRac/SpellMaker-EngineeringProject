@@ -12,25 +12,30 @@ public class BaseCharacterPresenter : MonoBehaviour, IUnit
     [SerializeField] private SkinnedMeshRenderer characterMeshRenderer;
     [SerializeField] private Material materialToSetup;
 
-    public void Setup(int material)
+    public void Initialize(UnitData data)
     {
-        UnityEngine.ResourceManagement.AsyncOperations.AsyncOperationHandle<Material> buf;
-        switch (material)
-        {
-            case 1:
-                buf = Addressables.LoadAssetAsync<Material>("GenericChar");
-                buf.Completed += Buf_Completed;
-                break;
-            case 2:
-                buf = Addressables.LoadAssetAsync<Material>("AllyChar");
-                buf.Completed += Buf_Completed;
-                break;
-            case 3:
-                buf = Addressables.LoadAssetAsync<Material>("EnemyChar");
-                buf.Completed += Buf_Completed;
-                break;
-        }
+        characterMeshRenderer.material.color = data.color;
+    }
 
+    public void Setup(UnitData data)
+    {
+        /*        UnityEngine.ResourceManagement.AsyncOperations.AsyncOperationHandle<Material> buf;
+                switch (material)
+                {
+                    case 1:
+                        buf = Addressables.LoadAssetAsync<Material>("GenericChar");
+                        buf.Completed += Buf_Completed;
+                        break;
+                    case 2:
+                        buf = Addressables.LoadAssetAsync<Material>("AllyChar");
+                        buf.Completed += Buf_Completed;
+                        break;
+                    case 3:
+                        buf = Addressables.LoadAssetAsync<Material>("EnemyChar");
+                        buf.Completed += Buf_Completed;
+                        break;
+                }*/
+        characterMeshRenderer.material.color = data.color;
 
     }
 
@@ -49,4 +54,5 @@ public class BaseCharacterPresenter : MonoBehaviour, IUnit
         highlightProjector.gameObject.SetActive(value);
         shadowProjector.gameObject.SetActive(!value);
     }
+
 }

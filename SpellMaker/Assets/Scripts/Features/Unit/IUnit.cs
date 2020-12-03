@@ -4,6 +4,7 @@ using UnityEngine;
 
 public interface IUnit
 {
+    void Initialize(UnitData data);
     void SetSelect(bool value);
     void SetHighlight(bool value);
 }

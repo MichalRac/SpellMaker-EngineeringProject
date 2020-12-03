@@ -19,12 +19,16 @@ public class BaseCharacterMaster : MonoBehaviour, IUnit
     // Start is called before the first frame update
     void Start()
     {
-        baseCharacterPresenter.Setup(Random.Range(1, 4));
+        Initialize(new UnitData() 
+        { 
+            characterId = 0,
+            color = Color.blue,
+            hp = 30 
+        });
     }
 
-    // Update is called once per frame
-    void Update()
+    public void Initialize(UnitData data)
     {
-        
+        baseCharacterPresenter.Initialize(data);
     }
 }
