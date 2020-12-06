@@ -10,7 +10,8 @@ public class MainMenuBehaviour : MonoBehaviour
     public void OnPlayButtonClicked()
     {
         gameCreator.gameObject.SetActive(true);
-        SceneManager.LoadScene("BaseBattleScene");
+        var Args = new BaseBattleSceneArgs { Enemies = 3 };
+        SceneStartupManager.OpenSceneWithArgs<BaseBattleSceneStartup, BaseBattleSceneArgs>();
     }
 
     public void OnExitButtonClicked()
