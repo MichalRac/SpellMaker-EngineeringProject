@@ -16,19 +16,9 @@ public class BaseCharacterMaster : MonoBehaviour, IUnit
         baseCharacterPresenter.SetSelect(value);
     }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        Initialize(new UnitData() 
-        { 
-            characterId = 0,
-            color = Color.blue,
-            hp = 30 
-        });
-    }
-
     public void Initialize(UnitData data)
     {
         baseCharacterPresenter.Initialize(data);
+        transform.position = new Vector3(Random.Range(-9f, 9f), transform.position.y, Random.Range(-9f, 9f));
     }
 }

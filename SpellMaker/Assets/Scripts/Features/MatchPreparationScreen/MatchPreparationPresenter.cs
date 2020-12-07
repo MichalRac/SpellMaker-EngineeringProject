@@ -8,14 +8,21 @@ public class MatchPreparationPresenter : MonoBehaviour
     [SerializeField] private Transform opponentSlotRoot;
     [SerializeField] private Button matchupConfirmButton;
 
-    public void Setup(UnityAction onMatchupConfirm)
+    [SerializeField] private Button addPlayerCharacterButton;
+    [SerializeField] private Button addOpponentCharacterButton;
+
+    public void Setup(UnityAction onMatchupConfirm, UnityAction onPlayerAdded, UnityAction onOpponentAdded)
     {
         matchupConfirmButton.onClick.AddListener(onMatchupConfirm);
+        addPlayerCharacterButton.onClick.AddListener(onPlayerAdded);
+        addOpponentCharacterButton.onClick.AddListener(onOpponentAdded);
     }
 
     private void OnDisable()
     {
         matchupConfirmButton.onClick.RemoveAllListeners();
+        addPlayerCharacterButton.onClick.RemoveAllListeners();
+        addOpponentCharacterButton.onClick.RemoveAllListeners();
     }
 
     public void CleanupCharacterSlots()
@@ -24,20 +31,32 @@ public class MatchPreparationPresenter : MonoBehaviour
         opponentSlotRoot.DestroyAllChildren();
     }
 
-    public CharacterSlotMaster CreateSlot(CharacterSlotMaster characterSlot, UnitOwner owner, bool isInitialSlot = false)
+    public void SetAddCharacterButton(UnitOwner owner, bool value)
+    {
+        if (owner == UnitOwner.Player)
+            addPlayerCharacterButton.gameObject.SetActive(value);
+
+        else if (owner == UnitOwner.Opponent)
+            addOpponentCharacterButton.gameObject.SetActive(value);
+
+        else
+            Debug.LogError($"[MatchPreparationPresenter] Unexpected unit owner {owner}");
+    }
+
+    public CharacterSlotMaster CreateSlot(int slotID, CharacterSlotMaster characterSlot, UnitOwner owner, UnityAction<UnitOwner, int> onSlotRemovedCallback)
     {
         switch (owner)
         {
             case UnitOwner.Player:
                 {
                     var slot = Instantiate(characterSlot, playerSlotRoot);
-                    slot.Setup(owner, isInitialSlot);
+                    slot.Setup(slotID, owner, onSlotRemovedCallback);
                     return slot;
                 }
             case UnitOwner.Opponent:
                 {
                     var slot = Instantiate(characterSlot, opponentSlotRoot);
-                    slot.Setup(owner, isInitialSlot);
+                    slot.Setup(slotID, owner, onSlotRemovedCallback);
                     return slot;
                 }
             case UnitOwner.None:

@@ -5,8 +5,10 @@ using UnityEngine;
 [SceneStartup("BaseBattleScene")]
 public class BaseBattleSceneStartup : SceneStartup<BaseBattleSceneStartup, BaseBattleSceneArgs>
 {
+    [SerializeField] MasterManager masterManager;
+
     protected override void OnAwake()
     {
-        Debug.Log($"Populating scene with {Args.OpponentCharacters} enemies");
+        masterManager.Initialize(Args);
     }
 }

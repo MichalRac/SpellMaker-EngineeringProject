@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,19 +9,25 @@ public class MatchPreparationMaster : MonoBehaviour
 
     [SerializeField] private MatchPreparationPresenter matchPreparationPresenter;
     [SerializeField] private CharacterSlotMaster characterSlotMaster;
-    private List<CharacterSlotMaster> playerCharacters;
+/*    private List<CharacterSlotMaster> playerCharacters;
     private List<CharacterSlotMaster> opponentCharacters;
+*/
+    private Dictionary<UnitOwner, List<CharacterSlotMaster>> matchupData;
 
     private void Awake()
     {
-        playerCharacters = new List<CharacterSlotMaster>();
+        matchupData = new Dictionary<UnitOwner, List<CharacterSlotMaster>>();
+        matchupData.Add(UnitOwner.Player, new List<CharacterSlotMaster>());
+        matchupData.Add(UnitOwner.Opponent, new List<CharacterSlotMaster>());
+
+/*        playerCharacters = new List<CharacterSlotMaster>();
         opponentCharacters = new List<CharacterSlotMaster>();
-    }
+*/    }
 
     private void OnEnable()
     {
         matchPreparationPresenter = Instantiate(matchPreparationPresenter, transform);
-        matchPreparationPresenter.Setup(OnMatchupConfirmed);
+        matchPreparationPresenter.Setup(OnMatchupConfirmed, () => AddCharacter(UnitOwner.Player), () => AddCharacter(UnitOwner.Opponent));
         PrepareInitialCharacters();
     }
 
@@ -31,20 +38,49 @@ public class MatchPreparationMaster : MonoBehaviour
 
     private void PrepareInitialCharacters()
     {
+        AddCharacter(UnitOwner.Player, true);
+        AddCharacter(UnitOwner.Opponent, true);
+    }
 
-        for(int i = 0; i < MAX_CHARACTERS_PER_TEAM; i++)
-        {
-            playerCharacters.Add( matchPreparationPresenter.CreateSlot(characterSlotMaster, UnitOwner.Player, i == 0) );
-            opponentCharacters.Add( matchPreparationPresenter.CreateSlot(characterSlotMaster, UnitOwner.Opponent, i == 0) );
-        }
+    private void AddCharacter(UnitOwner owner, bool initialCharacter = false)
+    {
+        matchupData[owner].Add(matchPreparationPresenter.CreateSlot(matchupData[owner].Count, characterSlotMaster, owner, OnAnyCharacterRemoved));
+        SetRemovableStates(owner);
+        SetCharacterAddableState(owner);
     }
 
     private void OnMatchupConfirmed()
     {
         var baseBattleSceneArgs = new BaseBattleSceneArgs();
-        baseBattleSceneArgs.PlayerCharacters = playerCharacters.FindAll(character => character.IsActive).Count;
-        baseBattleSceneArgs.OpponentCharacters = opponentCharacters.FindAll(character => character.IsActive).Count;
+        baseBattleSceneArgs.PlayerCharacters = matchupData[UnitOwner.Player].Count;
+        baseBattleSceneArgs.OpponentCharacters = matchupData[UnitOwner.Opponent].Count;
 
         SceneStartupManager.OpenSceneWithArgs<BaseBattleSceneStartup, BaseBattleSceneArgs>(baseBattleSceneArgs);
+    }
+
+    private void OnAnyCharacterRemoved(UnitOwner owner, int slotId)
+    {
+        Destroy(matchupData[owner][slotId].gameObject);
+        matchupData[owner].RemoveAt(slotId);
+
+        for(int i = slotId; i < matchupData[owner].Count; i++)
+        {
+            matchupData[owner][i].DecrementSlotId();
+        }
+
+        SetRemovableStates(owner);
+        SetCharacterAddableState(owner);    
+    }
+
+    private void SetRemovableStates(UnitOwner owner)
+    {
+        var canRemovePlayerCharacters = matchupData[owner].Count > 1;
+        foreach (var character in matchupData[owner])
+            character.SetRemoveButtonActive(canRemovePlayerCharacters);
+    }
+
+    private void SetCharacterAddableState(UnitOwner owner)
+    {
+        matchPreparationPresenter.SetAddCharacterButton(owner, matchupData[owner].Count < MAX_CHARACTERS_PER_TEAM);
     }
 }
