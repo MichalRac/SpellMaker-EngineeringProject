@@ -4,5 +4,6 @@ using UnityEngine;
 
 public sealed class BaseBattleSceneArgs : SceneArgs
 {
-    public int Enemies { get; set; }
+    public int PlayerCharacters { get; set; }
+    public int OpponentCharacters { get; set; }
 }

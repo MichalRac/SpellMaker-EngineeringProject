@@ -7,6 +7,6 @@ public class BaseBattleSceneStartup : SceneStartup<BaseBattleSceneStartup, BaseB
 {
     protected override void OnAwake()
     {
-        Debug.Log($"Populating scene with {Args.Enemies} enemies");
+        Debug.Log($"Populating scene with {Args.OpponentCharacters} enemies");
     }
 }
