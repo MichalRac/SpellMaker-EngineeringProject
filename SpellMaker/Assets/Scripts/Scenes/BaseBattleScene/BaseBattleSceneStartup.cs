@@ -9,6 +9,6 @@ public class BaseBattleSceneStartup : SceneStartup<BaseBattleSceneStartup, BaseB
 
     protected override void OnAwake()
     {
-        masterManager.Initialize(Args);
+        masterManager.Initialize(Args);   
     }
 }
