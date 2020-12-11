@@ -18,8 +18,9 @@ public class TurnManager : MonoBehaviour
             simpleListOfUnits.Add(unit);
         }
 
+        simpleListOfUnits.Shuffle();
+
         queue = simpleListOfUnits.ToQueue();
-        current = queue.Peek();
     }
 
     public UnitIdentifier GetNextInQueue()
@@ -27,5 +28,16 @@ public class TurnManager : MonoBehaviour
         queue.Enqueue(current);
         current = queue.Dequeue();
         return current;
+    }
+
+    public void UpdateStatus(List<UnitIdentifier> unitsToRemove)
+    {
+        var newQueue = new Queue<UnitIdentifier>();
+        foreach(var unit in queue)
+        {
+            if (!unitsToRemove.Contains(unit))
+                newQueue.Enqueue(unit);
+        }
+        queue = newQueue;
     }
 }

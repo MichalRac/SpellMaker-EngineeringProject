@@ -8,11 +8,10 @@ public class TargetPointerMaster : MonoBehaviour
 {
     private Camera camera;
     private InputController inputController;
+    private Action<IUnit, Vector3> onTargetSelected;
     
-    [SerializeField]
-    private TargetPointerPresenter targetPointerPresenter;
-    [SerializeField]
-    private float speed = 1f;
+    [SerializeField] private TargetPointerPresenter targetPointerPresenter;
+    [SerializeField] private float speed = 1f;
 
     private void Awake()
     {
@@ -26,6 +25,11 @@ public class TargetPointerMaster : MonoBehaviour
         inputController.TargetPointer.Execute.Enable();
 
         inputController.TargetPointer.Execute.performed += Execute_performed;
+    }
+
+    public void Setup(Action<IUnit, Vector3> onTargetSelected)
+    {
+        this.onTargetSelected = onTargetSelected;
     }
 
     private void Execute_performed(InputAction.CallbackContext obj) => Execute();
@@ -65,40 +69,30 @@ public class TargetPointerMaster : MonoBehaviour
 
     private void Execute()
     {
-        //Send position event
-        if(selectedUnit == null && highLightedUnit != null)
-        {
-            selectedUnit = highLightedUnit;
-            selectedUnit.SetHighlight(true);
-        }
+        /*        //Send position event
+                if(selectedUnit == null && highLightedUnit != null)
+                {
+                    selectedUnit = highLightedUnit;
+                    selectedUnit.SetHighlight(true);
+                }
 
-        if(selectedUnit != null && highLightedUnit == null)
-        {
-            selectedUnit.SetHighlight(false);
-            selectedUnit = null;
-        }
-    }
+                if(selectedUnit != null && highLightedUnit == null)
+                {
+                    selectedUnit.SetHighlight(false);
+                    selectedUnit = null;
+                }*/
 
-    private void OnCollisionExit(Collision collision)
-    {
-        if (collision.transform.GetComponent<IUnit>() != null)
-        {
-
-        }
-
+        onTargetSelected?.Invoke(highLightedUnit ?? null, new Vector3(transform.position.x, 0f, transform.position.z));
     }
 
     private IUnit highLightedUnit;
 
     private void OnTriggerEnter(Collider other)
     {
-        if(highLightedUnit == null)
+        highLightedUnit = other.GetComponent<IUnit>();
+        if(highLightedUnit != null)
         {
-            highLightedUnit = other.GetComponent<IUnit>();
-            if(highLightedUnit != null)
-            {
-                highLightedUnit.SetSelect(true);
-            }
+            highLightedUnit.SetSelect(true);
         }
     }
 

@@ -38,6 +38,22 @@ public class UnitManager : MonoBehaviour
         }
     }
 
+    public void UpdateStatus(out List<UnitIdentifier> unitsToRemove)
+    {
+        unitsToRemove = new List<UnitIdentifier>();
+        foreach (var unit in ActiveCharacters)
+        {
+            if(unit.Value.unitData.hp <= 0)
+            {
+                unitsToRemove.Add(unit.Key);
+            }
+        }
+        foreach(var unitToRemove in unitsToRemove)
+        {
+            ActiveCharacters.Remove(unitToRemove);
+        }
+    }
+
     public bool HasAnyCharacterLeft(UnitOwner owner)
     {
         foreach (var unit in ActiveCharacters)

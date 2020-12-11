@@ -9,6 +9,9 @@ public class BaseCharacterMaster : MonoBehaviour, IUnit
     [SerializeField] private float characterSpeed = 5f;
     public UnitData unitData { get; private set; }
 
+    // TODO cache this
+    public Transform GetTransform() => GetComponent<Transform>();
+
     public void SetHighlight(bool value)
     {
         baseCharacterPresenter.SetHighlight(value);
@@ -25,18 +28,21 @@ public class BaseCharacterMaster : MonoBehaviour, IUnit
         baseCharacterPresenter.Initialize(data);
     }
 
-    public void StartMovement(Vector3 target, Action onMovementFinishedCallback)
+    public void TriggerMoveToEmpty(Vector3 target, Action onMovementFinishedCallback)
     {
         StartCoroutine(MoveTowards(target, onMovementFinishedCallback));
     }
 
+    // TODO replace with NavMesh
     private IEnumerator MoveTowards(Vector3 target, Action onMovementFinishedCallback)
     {
         baseCharacterPresenter.SetWalkingAnim(true);
 
-        while(Vector3.Magnitude(transform.position - target) > float.Epsilon)
+        transform.LookAt(target);
+
+        while(Vector3.Magnitude(transform.position - target) > 0.1f)
         {
-            var velocity = (transform.position - target).normalized * characterSpeed * Time.deltaTime;
+            var velocity = (target - transform.position).normalized * characterSpeed * Time.deltaTime;
             transform.position = transform.position + velocity;
             yield return null;
         }
@@ -45,4 +51,46 @@ public class BaseCharacterMaster : MonoBehaviour, IUnit
         baseCharacterPresenter.SetWalkingAnim(false);
         onMovementFinishedCallback?.Invoke();
     }
+
+    public void TriggerMoveToUnit(IUnit target, Action onMovementFinishedCallback)
+    {
+        StartCoroutine(MoveTowardsUnit(target, onMovementFinishedCallback));
+    }
+
+    // TODO replace with NavMesh
+    private IEnumerator MoveTowardsUnit(IUnit target, Action onMovementFinishedCallback)
+    {
+        baseCharacterPresenter.SetWalkingAnim(true);
+
+        transform.LookAt(target.GetTransform());
+        var targetPosition = target.GetTransform().position;
+
+        while (Vector3.Magnitude(transform.position - targetPosition) > 1f)
+        {
+            var velocity = (targetPosition - transform.position).normalized * characterSpeed * Time.deltaTime;
+            transform.position = transform.position + velocity;
+            yield return null;
+        }
+        yield return null;
+
+        baseCharacterPresenter.SetWalkingAnim(false);
+        onMovementFinishedCallback?.Invoke();
+    }
+
+    public void TriggerAttackAnim(Action onCommandFinished)
+    {
+        baseCharacterPresenter.TriggerAttackAnim(onCommandFinished);
+    }
+
+    public void TriggerDamagedAnim(Action onCommandFinished)
+    {
+        baseCharacterPresenter.TriggerDamagedAnim(onCommandFinished);
+    }
+
+    public void ReciveDamage(int damage)
+    {
+        unitData.hp -= damage;
+        baseCharacterPresenter.RefreshLabel(unitData);
+    }
+
 }

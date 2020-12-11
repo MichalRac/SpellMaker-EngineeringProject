@@ -31,6 +31,9 @@ public class MasterManager : MonoBehaviour
 
     public void BeginNextTurn()
     {
+        unitManager.UpdateStatus(out var removedUnits);
+        turnManager.UpdateStatus(removedUnits);
+
         if(!unitManager.HasAnyCharacterLeft(UnitOwner.Player) || !unitManager.HasAnyCharacterLeft(UnitOwner.Opponent))
         {
             // Handle end game flow
@@ -38,7 +41,8 @@ public class MasterManager : MonoBehaviour
         }
 
         var nextInQueue = turnManager.GetNextInQueue();
+        var activeCharacter = unitManager.GetActiveCharacter(nextInQueue);
 
-        playerActionManager.BeginPlayerActionPhase(unitManager.GetActiveCharacter(nextInQueue), BeginNextTurn);
+        playerActionManager.BeginPlayerActionPhase(activeCharacter, BeginNextTurn);
     }
 }

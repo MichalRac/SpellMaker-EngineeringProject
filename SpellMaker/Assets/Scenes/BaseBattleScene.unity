@@ -510,7 +510,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ActionSelection: {fileID: 182020198}
-  Targeting: {fileID: 997046981}
+  Targeting: {fileID: 997046984}
 --- !u!1 &322141923
 GameObject:
   m_ObjectHideFlags: 0
@@ -968,11 +968,17 @@ MonoBehaviour:
   m_DefaultActionMap: TargetPointer
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
---- !u!1 &997046981 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5650462840968674131, guid: 6ca2f9fc613095e4e9b9e2da07abda4e, type: 3}
+--- !u!114 &997046984 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1471963592, guid: 6ca2f9fc613095e4e9b9e2da07abda4e, type: 3}
   m_PrefabInstance: {fileID: 5650462841762159254}
   m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06dc4f9d8219db542bd2074f894c0923, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1045554576
 GameObject:
   m_ObjectHideFlags: 0

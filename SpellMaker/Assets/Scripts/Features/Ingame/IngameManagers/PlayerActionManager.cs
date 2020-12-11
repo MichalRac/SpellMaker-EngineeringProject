@@ -21,15 +21,23 @@ public class PlayerActionManager : MonoBehaviour
     Action onActionPhaseCompleted;
 
     [SerializeField] private ActionSelection ActionSelection;
-    [SerializeField] private GameObject Targeting;
+    [SerializeField] private TargetPointerMaster Targeting;
 
     public void SetActionMode(ActionMode actionMode)
     {
         currentActionMode = actionMode;
 
-        Targeting.SetActive(actionMode == ActionMode.Targeting);
-    
-        if(actionMode == ActionMode.HUD)
+        if(actionMode == ActionMode.Targeting)
+        {
+            Targeting.gameObject.SetActive(true);
+            Targeting.Setup(OnTargetFound);
+        }
+        else
+        {
+            Targeting.gameObject.SetActive(false);
+        }
+
+        if (actionMode == ActionMode.HUD)
         {
             ActionSelection.gameObject.SetActive(true);
             ActionSelection.Setup(GetBasicActions());
@@ -49,18 +57,28 @@ public class PlayerActionManager : MonoBehaviour
         enqueuedCommands = new Queue<ICommand>();
         onActionPhaseCompleted = onPhaseCompleted;
         this.activeCharacter = activeCharacter;
+        activeCharacter.SetHighlight(true);
     }
 
     public void ExecuteNextAction()
     {
-        enqueuedCommands.Dequeue().Execute(ExecuteNextAction);
+        SetActionMode(ActionMode.Disabled);
+
+        if (enqueuedCommands.Count > 0)
+        {
+            enqueuedCommands.Dequeue().Execute(ExecuteNextAction);
+        }
+        else
+        {
+            EndPlayerActionPhase();
+        }
     }
 
     public void EndPlayerActionPhase()
     {
         actionMakingActive = false;
+        activeCharacter.SetHighlight(false);
         this.activeCharacter = null;
-        SetActionMode(ActionMode.Disabled);
         onActionPhaseCompleted?.Invoke();
     }
 
@@ -68,10 +86,25 @@ public class PlayerActionManager : MonoBehaviour
     {
         var results = new List<ActionSelectionEntryData>();
 
-        results.Add(new ActionSelectionEntryData("attack", () => SetActionMode(ActionMode.Targeting), null));
-        results.Add(new ActionSelectionEntryData("ability", () => SetActionMode(ActionMode.Targeting), null));
-        results.Add(new ActionSelectionEntryData("quit", () => Application.Quit(), null));
+        results.Add(new ActionSelectionEntryData("Attack", () => SetActionMode(ActionMode.Targeting), null));
+        results.Add(new ActionSelectionEntryData("Ability", () => SetActionMode(ActionMode.Targeting), null));
+        results.Add(new ActionSelectionEntryData("Quit", () => Application.Quit(), null));
 
         return results;
+    }
+
+    private void OnTargetFound(IUnit selectedUnit, Vector3 position)
+    {
+        if(selectedUnit == null)
+        {
+            enqueuedCommands.Enqueue(new MoveUnitCommand(activeCharacter, position));
+            ExecuteNextAction();
+        }
+        else
+        {
+            enqueuedCommands.Enqueue(new MoveUpToUnitCommand(activeCharacter, selectedUnit));
+            enqueuedCommands.Enqueue(new AttackUnitCommand(activeCharacter, selectedUnit));
+            ExecuteNextAction();
+        }
     }
 }

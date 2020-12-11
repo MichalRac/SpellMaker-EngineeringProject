@@ -14,6 +14,6 @@ public class MoveUnitCommand : IUnitCommand
 
     public override void Execute(Action onCommandFinished)
     {
-        activeCharacter.StartMovement(target, onCommandFinished);
+        activeCharacter.TriggerMoveToEmpty(target, onCommandFinished);
     }
 }
