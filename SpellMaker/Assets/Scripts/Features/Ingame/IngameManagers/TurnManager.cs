@@ -25,7 +25,10 @@ public class TurnManager : MonoBehaviour
 
     public UnitIdentifier GetNextInQueue()
     {
-        queue.Enqueue(current);
+        if(current != null) // TODO Can probably be avoided
+        {
+            queue.Enqueue(current);
+        }
         current = queue.Dequeue();
         return current;
     }
@@ -33,10 +36,14 @@ public class TurnManager : MonoBehaviour
     public void UpdateStatus(List<UnitIdentifier> unitsToRemove)
     {
         var newQueue = new Queue<UnitIdentifier>();
-        foreach(var unit in queue)
+        foreach (var unit in queue)
         {
             if (!unitsToRemove.Contains(unit))
                 newQueue.Enqueue(unit);
+        }
+        if(unitsToRemove.Contains(current))
+        {
+            current = null;
         }
         queue = newQueue;
     }
