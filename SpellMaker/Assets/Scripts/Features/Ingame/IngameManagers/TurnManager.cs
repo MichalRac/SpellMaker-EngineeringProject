@@ -6,27 +6,26 @@ public class TurnManager : MonoBehaviour
 {
     // Manage turns
     public static int turn = 0;
-    Queue<UnitIdentifier> queue = new Queue<UnitIdentifier>();
+    public Queue<UnitIdentifier> queue { get; private set; } = new Queue<UnitIdentifier>() ;
+    public UnitIdentifier current { get; private set; }
 
-    public void PrepareQueue(Dictionary<UnitOwner, List<BaseCharacterMaster>> allUnitLists)
+    public void PrepareQueue(Dictionary<UnitIdentifier, BaseCharacterMaster> allUnits)
     {
         var simpleListOfUnits = new List<UnitIdentifier>();
 
-        foreach(var team in allUnitLists)
+        foreach(var unit in allUnits.Keys)
         {
-            for(int i = 0; i < team.Value.Count; i++)
-            {
-                simpleListOfUnits.Add(new UnitIdentifier(team.Key, i));
-            }
+            simpleListOfUnits.Add(unit);
         }
 
         queue = simpleListOfUnits.ToQueue();
+        current = queue.Peek();
     }
 
     public UnitIdentifier GetNextInQueue()
     {
-        var next = queue.Dequeue();
-        queue.Enqueue(next);
-        return next;
+        queue.Enqueue(current);
+        current = queue.Dequeue();
+        return current;
     }
 }

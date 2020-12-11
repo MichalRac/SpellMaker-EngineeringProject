@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using TMPro;
 
 public class BaseCharacterPresenter : MonoBehaviour, IUnit
 {
@@ -12,9 +13,12 @@ public class BaseCharacterPresenter : MonoBehaviour, IUnit
     [SerializeField] private SkinnedMeshRenderer characterMeshRenderer;
     [SerializeField] private Material materialToSetup;
 
+    [SerializeField] private TextMeshPro characterLabel;
+    
     public void Initialize(UnitData data)
     {
-        characterMeshRenderer.material.color = data.color;
+        //characterMeshRenderer.material.color = data.color;
+        Setup(data);
     }
 
     public void Setup(UnitData data)
@@ -36,7 +40,8 @@ public class BaseCharacterPresenter : MonoBehaviour, IUnit
                         break;
                 }*/
         characterMeshRenderer.material.color = data.color;
-
+        characterLabel.color = data.color;
+        characterLabel.text = $"ID: {data.unitIdentifier.uniqueId}\nHP: {data.hp}";
     }
 
     private void Buf_Completed(UnityEngine.ResourceManagement.AsyncOperations.AsyncOperationHandle<Material> obj)

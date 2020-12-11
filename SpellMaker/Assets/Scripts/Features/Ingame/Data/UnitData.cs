@@ -14,7 +14,7 @@ public class UnitData
 }
 
 [Serializable]
-public class UnitIdentifier
+public class UnitIdentifier : IEquatable<UnitIdentifier>
 {
     public UnitOwner owner;
     public int uniqueId;
@@ -23,5 +23,15 @@ public class UnitIdentifier
     {
         this.owner = owner;
         this.uniqueId = uniqueId;
+    }
+
+    public bool Equals(UnitIdentifier other)
+    {
+        return owner == other.owner && uniqueId == other.uniqueId;
+    }
+
+    public override string ToString()
+    {
+        return $"ID(owner-{owner}, id-{uniqueId})";
     }
 }

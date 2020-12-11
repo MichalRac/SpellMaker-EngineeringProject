@@ -8,12 +8,13 @@ public class UnitManager : MonoBehaviour
     [SerializeField] BaseCharacterMaster baseCharacterMaster;
     [SerializeField] SpawnpointFetcher spawnpointFetcher;
 
-    private Dictionary<UnitOwner, List<BaseCharacterMaster>> ActiveCharacters;
-    public BaseCharacterMaster GetActiveCharacter(UnitIdentifier unitIdentifier) => ActiveCharacters[unitIdentifier.owner][unitIdentifier.uniqueId];
+    private Dictionary<UnitIdentifier, BaseCharacterMaster> ActiveCharacters;
+    public BaseCharacterMaster GetActiveCharacter(UnitIdentifier unitIdentifier) => ActiveCharacters[unitIdentifier];
+    public Dictionary<UnitIdentifier, BaseCharacterMaster> GetAllActiveCharacters() => ActiveCharacters;
 
     private void Awake()
     {
-        ActiveCharacters = new Dictionary<UnitOwner, List<BaseCharacterMaster>>();
+        ActiveCharacters = new Dictionary<UnitIdentifier, BaseCharacterMaster>();
     }
 
     public void SpawnUnit(UnitData data)
@@ -27,9 +28,13 @@ public class UnitManager : MonoBehaviour
         if(data.unitIdentifier.owner == UnitOwner.Opponent)
             character.transform.rotation = Quaternion.Euler(0f, 180f, 0f);
 
-        if (!ActiveCharacters.ContainsKey(data.unitIdentifier.owner))
-            ActiveCharacters.Add(data.unitIdentifier.owner, new List<BaseCharacterMaster>());
-
-        ActiveCharacters[data.unitIdentifier.owner].Add(character);
+        if (!ActiveCharacters.ContainsKey(data.unitIdentifier))
+        {
+            ActiveCharacters.Add(data.unitIdentifier, character);
+        }
+        else
+        {
+            Debug.LogError($"[UnitManager] Unit {data.unitIdentifier.ToString()} was already spawned!");
+        }
     }
 }

@@ -21,5 +21,7 @@ public class MasterManager : MonoBehaviour
         for (int i = 0; i < sceneArguments.OpponentCharacters; i++)
             unitManager.SpawnUnit(new UnitData { unitIdentifier = new UnitIdentifier(UnitOwner.Opponent, unitID++), characterId = 0, color = Color.red, hp = 30 });
 
+
+        turnManager.PrepareQueue(unitManager.GetAllActiveCharacters());
     }
 }
