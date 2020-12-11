@@ -257,6 +257,7 @@ MonoBehaviour:
   characterMeshRenderer: {fileID: 5069629506600748068}
   materialToSetup: {fileID: 0}
   characterLabel: {fileID: 9176941909248662409}
+  animator: {fileID: 5069629506596584166}
 --- !u!1 &7502525243592874182
 GameObject:
   m_ObjectHideFlags: 0
@@ -607,6 +608,11 @@ PrefabInstance:
 --- !u!4 &5069629506588890440 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400078, guid: 5a35c5f0a89b9654d897ccd7c8f81bd0, type: 3}
+  m_PrefabInstance: {fileID: 5069629506589282182}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &5069629506596584166 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 9500000, guid: 5a35c5f0a89b9654d897ccd7c8f81bd0, type: 3}
   m_PrefabInstance: {fileID: 5069629506589282182}
   m_PrefabAsset: {fileID: 0}
 --- !u!137 &5069629506600748068 stripped

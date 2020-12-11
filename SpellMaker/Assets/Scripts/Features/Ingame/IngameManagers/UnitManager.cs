@@ -37,4 +37,14 @@ public class UnitManager : MonoBehaviour
             Debug.LogError($"[UnitManager] Unit {data.unitIdentifier.ToString()} was already spawned!");
         }
     }
+
+    public bool HasAnyCharacterLeft(UnitOwner owner)
+    {
+        foreach (var unit in ActiveCharacters)
+        {
+            if (unit.Key.owner == owner && unit.Value.unitData.hp > 0)
+                return true;
+        }
+        return false;
+    }
 }

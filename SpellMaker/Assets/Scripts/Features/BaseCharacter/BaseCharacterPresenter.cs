@@ -14,31 +14,19 @@ public class BaseCharacterPresenter : MonoBehaviour, IUnit
     [SerializeField] private Material materialToSetup;
 
     [SerializeField] private TextMeshPro characterLabel;
-    
+
+    [SerializeField] private Animator animator;
+    private readonly int walkingAnimParam = Animator.StringToHash("Walking");
+    private readonly int attackAnimParam = Animator.StringToHash("Attack");
+
+
     public void Initialize(UnitData data)
     {
-        //characterMeshRenderer.material.color = data.color;
         Setup(data);
     }
 
     public void Setup(UnitData data)
     {
-        /*        UnityEngine.ResourceManagement.AsyncOperations.AsyncOperationHandle<Material> buf;
-                switch (material)
-                {
-                    case 1:
-                        buf = Addressables.LoadAssetAsync<Material>("GenericChar");
-                        buf.Completed += Buf_Completed;
-                        break;
-                    case 2:
-                        buf = Addressables.LoadAssetAsync<Material>("AllyChar");
-                        buf.Completed += Buf_Completed;
-                        break;
-                    case 3:
-                        buf = Addressables.LoadAssetAsync<Material>("EnemyChar");
-                        buf.Completed += Buf_Completed;
-                        break;
-                }*/
         characterMeshRenderer.material.color = data.color;
         characterLabel.color = data.color;
         characterLabel.text = $"ID: {data.unitIdentifier.uniqueId}\nHP: {data.hp}";
@@ -60,4 +48,13 @@ public class BaseCharacterPresenter : MonoBehaviour, IUnit
         shadowProjector.gameObject.SetActive(!value);
     }
 
+    public void SetWalkingAnim(bool value)
+    {
+        animator.SetBool(walkingAnimParam, value);
+    }
+
+    public void TriggerAttackAnim()
+    {
+        animator.SetTrigger(attackAnimParam);
+    }
 }

@@ -7,6 +7,7 @@ public class MasterManager : MonoBehaviour
     [SerializeField] TurnManager turnManager;
     [SerializeField] UnitManager unitManager;
     [SerializeField] BattleSceneManager battleSceneManager;
+    [SerializeField] PlayerActionManager playerActionManager;
 
     public void Initialize(BaseBattleSceneArgs sceneArguments)
     {
@@ -21,7 +22,23 @@ public class MasterManager : MonoBehaviour
         for (int i = 0; i < sceneArguments.OpponentCharacters; i++)
             unitManager.SpawnUnit(new UnitData { unitIdentifier = new UnitIdentifier(UnitOwner.Opponent, unitID++), characterId = 0, color = Color.red, hp = 30 });
 
-
         turnManager.PrepareQueue(unitManager.GetAllActiveCharacters());
+
+        BeginNextTurn();
+    }
+
+
+
+    public void BeginNextTurn()
+    {
+        if(!unitManager.HasAnyCharacterLeft(UnitOwner.Player) || !unitManager.HasAnyCharacterLeft(UnitOwner.Opponent))
+        {
+            // Handle end game flow
+            Debug.Log("Game completed!");
+        }
+
+        var nextInQueue = turnManager.GetNextInQueue();
+
+        playerActionManager.BeginPlayerActionPhase(unitManager.GetActiveCharacter(nextInQueue), BeginNextTurn);
     }
 }
