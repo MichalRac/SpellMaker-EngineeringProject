@@ -14,9 +14,12 @@ public class AttackUnitCommand : IUnitCommand
 
     public override void Execute(Action onCommandFinished)
     {
-        activeCharacter.TriggerAttackAnim(onCommandFinished);
+        activeCharacter.TriggerAttackAnim(onCommandFinished, AttackReaction);
+    }
 
-        if(targetUnit is BaseCharacterMaster targetCharacterMaster)
+    private void AttackReaction()
+    {
+        if (targetUnit is BaseCharacterMaster targetCharacterMaster)
         {
             targetCharacterMaster.TriggerDamagedAnim(null);
             targetCharacterMaster.ReciveDamage(20);

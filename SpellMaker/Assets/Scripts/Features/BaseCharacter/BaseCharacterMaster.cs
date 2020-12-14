@@ -5,7 +5,11 @@ using UnityEngine;
 
 public class BaseCharacterMaster : MonoBehaviour, IUnit
 {
-    [SerializeField] private BaseCharacterPresenter baseCharacterPresenter;
+    private const float STOP_AT_TARGET_DISTANCE = 0.05f;
+    private const float STOP_BEFORE_TARGET_DISTANCE = 1.1f;
+
+    [SerializeField] private BaseUnitPresenter baseUnitPresenter;
+    [SerializeField] private UnitAnimationController unitAnimationController;
     [SerializeField] private float characterSpeed = 5f;
     public UnitData unitData { get; private set; }
 
@@ -14,33 +18,38 @@ public class BaseCharacterMaster : MonoBehaviour, IUnit
 
     public void SetHighlight(bool value)
     {
-        baseCharacterPresenter.SetHighlight(value);
+        baseUnitPresenter.SetHighlight(value);
     }
 
     public void SetSelect(bool value)
     {
-        baseCharacterPresenter.SetSelect(value);
+        baseUnitPresenter.SetSelect(value);
     }
 
     public void Initialize(UnitData data)
     {
         unitData = data;
-        baseCharacterPresenter.Initialize(data);
+        baseUnitPresenter.Initialize(data);
     }
 
     public void TriggerMoveToEmpty(Vector3 target, Action onMovementFinishedCallback)
     {
-        StartCoroutine(MoveTowards(target, onMovementFinishedCallback));
+        StartCoroutine(MoveTowards(target, STOP_AT_TARGET_DISTANCE, onMovementFinishedCallback));
+    }
+
+    public void TriggerMoveToUnit(IUnit target, Action onMovementFinishedCallback)
+    {
+        StartCoroutine(MoveTowards(target.GetTransform().position, STOP_BEFORE_TARGET_DISTANCE, onMovementFinishedCallback));
     }
 
     // TODO replace with NavMesh
-    private IEnumerator MoveTowards(Vector3 target, Action onMovementFinishedCallback)
+    private IEnumerator MoveTowards(Vector3 target, float stopDistance, Action onMovementFinishedCallback)
     {
-        baseCharacterPresenter.SetWalkingAnim(true);
+        unitAnimationController.SetWalkingAnimation(true);
 
         transform.LookAt(target);
 
-        while(Vector3.Magnitude(transform.position - target) > 0.1f)
+        while(Vector3.Magnitude(transform.position - target) > stopDistance)
         {
             var velocity = (target - transform.position).normalized * characterSpeed * Time.deltaTime;
             transform.position = transform.position + velocity;
@@ -48,49 +57,23 @@ public class BaseCharacterMaster : MonoBehaviour, IUnit
         }
         yield return null;
 
-        baseCharacterPresenter.SetWalkingAnim(false);
+        unitAnimationController.SetWalkingAnimation(false);
         onMovementFinishedCallback?.Invoke();
     }
-
-    public void TriggerMoveToUnit(IUnit target, Action onMovementFinishedCallback)
+    public void TriggerAttackAnim(Action onCommandFinished, Action onAttackConnect)
     {
-        StartCoroutine(MoveTowardsUnit(target, onMovementFinishedCallback));
-    }
-
-    // TODO replace with NavMesh
-    private IEnumerator MoveTowardsUnit(IUnit target, Action onMovementFinishedCallback)
-    {
-        baseCharacterPresenter.SetWalkingAnim(true);
-
-        transform.LookAt(target.GetTransform());
-        var targetPosition = target.GetTransform().position;
-
-        while (Vector3.Magnitude(transform.position - targetPosition) > 1f)
-        {
-            var velocity = (targetPosition - transform.position).normalized * characterSpeed * Time.deltaTime;
-            transform.position = transform.position + velocity;
-            yield return null;
-        }
-        yield return null;
-
-        baseCharacterPresenter.SetWalkingAnim(false);
-        onMovementFinishedCallback?.Invoke();
-    }
-
-    public void TriggerAttackAnim(Action onCommandFinished)
-    {
-        baseCharacterPresenter.TriggerAttackAnim(onCommandFinished);
+        unitAnimationController.TriggerBaseAttackAnimation(onAttackConnect, onCommandFinished);
     }
 
     public void TriggerDamagedAnim(Action onCommandFinished)
     {
-        baseCharacterPresenter.TriggerDamagedAnim(onCommandFinished);
+        unitAnimationController.TriggerDamagedAnimation(onCommandFinished);
     }
 
     public void ReciveDamage(int damage)
     {
         unitData.hp -= damage;
-        baseCharacterPresenter.RefreshLabel(unitData);
+        baseUnitPresenter.RefreshLabel(unitData);
     }
 
 }

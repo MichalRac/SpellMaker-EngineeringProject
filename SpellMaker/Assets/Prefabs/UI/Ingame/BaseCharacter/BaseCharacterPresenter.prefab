@@ -1,5 +1,18 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &6437391378611917327
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5069629506589182312}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c52fca2f2fdee4a43907c001bffb8703, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 5069629506596584166}
 --- !u!1 &5542441819927230383
 GameObject:
   m_ObjectHideFlags: 0
@@ -14,7 +27,7 @@ GameObject:
   - component: {fileID: 9176941909248662409}
   - component: {fileID: 5740991514521309856}
   m_Layer: 9
-  m_Name: Text (TMP)
+  m_Name: CharacterLabel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -212,7 +225,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4876853885706464220}
-  - component: {fileID: 5900190944402885141}
+  - component: {fileID: 7800500911932433288}
   m_Layer: 10
   m_Name: BaseCharacterPresenter
   m_TagString: Untagged
@@ -239,7 +252,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5900190944402885141
+--- !u!114 &7800500911932433288
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -248,14 +261,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 6581559126905551371}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 576aecaf1365c1f478e59b2faffdf42c, type: 3}
+  m_Script: {fileID: 11500000, guid: 0a29293fcd0411847b52da435406df18, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   selectionProjector: {fileID: 2542165508998198783}
   highlightProjector: {fileID: 7715538383649447692}
   shadowProjector: {fileID: 6500036725758341955}
   characterMeshRenderer: {fileID: 5069629506600748068}
-  materialToSetup: {fileID: 0}
   characterLabel: {fileID: 9176941909248662409}
   animator: {fileID: 5069629506596584166}
 --- !u!1 &7502525243592874182
@@ -268,7 +280,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6698987897200090243}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: Label
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -605,6 +617,11 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: e2f44d83259a3c14abd33197677dbc91, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5a35c5f0a89b9654d897ccd7c8f81bd0, type: 3}
+--- !u!1 &5069629506589182312 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 100078, guid: 5a35c5f0a89b9654d897ccd7c8f81bd0, type: 3}
+  m_PrefabInstance: {fileID: 5069629506589282182}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &5069629506588890440 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400078, guid: 5a35c5f0a89b9654d897ccd7c8f81bd0, type: 3}

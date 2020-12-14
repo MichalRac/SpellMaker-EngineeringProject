@@ -5,14 +5,14 @@ using UnityEngine.AddressableAssets;
 using TMPro;
 using System;
 
-public class BaseCharacterPresenter : MonoBehaviour, IUnit
+public class BaseUnitPresenter : MonoBehaviour, IUnit
 {
     // Start is called before the first frame update
     [SerializeField] private GameObject selectionProjector;
     [SerializeField] private GameObject highlightProjector;
     [SerializeField] private GameObject shadowProjector;
     [SerializeField] private SkinnedMeshRenderer characterMeshRenderer;
-    [SerializeField] private Material materialToSetup;
+    //[SerializeField] private Material materialToSetup;
 
     [SerializeField] private TextMeshPro characterLabel;
 
@@ -43,11 +43,11 @@ public class BaseCharacterPresenter : MonoBehaviour, IUnit
             : "DEAD";
     }
 
-    private void Buf_Completed(UnityEngine.ResourceManagement.AsyncOperations.AsyncOperationHandle<Material> obj)
+/*    private void Buf_Completed(UnityEngine.ResourceManagement.AsyncOperations.AsyncOperationHandle<Material> obj)
     {
         characterMeshRenderer.material = obj.Result;
     }
-
+*/
     public void SetSelect(bool value)
     {
         selectionProjector.gameObject.SetActive(value);
@@ -58,22 +58,4 @@ public class BaseCharacterPresenter : MonoBehaviour, IUnit
         highlightProjector.gameObject.SetActive(value);
         shadowProjector.gameObject.SetActive(!value);
     }
-
-    public void SetWalkingAnim(bool value)
-    {
-        animator.SetBool(walkingAnimParam, value);
-    }
-
-    public void TriggerAttackAnim(Action onCommandFinished)
-    {
-        animator.SetTrigger(attackAnimParam);
-        onCommandFinished?.Invoke();
-    }
-
-    public void TriggerDamagedAnim(Action onCommandFinished)
-    {
-        animator.SetTrigger(damagedAnimParam);
-        onCommandFinished?.Invoke();
-    }
-
 }
