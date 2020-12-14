@@ -9,9 +9,7 @@ public class MatchPreparationMaster : MonoBehaviour
 
     [SerializeField] private MatchPreparationPresenter matchPreparationPresenter;
     [SerializeField] private CharacterSlotMaster characterSlotMaster;
-/*    private List<CharacterSlotMaster> playerCharacters;
-    private List<CharacterSlotMaster> opponentCharacters;
-*/
+
     private Dictionary<UnitOwner, List<CharacterSlotMaster>> matchupData;
 
     private void Awake()
@@ -19,10 +17,7 @@ public class MatchPreparationMaster : MonoBehaviour
         matchupData = new Dictionary<UnitOwner, List<CharacterSlotMaster>>();
         matchupData.Add(UnitOwner.Player, new List<CharacterSlotMaster>());
         matchupData.Add(UnitOwner.Opponent, new List<CharacterSlotMaster>());
-
-/*        playerCharacters = new List<CharacterSlotMaster>();
-        opponentCharacters = new List<CharacterSlotMaster>();
-*/    }
+    }
 
     private void OnEnable()
     {
