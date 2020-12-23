@@ -12,9 +12,18 @@ public class BillboardBehaviour : MonoBehaviour
 
     private Camera mainCamera;
 
-    private void Awake()
+    private Camera MainCamera 
     {
-        mainCamera = Camera.main;
+        get
+        {
+            if (mainCamera == null)
+                mainCamera = CameraService.activeCamera;
+            return mainCamera;
+        }
+        set
+        {
+            mainCamera = value;
+        }
     }
 
     void LateUpdate()
@@ -23,11 +32,11 @@ public class BillboardBehaviour : MonoBehaviour
 
         if(staticBillboard)
         {
-            transform.LookAt(mainCamera.transform);
+            transform.LookAt(MainCamera.transform);
         }
         else
         {
-            transform.rotation = mainCamera.transform.rotation;
+            transform.rotation = MainCamera.transform.rotation;
         }
 
         Vector3 targetEuler = transform.rotation.eulerAngles;

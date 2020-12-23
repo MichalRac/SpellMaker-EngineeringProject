@@ -4,12 +4,13 @@ using UnityEngine;
 
 public class MasterManager : MonoBehaviour
 {
+    [SerializeField] Camera sceneMainCamera;
     [SerializeField] TurnManager turnManager;
     [SerializeField] UnitManager unitManager;
     [SerializeField] BattleSceneManager battleSceneManager;
     [SerializeField] PlayerActionManager playerActionManager;
 
-    public void Initialize(BaseBattleSceneArgs sceneArguments)
+    public IEnumerator Initialize(BaseBattleSceneArgs sceneArguments)
     {
         if (sceneArguments.IsNull)
             sceneArguments = new BaseBattleSceneArgs() { OpponentCharacters = 3, PlayerCharacters = 3, IsNull = false };
@@ -23,6 +24,9 @@ public class MasterManager : MonoBehaviour
             unitManager.SpawnUnit(new UnitData { unitIdentifier = new UnitIdentifier(UnitOwner.Opponent, unitID++), characterId = 0, color = Color.red, hp = 30 });
 
         turnManager.PrepareQueue(unitManager.GetAllActiveCharacters());
+        CameraService.activeCamera = sceneMainCamera;
+
+        yield return null;
 
         BeginNextTurn();
     }

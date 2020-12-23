@@ -1,11 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 using UnityEngine;
 using System;
 
 public static class SceneStartupManager
 {
     private static readonly Dictionary<Type, SceneArgs> args;
+    private const string LOADING_SCENE_NAME = "LoadingScene";
+    private static string nextActiveScene;
     
     static SceneStartupManager()
     {
@@ -33,14 +36,24 @@ public static class SceneStartupManager
         if (attribute == null)
             throw new NullReferenceException($"You're trying to load scene startup without ${nameof(SceneStartupAttribute)}");
 
-        string sceneName = attribute.SceneName;
+        nextActiveScene = attribute.SceneName;
 
         if (sceneArgs == null)
             args.Add(type, new TArgs { IsNull = true });
         else
             args.Add(type, sceneArgs);
 
-        return UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(sceneName);
+        SceneManager.LoadSceneAsync(LOADING_SCENE_NAME);
+
+        var sceneToLoad = SceneManager.LoadSceneAsync(nextActiveScene, LoadSceneMode.Additive);
+        sceneToLoad.completed += SceneToLoad_completed;
+
+        return sceneToLoad;
+    }
+
+    private static void SceneToLoad_completed(AsyncOperation obj)
+    {
+        SceneManager.SetActiveScene(SceneManager.GetSceneByName(nextActiveScene));
     }
 
     public static TArgs GetArgs<TController, TArgs>()
@@ -57,5 +70,10 @@ public static class SceneStartupManager
         args.Remove(type);
 
         return sceneArgs;
+    }
+
+    public static void UnloadLoadingScene()
+    {
+        SceneManager.UnloadSceneAsync(LOADING_SCENE_NAME);
     }
 }

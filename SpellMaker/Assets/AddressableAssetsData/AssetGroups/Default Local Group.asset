@@ -16,7 +16,25 @@ MonoBehaviour:
   m_Data:
     m_SerializedData: []
   m_GUID: 3f9051aa53ceccb46aa797a497be28b2
-  m_SerializeEntries: []
+  m_SerializeEntries:
+  - m_GUID: 23447ea53621e884e8fff38a0647be97
+    m_Address: Unit/Priest
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: 45288819fde2143449a96207b14db0bb
+    m_Address: Unit/Knight
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
+  - m_GUID: a8116269611f7264699a40d56baa95fd
+    m_Address: Unit/Swordsman
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    m_MainAsset: {fileID: 0}
+    m_TargetAsset: {fileID: 0}
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: f3341b7ac78548b4ca9f66b79346ac5a, type: 2}
   m_SchemaSet:

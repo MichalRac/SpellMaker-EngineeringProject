@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 [SceneStartup("BaseBattleScene")]
 public class BaseBattleSceneStartup : SceneStartup<BaseBattleSceneStartup, BaseBattleSceneArgs>
@@ -9,6 +10,9 @@ public class BaseBattleSceneStartup : SceneStartup<BaseBattleSceneStartup, BaseB
 
     protected override void OnAwake()
     {
-        masterManager.Initialize(Args);   
+        //SceneStartupManager.UnloadLoadingScene();
+        //SceneManager.SetActiveScene(SceneManager.GetActiveScene());
+
+        StartCoroutine(masterManager.Initialize(Args));   
     }
 }

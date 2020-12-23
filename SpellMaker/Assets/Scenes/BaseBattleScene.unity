@@ -464,6 +464,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18b8f7c4aad8af64eb2bd33a9760095f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sceneMainCamera: {fileID: 941707176}
   turnManager: {fileID: 244833464}
   unitManager: {fileID: 244833463}
   battleSceneManager: {fileID: 244833465}
