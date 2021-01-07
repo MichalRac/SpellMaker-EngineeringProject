@@ -9,6 +9,8 @@ public static class SceneStartupManager
     private static readonly Dictionary<Type, SceneArgs> args;
     private const string LOADING_SCENE_NAME = "LoadingScene";
     private static string nextActiveScene;
+
+    public static float nextSceneLoadProgress;
     
     static SceneStartupManager()
     {
@@ -24,6 +26,38 @@ public static class SceneStartupManager
                 return targetAttribute;
 
         return null;
+    }
+
+
+    public static AsyncOperation OpenSceneThroughLoadingScreen<TController, TArgs>(TArgs sceneArgs = null)
+        where TController : SceneStartup<TController, TArgs>
+        where TArgs : SceneArgs, new()
+    {
+        Type type = typeof(TController);
+        SceneStartupAttribute attribute = GetAttribute<SceneStartupAttribute>(type);
+
+        if (attribute == null)
+            throw new NullReferenceException($"You're trying to load scene startup without ${nameof(SceneStartupAttribute)}");
+
+        nextActiveScene = attribute.SceneName;
+
+        if (sceneArgs == null)
+            args.Add(type, new TArgs { IsNull = true });
+        else
+            args.Add(type, sceneArgs);
+
+        nextSceneLoadProgress = 0f;
+
+        SceneManager.LoadScene(LOADING_SCENE_NAME);
+
+        var sceneToLoad = SceneManager.LoadSceneAsync(nextActiveScene);
+
+        while(!sceneToLoad.isDone)
+        {
+            nextSceneLoadProgress = sceneToLoad.progress;
+        }
+
+        return sceneToLoad;
     }
 
     public static AsyncOperation OpenSceneWithArgs<TController, TArgs>(TArgs sceneArgs = null)
@@ -43,20 +77,12 @@ public static class SceneStartupManager
         else
             args.Add(type, sceneArgs);
 
-        SceneManager.LoadSceneAsync(LOADING_SCENE_NAME);
-
-        var sceneToLoad = SceneManager.LoadSceneAsync(nextActiveScene, LoadSceneMode.Additive);
-        sceneToLoad.completed += SceneToLoad_completed;
+        var sceneToLoad = SceneManager.LoadSceneAsync(nextActiveScene);
 
         return sceneToLoad;
     }
 
-    private static void SceneToLoad_completed(AsyncOperation obj)
-    {
-        SceneManager.SetActiveScene(SceneManager.GetSceneByName(nextActiveScene));
-    }
-
-    public static TArgs GetArgs<TController, TArgs>()
+    public static TArgs GetArgs<TController, TArgs>(bool discardArgs = true)
         where TController : SceneStartup<TController, TArgs>
         where TArgs : SceneArgs, new()
     {
@@ -67,13 +93,11 @@ public static class SceneStartupManager
 
         TArgs sceneArgs = (TArgs)args[type];
 
-        args.Remove(type);
+        if(discardArgs)
+        {
+            args.Remove(type);
+        }
 
         return sceneArgs;
-    }
-
-    public static void UnloadLoadingScene()
-    {
-        SceneManager.UnloadSceneAsync(LOADING_SCENE_NAME);
     }
 }

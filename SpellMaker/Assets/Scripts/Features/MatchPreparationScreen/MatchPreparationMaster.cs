@@ -50,7 +50,8 @@ public class MatchPreparationMaster : MonoBehaviour
         baseBattleSceneArgs.PlayerCharacters = matchupData[UnitOwner.Player].Count;
         baseBattleSceneArgs.OpponentCharacters = matchupData[UnitOwner.Opponent].Count;
 
-        SceneStartupManager.OpenSceneWithArgs<BaseBattleSceneStartup, BaseBattleSceneArgs>(baseBattleSceneArgs);
+        //SceneStartupManager.OpenSceneWithArgs<BaseBattleSceneStartup, BaseBattleSceneArgs>(baseBattleSceneArgs);
+        SceneStartupManager.OpenSceneThroughLoadingScreen<BaseBattleSceneStartup, BaseBattleSceneArgs>(baseBattleSceneArgs);
     }
 
     private void OnAnyCharacterRemoved(UnitOwner owner, int slotId)
