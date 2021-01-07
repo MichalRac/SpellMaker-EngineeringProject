@@ -24,22 +24,22 @@ public class BaseUnitPresenter : MonoBehaviour, IUnit
     // TODO cache this
     public Transform GetTransform() => GetComponent<Transform>();
 
-    public void Initialize(UnitData data)
+    public void Initialize(Unit unit)
     {
-        Setup(data);
+        Setup(unit);
     }
 
-    public void Setup(UnitData data)
+    public void Setup(Unit unit)
     {
-        characterMeshRenderer.material.color = data.color;
-        characterLabel.color = data.color;
-        characterLabel.text = $"ID: {data.unitIdentifier.uniqueId}\nHP: {data.hp}";
+        characterMeshRenderer.material.color = unit.unitData.color;
+        characterLabel.color = unit.unitData.color;
+        characterLabel.text = $"ID: {unit.unitIdentifier.uniqueId}\nHP: {unit.unitData.hp}\nClass: {unit.unitData.unitClass}";
     }
 
-    public void RefreshLabel(UnitData data)
+    public void RefreshLabel(Unit unit)
     {
-        characterLabel.text = data.hp > 0 
-            ? $"ID: {data.unitIdentifier.uniqueId}\nHP: {data.hp}"
+        characterLabel.text = unit.unitData.hp > 0 
+            ? $"ID: {unit.unitIdentifier.uniqueId}\nHP: {unit.unitData.hp}\nClass: {unit.unitData.unitClass}"
             : "DEAD";
     }
 

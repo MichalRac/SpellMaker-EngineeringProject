@@ -8,18 +8,21 @@ public class CharacterSlotMaster : MonoBehaviour
     [SerializeField] CharacterSlotPresenter characterSlotPresenter;
 
     private int slotID;
-    private UnitOwner unitOwner;
-    private UnitClass unitClass;
+
+    public UnitOwner UnitOwner { get; private set; }
+    public UnitClass UnitClass { get; private set; }
+    public UnitData UnitData { get; private set; }
 
     private UnityAction<UnitOwner, int> onCharacterRemoved;
-
 
     public void Setup(int slotID, UnitOwner owner, UnityAction<UnitOwner, int> onCharacterRemoved)
     {
         this.slotID = slotID;
         this.onCharacterRemoved = onCharacterRemoved;
-        this.unitOwner = owner;
-        this.unitClass = UnitClass.Swordsman;
+        this.UnitOwner = owner;
+        this.UnitClass = default;
+
+        UnitData = new UnitData(30, 0, owner == UnitOwner.Player ? Color.green : Color.red, default);
 
         UpdateDescription();
 
@@ -36,26 +39,28 @@ public class CharacterSlotMaster : MonoBehaviour
 
     public void UpdateDescription()
     {
-        characterSlotPresenter.UpdateDescription(unitClass);
+        characterSlotPresenter.UpdateDescription(UnitClass);
     }
     
     public void NextClass()
     {
         var enumLenght = System.Enum.GetNames(typeof(UnitClass)).Length;
-        unitClass = (int)unitClass == enumLenght - 1 ? (UnitClass)0 : unitClass + 1;
+        UnitClass = (int)UnitClass == enumLenght - 1 ? (UnitClass)0 : UnitClass + 1;
+        UnitData.unitClass = UnitClass;
         UpdateDescription();
     }
 
     public void PreviousClass()
     {
         var enumLenght = System.Enum.GetNames(typeof(UnitClass)).Length;
-        unitClass = (int)unitClass == 0 ? (UnitClass)enumLenght - 1 : unitClass - 1;
+        UnitClass = (int)UnitClass == 0 ? (UnitClass)enumLenght - 1 : UnitClass - 1;
+        UnitData.unitClass = UnitClass;
         UpdateDescription();
     }
 
     public void RemoveCharacter()
     {
-        onCharacterRemoved?.Invoke(unitOwner, slotID);
+        onCharacterRemoved?.Invoke(UnitOwner, slotID);
     }
 
     public void SetRemoveButtonActive(bool value)

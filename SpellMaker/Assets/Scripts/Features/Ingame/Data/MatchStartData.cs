@@ -7,6 +7,6 @@ using System;
 [Serializable]
 public class MatchStartData
 {
-    public UnitData[] playerUnitDatas;
-    public UnitData[] opponentUnitDatas;
+    public Unit[] playerUnitDatas;
+    public Unit[] opponentUnitDatas;
 }

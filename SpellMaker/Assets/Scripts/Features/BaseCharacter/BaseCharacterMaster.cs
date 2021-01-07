@@ -11,7 +11,7 @@ public class BaseCharacterMaster : MonoBehaviour, IUnit
     [SerializeField] private BaseUnitPresenter baseUnitPresenter;
     [SerializeField] private UnitAnimationController unitAnimationController;
     [SerializeField] private float characterSpeed = 5f;
-    public UnitData unitData { get; private set; }
+    public Unit Unit { get; private set; }
 
     // TODO cache this
     public Transform GetTransform() => GetComponent<Transform>();
@@ -26,9 +26,9 @@ public class BaseCharacterMaster : MonoBehaviour, IUnit
         baseUnitPresenter.SetSelect(value);
     }
 
-    public void Initialize(UnitData data)
+    public void Initialize(Unit data)
     {
-        unitData = data;
+        Unit = data;
         baseUnitPresenter.Initialize(data);
     }
 
@@ -72,8 +72,8 @@ public class BaseCharacterMaster : MonoBehaviour, IUnit
 
     public void ReciveDamage(int damage)
     {
-        unitData.hp -= damage;
-        baseUnitPresenter.RefreshLabel(unitData);
+        Unit.unitData.hp -= damage;
+        baseUnitPresenter.RefreshLabel(Unit);
     }
 
 }

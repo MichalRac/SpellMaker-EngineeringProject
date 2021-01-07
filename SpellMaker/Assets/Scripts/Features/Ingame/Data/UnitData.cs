@@ -4,13 +4,16 @@ using UnityEngine;
 using System;
 
 [Serializable]
-public class UnitData
+public class Unit
 {
     public UnitIdentifier unitIdentifier;
+    public UnitData unitData;
 
-    public int hp;
-    public int characterId;
-    public Color color;
+    public Unit(UnitIdentifier unitIdentifier, UnitData unitData)
+    {
+        this.unitIdentifier = unitIdentifier;
+        this.unitData = unitData;
+    }
 }
 
 [Serializable]
@@ -33,5 +36,38 @@ public class UnitIdentifier : IEquatable<UnitIdentifier>
     public override string ToString()
     {
         return $"ID(owner-{owner}, id-{uniqueId})";
+    }
+}
+
+[Serializable]
+public class UnitData
+{
+    public int hp;
+    public int characterId;
+    public Color color;
+    public UnitClass unitClass;
+
+    public UnitData(int hp, int characterId, Color color, UnitClass unitClass)
+    {
+        this.hp = hp;
+        this.characterId = characterId;
+        this.color = color;
+        this.unitClass = unitClass;
+    }
+}
+
+public static class UnitFactory
+{
+    public static Unit GetUnit(UnitOwner owner, int uniqueId, int hp, int characterId, Color color, UnitClass unitClass)
+    {
+        return new Unit(
+            new UnitIdentifier(owner, uniqueId), 
+            new UnitData(hp, characterId, color, unitClass)
+            );    
+    }
+
+    public static Unit GetUnit(UnitOwner owner, int uniqueId, UnitData unitData)
+    {
+        return new Unit(new UnitIdentifier(owner, uniqueId), unitData);
     }
 }

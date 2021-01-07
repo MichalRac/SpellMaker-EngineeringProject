@@ -47,8 +47,8 @@ public class MatchPreparationMaster : MonoBehaviour
     private void OnMatchupConfirmed()
     {
         var baseBattleSceneArgs = new BaseBattleSceneArgs();
-        baseBattleSceneArgs.PlayerCharacters = matchupData[UnitOwner.Player].Count;
-        baseBattleSceneArgs.OpponentCharacters = matchupData[UnitOwner.Opponent].Count;
+        baseBattleSceneArgs.PlayerCharacters = matchupData[UnitOwner.Player];
+        baseBattleSceneArgs.OpponentCharacters = matchupData[UnitOwner.Opponent];
 
         SceneStartupManager.OpenSceneWithArgs<BaseBattleSceneStartup, BaseBattleSceneArgs>(baseBattleSceneArgs);
     }

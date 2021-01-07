@@ -17,7 +17,7 @@ public class UnitManager : MonoBehaviour
         ActiveCharacters = new Dictionary<UnitIdentifier, BaseCharacterMaster>();
     }
 
-    public void SpawnUnit(UnitData data)
+    public void SpawnUnit(Unit data)
     {
         var character = Instantiate(baseCharacterMaster, unitRoot);
         character.Initialize(data);
@@ -41,11 +41,11 @@ public class UnitManager : MonoBehaviour
     public void UpdateStatus(out List<UnitIdentifier> unitsToRemove)
     {
         unitsToRemove = new List<UnitIdentifier>();
-        foreach (var unit in ActiveCharacters)
+        foreach (var baseCharacterMaster in ActiveCharacters)
         {
-            if(unit.Value.unitData.hp <= 0)
+            if(baseCharacterMaster.Value.Unit.unitData.hp <= 0)
             {
-                unitsToRemove.Add(unit.Key);
+                unitsToRemove.Add(baseCharacterMaster.Key);
             }
         }
         foreach(var unitToRemove in unitsToRemove)
@@ -56,9 +56,9 @@ public class UnitManager : MonoBehaviour
 
     public bool HasAnyCharacterLeft(UnitOwner owner)
     {
-        foreach (var unit in ActiveCharacters)
+        foreach (var baseCharacterMaster in ActiveCharacters)
         {
-            if (unit.Key.owner == owner && unit.Value.unitData.hp > 0)
+            if (baseCharacterMaster.Key.owner == owner && baseCharacterMaster.Value.Unit.unitData.hp > 0)
                 return true;
         }
         return false;

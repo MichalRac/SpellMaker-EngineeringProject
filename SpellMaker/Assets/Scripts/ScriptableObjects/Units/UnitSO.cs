@@ -5,5 +5,5 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "UnitSO", menuName = "ScriptableObjects/Units/UnitSO", order = 2)]
 public class UnitSO : ScriptableObject
 {
-    public UnitData data;
+    public Unit data;
 }
