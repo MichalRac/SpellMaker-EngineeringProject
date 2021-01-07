@@ -26,10 +26,11 @@ public class BaseCharacterMaster : MonoBehaviour, IUnit
         baseUnitPresenter.SetSelect(value);
     }
 
-    public void Initialize(Unit data)
+    public void Initialize(Unit data, UnitAnimationController animationController)
     {
         Unit = data;
-        baseUnitPresenter.Initialize(data);
+        unitAnimationController = Instantiate(animationController, transform);
+        baseUnitPresenter.Initialize(data, unitAnimationController);
     }
 
     public void TriggerMoveToEmpty(Vector3 target, Action onMovementFinishedCallback)

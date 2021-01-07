@@ -25,12 +25,12 @@ public class MasterManager : MonoBehaviour
 
         turnManager.PrepareQueue(unitManager.GetAllActiveCharacters());
 
-        BeginNextTurn();
+        BeginTurn();
     }
 
 
 
-    public void BeginNextTurn()
+    public void BeginTurn()
     {
         unitManager.UpdateStatus(out var removedUnits);
         turnManager.UpdateStatus(removedUnits);
@@ -44,6 +44,6 @@ public class MasterManager : MonoBehaviour
         var nextInQueue = turnManager.GetNextInQueue();
         var activeCharacter = unitManager.GetActiveCharacter(nextInQueue);
 
-        playerActionManager.BeginPlayerActionPhase(activeCharacter, BeginNextTurn);
+        playerActionManager.BeginPlayerActionPhase(activeCharacter, BeginTurn);
     }
 }

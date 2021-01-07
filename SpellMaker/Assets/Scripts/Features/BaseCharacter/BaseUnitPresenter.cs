@@ -11,27 +11,20 @@ public class BaseUnitPresenter : MonoBehaviour, IUnit
     [SerializeField] private GameObject selectionProjector;
     [SerializeField] private GameObject highlightProjector;
     [SerializeField] private GameObject shadowProjector;
-    [SerializeField] private SkinnedMeshRenderer characterMeshRenderer;
-    //[SerializeField] private Material materialToSetup;
 
     [SerializeField] private TextMeshPro characterLabel;
-
-    [SerializeField] private Animator animator;
-    private readonly int walkingAnimParam = Animator.StringToHash("Walking");
-    private readonly int attackAnimParam = Animator.StringToHash("Attack");
-    private readonly int damagedAnimParam = Animator.StringToHash("Damaged");
 
     // TODO cache this
     public Transform GetTransform() => GetComponent<Transform>();
 
-    public void Initialize(Unit unit)
+    public void Initialize(Unit unit, UnitAnimationController animationController)
     {
+        animationController.GetComponent<UnitAvatarController>()?.SetTeamColor(unit.unitIdentifier.owner);
         Setup(unit);
     }
 
     public void Setup(Unit unit)
     {
-        characterMeshRenderer.material.color = unit.unitData.color;
         characterLabel.color = unit.unitData.color;
         characterLabel.text = $"ID: {unit.unitIdentifier.uniqueId}\nHP: {unit.unitData.hp}\nClass: {unit.unitData.unitClass}";
     }
@@ -43,11 +36,6 @@ public class BaseUnitPresenter : MonoBehaviour, IUnit
             : "DEAD";
     }
 
-/*    private void Buf_Completed(UnityEngine.ResourceManagement.AsyncOperations.AsyncOperationHandle<Material> obj)
-    {
-        characterMeshRenderer.material = obj.Result;
-    }
-*/
     public void SetSelect(bool value)
     {
         selectionProjector.gameObject.SetActive(value);

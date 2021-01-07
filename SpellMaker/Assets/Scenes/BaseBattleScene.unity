@@ -428,6 +428,7 @@ MonoBehaviour:
   unitRoot: {fileID: 1437999546}
   baseCharacterMaster: {fileID: 708790658002128773, guid: a29026fd7c3081546a9c2c7f222a4654, type: 3}
   spawnpointFetcher: {fileID: 1597044948}
+  UnitAvatarList: {fileID: 11400000, guid: 6d9b62296aec1ff45ae11ca5c6c2ee48, type: 2}
 --- !u!114 &244833464
 MonoBehaviour:
   m_ObjectHideFlags: 0

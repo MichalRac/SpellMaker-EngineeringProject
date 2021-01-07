@@ -4,13 +4,15 @@ using UnityEngine;
 
 public class UnitManager : MonoBehaviour
 {
-    [SerializeField] Transform unitRoot;
-    [SerializeField] BaseCharacterMaster baseCharacterMaster;
-    [SerializeField] SpawnpointFetcher spawnpointFetcher;
+    [SerializeField] private Transform unitRoot;
+    [SerializeField] private BaseCharacterMaster baseCharacterMaster;
+    [SerializeField] private SpawnpointFetcher spawnpointFetcher;
+    [SerializeField] private UnitAvatarListSO UnitAvatarList;
 
     private Dictionary<UnitIdentifier, BaseCharacterMaster> ActiveCharacters;
     public BaseCharacterMaster GetActiveCharacter(UnitIdentifier unitIdentifier) => ActiveCharacters[unitIdentifier];
     public Dictionary<UnitIdentifier, BaseCharacterMaster> GetAllActiveCharacters() => ActiveCharacters;
+
 
     private void Awake()
     {
@@ -20,7 +22,8 @@ public class UnitManager : MonoBehaviour
     public void SpawnUnit(Unit data)
     {
         var character = Instantiate(baseCharacterMaster, unitRoot);
-        character.Initialize(data);
+        character.Initialize(data, UnitAvatarList.GetUnitAvatar(data.unitData.unitClass).unitAnimationController);
+
         character.transform.position = data.unitIdentifier.owner == UnitOwner.Player 
             ? spawnpointFetcher.GetNextPlayerStartPosition() 
             : spawnpointFetcher.GetNextEnemyStartPosition();
