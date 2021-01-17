@@ -9,6 +9,8 @@ public class UnitManager : MonoBehaviour
     [SerializeField] private SpawnpointFetcher spawnpointFetcher;
     [SerializeField] private UnitAvatarListSO UnitAvatarList;
 
+    [SerializeField] private TurnManager turnManager;
+
     private Dictionary<UnitIdentifier, BaseCharacterMaster> ActiveCharacters;
     public BaseCharacterMaster GetActiveCharacter(UnitIdentifier unitIdentifier) => ActiveCharacters[unitIdentifier];
     public Dictionary<UnitIdentifier, BaseCharacterMaster> GetAllActiveCharacters() => ActiveCharacters;
@@ -17,6 +19,7 @@ public class UnitManager : MonoBehaviour
     private void Awake()
     {
         ActiveCharacters = new Dictionary<UnitIdentifier, BaseCharacterMaster>();
+        turnManager = GetComponent<TurnManager>();
     }
 
     public void SpawnUnit(Unit data)
@@ -65,5 +68,14 @@ public class UnitManager : MonoBehaviour
                 return true;
         }
         return false;
+    }
+
+    // Used implictly
+    public void SpawnUnitCheat(bool isPlayer)
+    {
+        var data = new Unit(new UnitIdentifier(isPlayer ? UnitOwner.Player : UnitOwner.Opponent, ActiveCharacters.Count + 1), new UnitData(50, isPlayer ? Color.blue : Color.black, UnitClass.Swordsman));
+
+        SpawnUnit(data);
+        turnManager.AddToQueue(data.unitIdentifier);
     }
 }

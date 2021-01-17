@@ -43,14 +43,12 @@ public class UnitIdentifier : IEquatable<UnitIdentifier>
 public class UnitData
 {
     public int hp;
-    public int characterId;
     public Color color;
     public UnitClass unitClass;
 
-    public UnitData(int hp, int characterId, Color color, UnitClass unitClass)
+    public UnitData(int hp, Color color, UnitClass unitClass)
     {
         this.hp = hp;
-        this.characterId = characterId;
         this.color = color;
         this.unitClass = unitClass;
     }
@@ -62,12 +60,17 @@ public static class UnitFactory
     {
         return new Unit(
             new UnitIdentifier(owner, uniqueId), 
-            new UnitData(hp, characterId, color, unitClass)
+            new UnitData(hp, color, unitClass)
             );    
     }
 
     public static Unit GetUnit(UnitOwner owner, int uniqueId, UnitData unitData)
     {
         return new Unit(new UnitIdentifier(owner, uniqueId), unitData);
+    }
+
+    public static Unit GetBasicUnit(UnitOwner owner, int uniqueId)
+    {
+        return GetUnit(owner, uniqueId, new UnitData(50, owner == UnitOwner.Player ? Color.blue : Color.black, default));
     }
 }

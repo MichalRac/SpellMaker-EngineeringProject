@@ -46,21 +46,25 @@ public class MatchPreparationMaster : MonoBehaviour
 
     private void OnMatchupConfirmed()
     {
-        var baseBattleSceneArgs = new BaseBattleSceneArgs();
-        baseBattleSceneArgs.PlayerCharacters = matchupData[UnitOwner.Player];
-        baseBattleSceneArgs.OpponentCharacters = matchupData[UnitOwner.Opponent];
+        List<Unit> playerCharacters = new List<Unit>();
+        List<Unit> opponentCharacters = new List<Unit>();
 
-        SceneStartupManager.OpenSceneWithArgs<BaseBattleSceneStartup, BaseBattleSceneArgs>(baseBattleSceneArgs);
+        foreach (var slot in matchupData[UnitOwner.Player])
+            playerCharacters.Add(slot.Unit);
+        foreach (var slot in matchupData[UnitOwner.Opponent])
+            opponentCharacters.Add(slot.Unit);
+
+        SceneStartupManager.OpenSceneWithArgs<BaseBattleSceneStartup, BaseBattleSceneArgs>
+            (BaseBattleSceneBuilder.GetBaseBattleSceneArgs(playerCharacters, opponentCharacters));
     }
 
     private void OnAnyCharacterRemoved(UnitOwner owner, int slotId)
     {
-        Destroy(matchupData[owner][slotId].gameObject);
         matchupData[owner].RemoveAt(slotId);
 
         for(int i = slotId; i < matchupData[owner].Count; i++)
         {
-            matchupData[owner][i].DecrementSlotId();
+            matchupData[owner][i].Unit.unitIdentifier.uniqueId--;
         }
 
         SetRemovableStates(owner);

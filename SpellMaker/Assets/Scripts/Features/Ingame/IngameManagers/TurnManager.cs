@@ -47,4 +47,9 @@ public class TurnManager : MonoBehaviour
         }
         queue = newQueue;
     }
+
+    public void AddToQueue(UnitIdentifier unitIdentifier)
+    {
+        queue.Enqueue(unitIdentifier);
+    }
 }
