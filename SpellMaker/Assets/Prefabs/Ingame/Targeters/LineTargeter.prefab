@@ -201,7 +201,7 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6547778242477838170}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 100, z: 1}
@@ -219,6 +219,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   decal: {fileID: 4571964612056497207}
+  targeterScaleSO: {fileID: 11400000, guid: 33807e8beefe90347ba9aaf5103ae0f8, type: 2}
 --- !u!1 &9015605069573648368
 GameObject:
   m_ObjectHideFlags: 0
