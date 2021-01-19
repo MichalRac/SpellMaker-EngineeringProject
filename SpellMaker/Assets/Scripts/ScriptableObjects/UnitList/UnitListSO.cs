@@ -3,19 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "UnitListSO", menuName = "ScriptableObjects/Units/UnitListSO", order = 1)]
-public class UnitAvatarListSO : ScriptableObject
+public class UnitListSO : ScriptableObject
 {
-    public List<UnitAvatarData> unitAvatarDatas;
+    public List<UnitListData> unitAvatarDatas;
 
-    public UnitAvatarData GetUnitAvatar(UnitClass unitClass)
+    public UnitListData GetUnitAvatar(UnitClass unitClass)
     {
         return unitAvatarDatas.Find((data) => data.unitClass == unitClass);
     }
 }
 
 [System.Serializable]
-public class UnitAvatarData
+public class UnitListData
 {
     public UnitClass unitClass;
-    public UnitAnimationController unitAnimationController;
+    public UnitClassMaster unitClassMaster;
+    public List<AbilitySetupSO> abilities;
 }

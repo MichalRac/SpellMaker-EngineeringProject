@@ -1,26 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System;
 
-[Serializable]
-public abstract class ActionEffect : IActionEffect
+public enum ActionEffectType
 {
-    public int TurnsLeftAffected { get; set; }
-    public int Power { get; }
-
-    protected ActionEffect(int turnLenght, int power)
-    {
-        TurnsLeftAffected = TurnsLeftAffected;
-        Power = power;
-    }
-
-    // Happens on turn finished
-    public virtual void Affect(Unit unitAffected)
-    {
-        TurnsLeftAffected--;
-    }
-
-    public bool IsFinished() => TurnsLeftAffected <= 0;
-
+    Damage = 0,
+    Heal = 1,
+    Taunt = 2,
+    Shield = 3,
 }

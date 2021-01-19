@@ -9,7 +9,7 @@ public class BaseCharacterMaster : MonoBehaviour, IUnit
     private const float STOP_BEFORE_TARGET_DISTANCE = 1.1f;
 
     [SerializeField] private BaseUnitPresenter baseUnitPresenter;
-    [SerializeField] private UnitAnimationController unitAnimationController;
+    [SerializeField] private UnitClassMaster unitClassMaster;
     [SerializeField] private float characterSpeed = 5f;
     public Unit Unit { get; private set; }
 
@@ -26,11 +26,11 @@ public class BaseCharacterMaster : MonoBehaviour, IUnit
         baseUnitPresenter.SetSelect(value);
     }
 
-    public void Initialize(Unit data, UnitAnimationController animationController)
+    public void Initialize(Unit data, UnitClassMaster unitClassMaster)
     {
         Unit = data;
-        unitAnimationController = Instantiate(animationController, transform);
-        baseUnitPresenter.Initialize(data, unitAnimationController);
+        this.unitClassMaster = Instantiate(unitClassMaster, transform);
+        baseUnitPresenter.Initialize(data, this.unitClassMaster);
     }
 
     public void TriggerMoveToEmpty(Vector3 target, Action onMovementFinishedCallback)
@@ -46,7 +46,7 @@ public class BaseCharacterMaster : MonoBehaviour, IUnit
     // TODO replace with NavMesh
     private IEnumerator MoveTowards(Vector3 target, float stopDistance, Action onMovementFinishedCallback)
     {
-        unitAnimationController.SetWalkingAnimation(true);
+        unitClassMaster.UnitAnimationController.SetWalkingAnimation(true);
 
         transform.LookAt(target);
 
@@ -58,17 +58,17 @@ public class BaseCharacterMaster : MonoBehaviour, IUnit
         }
         yield return null;
 
-        unitAnimationController.SetWalkingAnimation(false);
+        unitClassMaster.UnitAnimationController.SetWalkingAnimation(false);
         onMovementFinishedCallback?.Invoke();
     }
     public void TriggerAttackAnim(Action onCommandFinished, Action onAttackConnect)
     {
-        unitAnimationController.TriggerBaseAttackAnimation(onAttackConnect, onCommandFinished);
+        unitClassMaster.UnitAnimationController.TriggerBaseAttackAnimation(onAttackConnect, onCommandFinished);
     }
 
     public void TriggerDamagedAnim(Action onCommandFinished)
     {
-        unitAnimationController.TriggerDamagedAnimation(onCommandFinished);
+        unitClassMaster.UnitAnimationController.TriggerDamagedAnimation(onCommandFinished);
     }
 
     public void ReciveDamage(int damage)

@@ -4,15 +4,30 @@ using UnityEngine;
 
 public class UnitAbility : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public TargetingType TargetingType { get; private set; }
+    public AbilitySize AbilitySize { get; private set; }
+    public List<ActionEffect> AbilityEffects { get; private set; }
+
+    public UnitAbility(TargetingType targetingType, AbilitySize abilitySize, List<ActionEffect> abilityEffects)
     {
-        
+        TargetingType = targetingType;
+        AbilitySize = abilitySize;
+        AbilityEffects = abilityEffects;
     }
 
-    // Update is called once per frame
-    void Update()
+}
+
+public static class UnitAbilityFactory
+{
+    public static UnitAbility GetUnitAbility(AbilitySetupSO abilitySetupSO)
     {
-        
+
+        List<ActionEffect> actionEffects = new List<ActionEffect>();
+        foreach(var actionEffectData in abilitySetupSO.AbilityEffects)
+        {
+            actionEffects.Add(ActionEffectFactory.GetActionEffect(actionEffectData));
+        }
+
+        return new UnitAbility(abilitySetupSO.TargetingType, abilitySetupSO.AbilitySize, actionEffects);
     }
 }

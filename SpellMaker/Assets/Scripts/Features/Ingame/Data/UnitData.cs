@@ -56,7 +56,7 @@ public class UnitData
 
 public static class UnitFactory
 {
-    public static Unit GetUnit(UnitOwner owner, int uniqueId, int hp, int characterId, Color color, UnitClass unitClass)
+    public static Unit GetUnit(UnitOwner owner, int uniqueId, int hp, int characterId, Color color, UnitClass unitClass, List<UnitAbility> unitAbilities)
     {
         return new Unit(
             new UnitIdentifier(owner, uniqueId), 

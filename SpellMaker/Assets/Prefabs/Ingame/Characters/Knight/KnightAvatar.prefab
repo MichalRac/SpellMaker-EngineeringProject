@@ -966,6 +966,7 @@ GameObject:
   - component: {fileID: 4572957533022948039}
   - component: {fileID: 5856807393471953865}
   - component: {fileID: 4284904752862693999}
+  - component: {fileID: 3703147636633124923}
   m_Layer: 0
   m_Name: KnightAvatar
   m_TagString: Untagged
@@ -1034,6 +1035,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterMeshRenderer: {fileID: 4572957533018682371}
+  unitAbilityManager: {fileID: 3703147636633124923}
+--- !u!114 &3703147636633124923
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4572957533015570697}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f1d0bb05d91b0d4e9ac1c22a46f12c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  unitAbilities:
+  - {fileID: 11400000, guid: 3c25c9f05af2d60408a5964030b72e7c, type: 2}
+  - {fileID: 11400000, guid: d1043d2bff834d442a78a33c156d3465, type: 2}
 --- !u!1 &4572957533015570699
 GameObject:
   m_ObjectHideFlags: 0

@@ -17,9 +17,9 @@ public class BaseUnitPresenter : MonoBehaviour, IUnit
     // TODO cache this
     public Transform GetTransform() => GetComponent<Transform>();
 
-    public void Initialize(Unit unit, UnitAnimationController animationController)
+    public void Initialize(Unit unit, UnitClassMaster unitClassMaster)
     {
-        animationController.GetComponent<UnitAvatarController>()?.SetTeamColor(unit.unitIdentifier.owner);
+        unitClassMaster.SetTeamColor(unit.unitIdentifier.owner);
         Setup(unit);
     }
 

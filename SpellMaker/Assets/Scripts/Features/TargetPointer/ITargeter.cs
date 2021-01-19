@@ -5,4 +5,5 @@ using UnityEngine;
 public interface ITargeter
 {
     List<BaseCharacterMaster> GetTargets();
+    void Setup(AbilitySize abilitySize);
 }

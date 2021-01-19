@@ -8,6 +8,6 @@ public interface IActionEffect
 
     int Power { get; }
 
-    void Affect(Unit unitToAffect);
+    void Affect(BaseCharacterMaster unitToAffect);
     bool IsFinished();
 }

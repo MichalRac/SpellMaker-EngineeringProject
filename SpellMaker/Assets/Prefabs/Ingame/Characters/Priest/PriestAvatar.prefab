@@ -385,6 +385,7 @@ GameObject:
   - component: {fileID: 95206231959375140}
   - component: {fileID: 6554546024924814471}
   - component: {fileID: 3381964551250889944}
+  - component: {fileID: 459785979950672440}
   m_Layer: 0
   m_Name: PriestAvatar
   m_TagString: Untagged
@@ -453,6 +454,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterMeshRenderer: {fileID: 137105558851883282}
+--- !u!114 &459785979950672440
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1500939411536426}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f1d0bb05d91b0d4e9ac1c22a46f12c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  unitAbilities:
+  - {fileID: 11400000, guid: f43316d6422b8164cac61ff0946ccf0d, type: 2}
+  - {fileID: 11400000, guid: 856af5ea5c7e1c846bec2a6193a9e863, type: 2}
 --- !u!1 &1537370055453520
 GameObject:
   m_ObjectHideFlags: 0

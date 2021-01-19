@@ -4,7 +4,7 @@ using UnityEngine;
 
 public interface IUnit
 {
-    void Initialize(Unit data, UnitAnimationController animationController);
+    void Initialize(Unit data, UnitClassMaster unitClassMaster);
     void SetSelect(bool value);
     void SetHighlight(bool value);
     Transform GetTransform();

@@ -5,20 +5,33 @@ using UnityEngine;
 public class AreaTargeter : MonoBehaviour, ITargeter
 {
     private List<BaseCharacterMaster> unitsInArea;
+    private Quaternion rotation;
+    [SerializeField] private SamDriver.Decal.DecalMesh decal;
+    [SerializeField] private TargeterScaleSO targeterScaleSO;
 
     public List<BaseCharacterMaster> GetTargets()
     {
         return unitsInArea;
     }
 
+    public void Setup(AbilitySize abilitySize)
+    {
+        var targeterScale = targeterScaleSO.GetAbilityTargeterScale(abilitySize);
+        transform.parent.localScale = new Vector3(targeterScale, 1f, targeterScale);
+    }
+
     private void OnEnable()
     {
         unitsInArea = new List<BaseCharacterMaster>();
+        rotation = transform.rotation;
+        decal.GenerateProjectedMeshImmediate();
+        StartCoroutine(UpdateDecal());
     }
 
     private void OnDisable()
     {
         unitsInArea.Clear();
+        StopCoroutine(UpdateDecal());
     }
 
     private void OnTriggerEnter(Collider other)
@@ -40,4 +53,19 @@ public class AreaTargeter : MonoBehaviour, ITargeter
             bcm.SetHighlight(false);
         }
     }
+
+    private IEnumerator UpdateDecal()
+    {
+        while(true)
+        {
+            var newRotation = transform.rotation;
+            if(newRotation != rotation)
+            {
+                decal.GenerateProjectedMeshImmediate();
+            }
+            rotation = newRotation;
+            yield return null;
+        }
+    }
+
 }

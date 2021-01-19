@@ -7,7 +7,7 @@ public class UnitManager : MonoBehaviour
     [SerializeField] private Transform unitRoot;
     [SerializeField] private BaseCharacterMaster baseCharacterMaster;
     [SerializeField] private SpawnpointFetcher spawnpointFetcher;
-    [SerializeField] private UnitAvatarListSO UnitAvatarList;
+    [SerializeField] private UnitListSO UnitAvatarList;
 
     [SerializeField] private TurnManager turnManager;
 
@@ -19,13 +19,12 @@ public class UnitManager : MonoBehaviour
     private void Awake()
     {
         ActiveCharacters = new Dictionary<UnitIdentifier, BaseCharacterMaster>();
-        turnManager = GetComponent<TurnManager>();
     }
 
     public void SpawnUnit(Unit data)
     {
         var character = Instantiate(baseCharacterMaster, unitRoot);
-        character.Initialize(data, UnitAvatarList.GetUnitAvatar(data.unitData.unitClass).unitAnimationController);
+        character.Initialize(data, UnitAvatarList.GetUnitAvatar(data.unitData.unitClass).unitClassMaster);
 
         character.transform.position = data.unitIdentifier.owner == UnitOwner.Player 
             ? spawnpointFetcher.GetNextPlayerStartPosition() 

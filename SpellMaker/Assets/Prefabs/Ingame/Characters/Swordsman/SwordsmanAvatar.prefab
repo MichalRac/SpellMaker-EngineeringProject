@@ -747,6 +747,7 @@ GameObject:
   - component: {fileID: 6166234370199720355}
   - component: {fileID: 5376762537685252426}
   - component: {fileID: 2432950548528500608}
+  - component: {fileID: 5466636553345461530}
   m_Layer: 10
   m_Name: SwordsmanAvatar
   m_TagString: Untagged
@@ -816,6 +817,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterMeshRenderer: {fileID: 6166234370203905889}
+--- !u!114 &5466636553345461530
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6166234370192335405}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f1d0bb05d91b0d4e9ac1c22a46f12c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  unitAbilities:
+  - {fileID: 11400000, guid: 2083cfc01a78f574cb2f4388c45a166e, type: 2}
+  - {fileID: 11400000, guid: 697710f7124081747ac57568aac22645, type: 2}
 --- !u!1 &6166234370192335407
 GameObject:
   m_ObjectHideFlags: 0

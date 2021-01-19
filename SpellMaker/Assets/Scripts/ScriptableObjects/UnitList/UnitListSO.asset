@@ -14,8 +14,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   unitAvatarDatas:
   - unitClass: 0
-    unitAnimationController: {fileID: 5376762537685252426, guid: 272fae19d0dc61b41a405d81ff05a67e, type: 3}
+    unitClassMaster: {fileID: 2432950548528500608, guid: 272fae19d0dc61b41a405d81ff05a67e, type: 3}
+    abilities:
+    - {fileID: 11400000, guid: 2083cfc01a78f574cb2f4388c45a166e, type: 2}
+    - {fileID: 11400000, guid: 697710f7124081747ac57568aac22645, type: 2}
   - unitClass: 1
-    unitAnimationController: {fileID: 5856807393471953865, guid: 76b7efe2fe8dd924aa920ed881652235, type: 3}
+    unitClassMaster: {fileID: 4284904752862693999, guid: 76b7efe2fe8dd924aa920ed881652235, type: 3}
+    abilities:
+    - {fileID: 11400000, guid: 3c25c9f05af2d60408a5964030b72e7c, type: 2}
+    - {fileID: 11400000, guid: d1043d2bff834d442a78a33c156d3465, type: 2}
   - unitClass: 2
-    unitAnimationController: {fileID: 6554546024924814471, guid: 274c4c35ed05ea14c87492064b3cadfd, type: 3}
+    unitClassMaster: {fileID: 3381964551250889944, guid: 274c4c35ed05ea14c87492064b3cadfd, type: 3}
+    abilities:
+    - {fileID: 11400000, guid: f43316d6422b8164cac61ff0946ccf0d, type: 2}
+    - {fileID: 11400000, guid: 856af5ea5c7e1c846bec2a6193a9e863, type: 2}
