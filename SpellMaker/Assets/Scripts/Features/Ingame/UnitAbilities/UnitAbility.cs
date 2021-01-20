@@ -30,4 +30,16 @@ public static class UnitAbilityFactory
 
         return new UnitAbility(abilitySetupSO.TargetingType, abilitySetupSO.AbilitySize, actionEffects);
     }
+
+    public static List<UnitAbility> GetUnitAbilities(UnitDataSO unitDataSO)
+    {
+        List<UnitAbility> unitAbilities = new List<UnitAbility>();
+
+        foreach(var abilitySetup in unitDataSO.abilities)
+        {
+            unitAbilities.Add(GetUnitAbility(abilitySetup));
+        }
+
+        return unitAbilities;
+    }
 }
