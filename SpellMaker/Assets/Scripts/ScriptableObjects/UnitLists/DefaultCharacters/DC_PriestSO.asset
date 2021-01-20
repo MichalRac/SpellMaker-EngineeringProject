@@ -17,3 +17,4 @@ MonoBehaviour:
   abilities:
   - {fileID: 11400000, guid: f43316d6422b8164cac61ff0946ccf0d, type: 2}
   - {fileID: 11400000, guid: 856af5ea5c7e1c846bec2a6193a9e863, type: 2}
+  health: 40
