@@ -46,13 +46,13 @@ public class MatchPreparationMaster : MonoBehaviour
 
     private void OnMatchupConfirmed()
     {
-        List<Unit> playerCharacters = new List<Unit>();
-        List<Unit> opponentCharacters = new List<Unit>();
+        List<UnitIdentifier> playerCharacters = new List<UnitIdentifier>();
+        List<UnitIdentifier> opponentCharacters = new List<UnitIdentifier>();
 
         foreach (var slot in matchupData[UnitOwner.Player])
-            playerCharacters.Add(slot.Unit);
+            playerCharacters.Add(slot.UnitIdentifier);
         foreach (var slot in matchupData[UnitOwner.Opponent])
-            opponentCharacters.Add(slot.Unit);
+            opponentCharacters.Add(slot.UnitIdentifier);
 
         SceneStartupManager.OpenSceneWithArgs<BaseBattleSceneStartup, BaseBattleSceneArgs>
             (BaseBattleSceneBuilder.GetBaseBattleSceneArgs(playerCharacters, opponentCharacters));
@@ -64,7 +64,7 @@ public class MatchPreparationMaster : MonoBehaviour
 
         for(int i = slotId; i < matchupData[owner].Count; i++)
         {
-            matchupData[owner][i].Unit.unitIdentifier.uniqueId--;
+            matchupData[owner][i].UnitIdentifier.uniqueId--;
         }
 
         SetRemovableStates(owner);

@@ -11,7 +11,7 @@ public class CharacterSlotMaster : MonoBehaviour
 
     public UnitOwner UnitOwner { get; private set; }
     public UnitClass UnitClass { get; private set; }
-    public Unit Unit { get; private set; }
+    public UnitIdentifier UnitIdentifier { get; private set; }
 
     private UnityAction<UnitOwner, int> onCharacterRemoved;
 
@@ -22,10 +22,7 @@ public class CharacterSlotMaster : MonoBehaviour
         this.UnitOwner = owner;
         this.UnitClass = default;
 
-        this.Unit = new Unit(
-            new UnitIdentifier(owner, slotID), 
-            new UnitData(30, owner == UnitOwner.Player ? Color.green : Color.red, default)
-            );
+        this.UnitIdentifier = new UnitIdentifier(owner, slotID, default);
 
         UpdateDescription();
 
@@ -49,7 +46,7 @@ public class CharacterSlotMaster : MonoBehaviour
     {
         var enumLenght = System.Enum.GetNames(typeof(UnitClass)).Length;
         UnitClass = (int)UnitClass == enumLenght - 1 ? (UnitClass)0 : UnitClass + 1;
-        Unit.unitData.unitClass = UnitClass;
+        UnitIdentifier.unitClass = UnitClass;
         UpdateDescription();
     }
 
@@ -57,7 +54,7 @@ public class CharacterSlotMaster : MonoBehaviour
     {
         var enumLenght = System.Enum.GetNames(typeof(UnitClass)).Length;
         UnitClass = (int)UnitClass == 0 ? (UnitClass)enumLenght - 1 : UnitClass - 1;
-        Unit.unitData.unitClass = UnitClass;
+        UnitIdentifier.unitClass = UnitClass;
         UpdateDescription();
     }
 

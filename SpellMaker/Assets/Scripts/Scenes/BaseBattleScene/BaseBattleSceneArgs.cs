@@ -4,21 +4,21 @@ using UnityEngine;
 
 public sealed class BaseBattleSceneArgs : SceneArgs
 {
-    public List<Unit> PlayerCharacters { get; set; }
-    public List<Unit> OpponentCharacters { get; set; }
+    public List<UnitIdentifier> PlayerCharactersIdentifiers { get; set; }
+    public List<UnitIdentifier> OpponentCharactersIdentifiers { get; set; }
 }
 
 public static class BaseBattleSceneBuilder
 {
-    public static BaseBattleSceneArgs GetBaseBattleSceneArgs(List<Unit> PlayerCharacters, List<Unit> OpponentCharacters)
+    public static BaseBattleSceneArgs GetBaseBattleSceneArgs(List<UnitIdentifier> PlayerCharacters, List<UnitIdentifier> OpponentCharacters)
     {
         var baseBattleSceneArgs = new BaseBattleSceneArgs();
 
-        List<Unit> playerCharacters = PlayerCharacters;
-        List<Unit> opponentCharacters = OpponentCharacters;
+        List<UnitIdentifier> playerCharacters = PlayerCharacters;
+        List<UnitIdentifier> opponentCharacters = OpponentCharacters;
 
-        baseBattleSceneArgs.PlayerCharacters = playerCharacters;
-        baseBattleSceneArgs.OpponentCharacters = opponentCharacters;
+        baseBattleSceneArgs.PlayerCharactersIdentifiers = playerCharacters;
+        baseBattleSceneArgs.OpponentCharactersIdentifiers = opponentCharacters;
 
         return baseBattleSceneArgs;
     }

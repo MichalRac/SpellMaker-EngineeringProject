@@ -9,12 +9,12 @@ public class BaseBattleSceneStartup : SceneStartup<BaseBattleSceneStartup, BaseB
 
     protected override void OnAwake()
     {
-        // When BaseBattleScene is loaded first add one character for each team
-        if (Args.OpponentCharacters == null || Args.PlayerCharacters == null)
+        // When BaseBattleScene is loaded as first scene add one character for each team as a shortcut
+        if (Args.OpponentCharactersIdentifiers == null || Args.PlayerCharactersIdentifiers == null)
         {
             masterManager.Initialize(BaseBattleSceneBuilder.GetBaseBattleSceneArgs(
-                new List<Unit>() { UnitFactory.GetBasicUnit(UnitOwner.Player, 0) }, 
-                new List<Unit>() { UnitFactory.GetBasicUnit(UnitOwner.Opponent, 1) }));
+                new List<UnitIdentifier>() { new UnitIdentifier(UnitOwner.Player, 0, default) }, 
+                new List<UnitIdentifier>() { new UnitIdentifier(UnitOwner.Opponent, 1, default) }));
         }
         else
         {

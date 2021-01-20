@@ -68,4 +68,8 @@ public class AreaTargeter : MonoBehaviour, ITargeter
         }
     }
 
+    public void Move(Vector3 target)
+    {
+        transform.position = target;
+    }
 }

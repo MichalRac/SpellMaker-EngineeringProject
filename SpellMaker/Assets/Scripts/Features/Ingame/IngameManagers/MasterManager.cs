@@ -13,14 +13,14 @@ public class MasterManager : MonoBehaviour
     {
         var unitID = 0;
 
-        foreach(var unit in sceneArguments.PlayerCharacters)
+        foreach(var unitIdentifier in sceneArguments.PlayerCharactersIdentifiers)
         {
-            unitManager.SpawnUnit(UnitFactory.GetUnit(unit.unitIdentifier.owner, unitID++, unit.unitData));
+            unitManager.SpawnUnit(unitIdentifier);
         }
 
-        foreach (var unit in sceneArguments.OpponentCharacters)
+        foreach (var unitIdentifier in sceneArguments.OpponentCharactersIdentifiers)
         {
-            unitManager.SpawnUnit(UnitFactory.GetUnit(unit.unitIdentifier.owner, unitID++, unit.unitData));
+            unitManager.SpawnUnit(unitIdentifier);
         }
 
         turnManager.PrepareQueue(unitManager.GetAllActiveCharacters());

@@ -26,13 +26,13 @@ public class BaseUnitPresenter : MonoBehaviour, IUnit
     public void Setup(Unit unit)
     {
         characterLabel.color = unit.unitData.color;
-        characterLabel.text = $"ID: {unit.unitIdentifier.uniqueId}\nHP: {unit.unitData.hp}\nClass: {unit.unitData.unitClass}";
+        characterLabel.text = $"ID: {unit.unitIdentifier.uniqueId}\nHP: {unit.unitData.hp}\nClass: {unit.unitIdentifier.unitClass}";
     }
 
     public void RefreshLabel(Unit unit)
     {
         characterLabel.text = unit.unitData.hp > 0 
-            ? $"ID: {unit.unitIdentifier.uniqueId}\nHP: {unit.unitData.hp}\nClass: {unit.unitData.unitClass}"
+            ? $"ID: {unit.unitIdentifier.uniqueId}\nHP: {unit.unitData.hp}\nClass: {unit.unitIdentifier.unitClass}"
             : "DEAD";
     }
 

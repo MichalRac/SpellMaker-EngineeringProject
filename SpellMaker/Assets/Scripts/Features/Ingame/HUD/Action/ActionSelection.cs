@@ -10,6 +10,7 @@ public class ActionSelection : MonoBehaviour
 
     public void Setup(List<ActionSelectionEntryData> actionSelectionEntries)
     {
+        Discard();
         foreach(var actionSelectionEntryData in actionSelectionEntries)
         {
             Instantiate(actionSelectionEntryPrefab, actionSelectionsHolder).Setup(actionSelectionEntryData);

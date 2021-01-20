@@ -7,7 +7,7 @@ public class UnitManager : MonoBehaviour
     [SerializeField] private Transform unitRoot;
     [SerializeField] private BaseCharacterMaster baseCharacterMaster;
     [SerializeField] private SpawnpointFetcher spawnpointFetcher;
-    [SerializeField] private UnitListSO UnitAvatarList;
+    [SerializeField] private UnitListSO UnitListSO;
 
     [SerializeField] private TurnManager turnManager;
 
@@ -21,25 +21,29 @@ public class UnitManager : MonoBehaviour
         ActiveCharacters = new Dictionary<UnitIdentifier, BaseCharacterMaster>();
     }
 
-    public void SpawnUnit(Unit data)
+    public void SpawnUnit(UnitIdentifier unitIdentifier)
     {
         var character = Instantiate(baseCharacterMaster, unitRoot);
-        character.Initialize(data, UnitAvatarList.GetUnitAvatar(data.unitData.unitClass).unitClassMaster);
+        
+        var unitDataSO = UnitListSO.GetUnitDataSO(unitIdentifier.unitClass);
+        var unit = UnitFactory.GetUnit(unitIdentifier, unitDataSO);
+        
+        character.Initialize(unit, unitDataSO.unitClassMaster);
 
-        character.transform.position = data.unitIdentifier.owner == UnitOwner.Player 
+        character.transform.position = unitIdentifier.owner == UnitOwner.Player 
             ? spawnpointFetcher.GetNextPlayerStartPosition() 
             : spawnpointFetcher.GetNextEnemyStartPosition();
     
-        if(data.unitIdentifier.owner == UnitOwner.Opponent)
+        if(unitIdentifier.owner == UnitOwner.Opponent)
             character.transform.rotation = Quaternion.Euler(0f, 180f, 0f);
 
-        if (!ActiveCharacters.ContainsKey(data.unitIdentifier))
+        if (!ActiveCharacters.ContainsKey(unitIdentifier))
         {
-            ActiveCharacters.Add(data.unitIdentifier, character);
+            ActiveCharacters.Add(unitIdentifier, character);
         }
         else
         {
-            Debug.LogError($"[UnitManager] Unit {data.unitIdentifier.ToString()} was already spawned!");
+            Debug.LogError($"[UnitManager] Unit {unitIdentifier.ToString()} was already spawned!");
         }
     }
 
@@ -72,9 +76,8 @@ public class UnitManager : MonoBehaviour
     // Used implictly
     public void SpawnUnitCheat(bool isPlayer)
     {
-        var data = new Unit(new UnitIdentifier(isPlayer ? UnitOwner.Player : UnitOwner.Opponent, ActiveCharacters.Count + 1), new UnitData(50, isPlayer ? Color.blue : Color.black, UnitClass.Swordsman));
-
-        SpawnUnit(data);
-        turnManager.AddToQueue(data.unitIdentifier);
+        var newUnitIdentifier = new UnitIdentifier(isPlayer ? UnitOwner.Player : UnitOwner.Opponent, ActiveCharacters.Count + 1, default);
+        SpawnUnit(newUnitIdentifier);
+        turnManager.AddToQueue(newUnitIdentifier);
     }
 }

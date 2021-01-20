@@ -6,4 +6,5 @@ public interface ITargeter
 {
     List<BaseCharacterMaster> GetTargets();
     void Setup(AbilitySize abilitySize);
+    void Move(Vector3 displacement);
 }

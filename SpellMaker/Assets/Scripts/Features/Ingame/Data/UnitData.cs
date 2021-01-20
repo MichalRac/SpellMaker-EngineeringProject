@@ -21,11 +21,13 @@ public class UnitIdentifier : IEquatable<UnitIdentifier>
 {
     public UnitOwner owner;
     public int uniqueId;
+    public UnitClass unitClass;
 
-    public UnitIdentifier(UnitOwner owner, int uniqueId)
+    public UnitIdentifier(UnitOwner owner, int uniqueId, UnitClass unitClass)
     {
         this.owner = owner;
         this.uniqueId = uniqueId;
+        this.unitClass = unitClass;
     }
 
     public bool Equals(UnitIdentifier other)
@@ -44,33 +46,36 @@ public class UnitData
 {
     public int hp;
     public Color color;
-    public UnitClass unitClass;
 
-    public UnitData(int hp, Color color, UnitClass unitClass)
+    public UnitData(int hp, Color color)
     {
         this.hp = hp;
         this.color = color;
-        this.unitClass = unitClass;
     }
 }
 
 public static class UnitFactory
 {
-    public static Unit GetUnit(UnitOwner owner, int uniqueId, int hp, int characterId, Color color, UnitClass unitClass, List<UnitAbility> unitAbilities)
+    public static Unit GetUnit(UnitOwner owner, int uniqueId, int hp, Color color, UnitClass unitClass, List<UnitAbility> unitAbilities)
     {
         return new Unit(
-            new UnitIdentifier(owner, uniqueId), 
-            new UnitData(hp, color, unitClass)
+            new UnitIdentifier(owner, uniqueId, unitClass), 
+            new UnitData(hp, color)
             );    
     }
 
-    public static Unit GetUnit(UnitOwner owner, int uniqueId, UnitData unitData)
+    public static Unit GetUnit(UnitOwner owner, int uniqueId, UnitClass unitClass, UnitData unitData)
     {
-        return new Unit(new UnitIdentifier(owner, uniqueId), unitData);
+        return new Unit(new UnitIdentifier(owner, uniqueId, unitClass), unitData);
+    }
+
+    public static Unit GetUnit(UnitIdentifier unitIdentifier, UnitDataSO unitDataSO)
+    {
+        return new Unit(unitIdentifier, new UnitData(50, unitIdentifier.owner == UnitOwner.Player ? Color.green : Color.red));
     }
 
     public static Unit GetBasicUnit(UnitOwner owner, int uniqueId)
     {
-        return GetUnit(owner, uniqueId, new UnitData(50, owner == UnitOwner.Player ? Color.blue : Color.black, default));
+        return GetUnit(owner, uniqueId, default, new UnitData(50, owner == UnitOwner.Player ? Color.blue : Color.black));
     }
 }

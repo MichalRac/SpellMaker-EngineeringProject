@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "AbilitySetupSO", menuName = "ScriptableObjects/Abilities/AbilitySetupSO", order = 2)]
+[System.Serializable]
 public class AbilitySetupSO : ScriptableObject
 {
     public TargetingType TargetingType;

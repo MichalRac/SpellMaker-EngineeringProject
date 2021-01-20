@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0cec7979e1b60a440bd02e6c431f1704, type: 3}
+  m_Name: DC_PriestSO
+  m_EditorClassIdentifier: 
+  unitClass: 2
+  unitClassMaster: {fileID: 3381964551250889944, guid: 274c4c35ed05ea14c87492064b3cadfd, type: 3}
+  abilities:
+  - {fileID: 11400000, guid: f43316d6422b8164cac61ff0946ccf0d, type: 2}
+  - {fileID: 11400000, guid: 856af5ea5c7e1c846bec2a6193a9e863, type: 2}

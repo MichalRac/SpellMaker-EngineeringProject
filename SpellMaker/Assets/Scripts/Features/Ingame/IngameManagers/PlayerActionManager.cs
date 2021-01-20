@@ -10,6 +10,7 @@ public class PlayerActionManager : MonoBehaviour
         Disabled = 0,
         HUD = 1,
         Targeting = 2,
+        PickAbility = 3,
     }
 
     private bool actionMakingActive = false;
@@ -27,25 +28,23 @@ public class PlayerActionManager : MonoBehaviour
     {
         currentActionMode = actionMode;
 
-        if(actionMode == ActionMode.Targeting)
+        switch (actionMode)
         {
-            Targeting.gameObject.SetActive(true);
-            Targeting.Setup(OnTargetFound);
-        }
-        else
-        {
-            Targeting.gameObject.SetActive(false);
-        }
-
-        if (actionMode == ActionMode.HUD)
-        {
-            ActionSelection.gameObject.SetActive(true);
-            ActionSelection.Setup(GetBasicActions());
-        }
-        else
-        {
-            ActionSelection.gameObject.SetActive(false);
-            ActionSelection.Discard();
+            case ActionMode.HUD:
+                Targeting.gameObject.SetActive(false);
+                ActionSelection.gameObject.SetActive(true);
+                ActionSelection.Setup(GetBasicActions());
+                break;
+            case ActionMode.Targeting:
+                Targeting.gameObject.SetActive(true);
+                Targeting.Setup(OnTargetFound);
+                ActionSelection.Setup(GetTargetingActions());
+                break;
+            case ActionMode.PickAbility:
+                Targeting.gameObject.SetActive(false);
+                ActionSelection.gameObject.SetActive(true);
+                ActionSelection.Setup(GetAbilityActions(activeCharacter));
+                break;
         }
     }
 
@@ -87,8 +86,26 @@ public class PlayerActionManager : MonoBehaviour
         var results = new List<ActionSelectionEntryData>();
 
         results.Add(new ActionSelectionEntryData("Attack", () => SetActionMode(ActionMode.Targeting), null));
-        results.Add(new ActionSelectionEntryData("Ability", () => SetActionMode(ActionMode.Targeting), null));
+        results.Add(new ActionSelectionEntryData("Ability", () => SetActionMode(ActionMode.PickAbility), null));
         results.Add(new ActionSelectionEntryData("Quit", () => Application.Quit(), null));
+
+        return results;
+    }
+
+    private List<ActionSelectionEntryData> GetTargetingActions()
+    {
+        var results = new List<ActionSelectionEntryData>();
+
+        results.Add(new ActionSelectionEntryData("Back", () => SetActionMode(ActionMode.HUD), null));
+
+        return results;
+    }
+
+    private List<ActionSelectionEntryData> GetAbilityActions(BaseCharacterMaster activeUnit)
+    {
+        var results = new List<ActionSelectionEntryData>();
+
+        results.Add(new ActionSelectionEntryData("Back", () => SetActionMode(ActionMode.HUD), null));
 
         return results;
     }

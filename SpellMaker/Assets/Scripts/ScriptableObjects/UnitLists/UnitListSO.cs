@@ -5,9 +5,10 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "UnitListSO", menuName = "ScriptableObjects/Units/UnitListSO", order = 1)]
 public class UnitListSO : ScriptableObject
 {
-    public List<UnitListData> unitAvatarDatas;
+    public string title = "title";
+    public List<UnitDataSO> unitAvatarDatas;
 
-    public UnitListData GetUnitAvatar(UnitClass unitClass)
+    public UnitDataSO GetUnitDataSO(UnitClass unitClass)
     {
         return unitAvatarDatas.Find((data) => data.unitClass == unitClass);
     }
