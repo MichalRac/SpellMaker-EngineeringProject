@@ -45,12 +45,15 @@ public class UnitIdentifier : IEquatable<UnitIdentifier>
 public class UnitData
 {
     public int hp;
+    public int baseDamage;
+
     public Color color;
     public List<UnitAbility> unitAbilities;
 
-    public UnitData(int hp, Color color, List<UnitAbility> unitAbilities)
+    public UnitData(UnitDataSO unitDataSO, List<UnitAbility> unitAbilities, Color color)
     {
-        this.hp = hp;
+        this.hp = unitDataSO.health;
+        this.baseDamage = unitDataSO.baseDamage;
         this.color = color;
         this.unitAbilities = unitAbilities;
     }
@@ -61,6 +64,6 @@ public static class UnitFactory
     public static Unit GetUnit(UnitIdentifier unitIdentifier, UnitDataSO unitDataSO)
     {
         return new Unit(unitIdentifier, 
-            new UnitData(unitDataSO.health, unitIdentifier.owner == UnitOwner.Player ? Color.green : Color.red, UnitAbilityFactory.GetUnitAbilities(unitDataSO)));
+            new UnitData(unitDataSO, UnitAbilityFactory.GetUnitAbilities(unitDataSO), unitIdentifier.owner == UnitOwner.Player ? Color.green : Color.red));
     }
 }

@@ -8,7 +8,9 @@ public class UnitDataSO : ScriptableObject
 {
     public UnitClass unitClass;
     public UnitClassMaster unitClassMaster;
-    public List<AbilitySetupSO> abilities;
 
     public int health = 50;
+    public int baseDamage = 30;
+
+    public List<AbilitySetupSO> abilities;
 }

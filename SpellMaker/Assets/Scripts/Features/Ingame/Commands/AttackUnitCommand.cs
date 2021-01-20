@@ -22,7 +22,7 @@ public class AttackUnitCommand : IUnitCommand
         if (targetUnit is BaseCharacterMaster targetCharacterMaster)
         {
             targetCharacterMaster.TriggerDamagedAnim(null);
-            targetCharacterMaster.ReciveDamage(20);
+            targetCharacterMaster.ReciveDamage(activeCharacter.Unit.unitData.baseDamage);
         }
     }
 }
