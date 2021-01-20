@@ -12,9 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c02928f4ac4bf44eb4bbee1d85ab449, type: 3}
   m_Name: PriestAreaHealSkill
   m_EditorClassIdentifier: 
+  AbilityName: Heal Zone
   TargetingType: 2
   AbilitySize: 1
   AbilityEffects:
-  - AbilityEffect: 1
+  - AbilityEffectType: 0
     AbilityLenght: 0
     AbilityPower: 40

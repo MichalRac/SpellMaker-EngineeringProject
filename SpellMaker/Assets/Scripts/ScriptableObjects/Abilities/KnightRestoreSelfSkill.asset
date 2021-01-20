@@ -12,9 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c02928f4ac4bf44eb4bbee1d85ab449, type: 3}
   m_Name: KnightRestoreSelfSkill
   m_EditorClassIdentifier: 
+  AbilityName: Motivation
   TargetingType: 4
   AbilitySize: 0
   AbilityEffects:
-  - AbilityEffect: 1
+  - AbilityEffectType: 1
     AbilityLenght: 0
     AbilityPower: 100

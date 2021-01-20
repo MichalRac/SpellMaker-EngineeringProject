@@ -6,6 +6,7 @@ using UnityEngine;
 [System.Serializable]
 public class AbilitySetupSO : ScriptableObject
 {
+    public string AbilityName;
     public TargetingType TargetingType;
     public AbilitySize AbilitySize;
     public List<ActionEffectData> AbilityEffects;

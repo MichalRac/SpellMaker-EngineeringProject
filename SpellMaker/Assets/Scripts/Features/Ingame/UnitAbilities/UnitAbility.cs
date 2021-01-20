@@ -2,14 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UnitAbility : MonoBehaviour
+public class UnitAbility
 {
+    public string AbilityName { get; private set; }
     public TargetingType TargetingType { get; private set; }
     public AbilitySize AbilitySize { get; private set; }
     public List<ActionEffect> AbilityEffects { get; private set; }
 
-    public UnitAbility(TargetingType targetingType, AbilitySize abilitySize, List<ActionEffect> abilityEffects)
+    public UnitAbility(string abilityName, TargetingType targetingType, AbilitySize abilitySize, List<ActionEffect> abilityEffects)
     {
+        AbilityName = abilityName;
         TargetingType = targetingType;
         AbilitySize = abilitySize;
         AbilityEffects = abilityEffects;
@@ -28,7 +30,7 @@ public static class UnitAbilityFactory
             actionEffects.Add(ActionEffectFactory.GetActionEffect(actionEffectData));
         }
 
-        return new UnitAbility(abilitySetupSO.TargetingType, abilitySetupSO.AbilitySize, actionEffects);
+        return new UnitAbility(abilitySetupSO.AbilityName, abilitySetupSO.TargetingType, abilitySetupSO.AbilitySize, actionEffects);
     }
 
     public static List<UnitAbility> GetUnitAbilities(UnitDataSO unitDataSO)
@@ -37,7 +39,8 @@ public static class UnitAbilityFactory
 
         foreach(var abilitySetup in unitDataSO.abilities)
         {
-            unitAbilities.Add(GetUnitAbility(abilitySetup));
+            var unitAbility = GetUnitAbility(abilitySetup);
+            unitAbilities.Add(unitAbility);
         }
 
         return unitAbilities;

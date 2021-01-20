@@ -43,7 +43,7 @@ public class PlayerActionManager : MonoBehaviour
             case ActionMode.PickAbility:
                 Targeting.gameObject.SetActive(false);
                 ActionSelection.gameObject.SetActive(true);
-                ActionSelection.Setup(GetAbilityActions(activeCharacter));
+                ActionSelection.Setup(GetAbilityActions(activeCharacter.Unit.unitData));
                 break;
         }
     }
@@ -101,9 +101,14 @@ public class PlayerActionManager : MonoBehaviour
         return results;
     }
 
-    private List<ActionSelectionEntryData> GetAbilityActions(BaseCharacterMaster activeUnit)
+    private List<ActionSelectionEntryData> GetAbilityActions(UnitData activeUnitData)
     {
         var results = new List<ActionSelectionEntryData>();
+
+        foreach (var ability in activeUnitData.unitAbilities)
+        {
+            results.Add(new ActionSelectionEntryData(ability.AbilityName, () => SetActionMode(ActionMode.Targeting), null));
+        }
 
         results.Add(new ActionSelectionEntryData("Back", () => SetActionMode(ActionMode.HUD), null));
 
