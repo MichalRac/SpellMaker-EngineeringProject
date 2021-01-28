@@ -6,9 +6,9 @@ using UnityEngine.InputSystem;
 
 public class TargeterMaster : MonoBehaviour
 {
-    [SerializeField] private AreaTargeter pointTargeter;
-    [SerializeField] private AreaTargeter circleTargeter;
-    [SerializeField] private AreaTargeter lineTargeter;
+    [SerializeField] private PointTargeter pointTargeter;
+    [SerializeField] private CircleTargeter circleTargeter;
+    [SerializeField] private CircleTargeter lineTargeter;
     [SerializeField] private float targeterMovementSpeed = 1f;
 
     private ITargeter currentTargeter;
@@ -21,10 +21,10 @@ public class TargeterMaster : MonoBehaviour
         inputController = new InputController();
     }
 
-    public void StartTargeting(AbilitySetupSO abilitySetupSO)
+    public void StartTargeting(UnitAbility ability)
     {
 
-        switch (abilitySetupSO.TargetingType)
+        switch (ability.TargetingType)
         {
             case TargetingType.Single:
             case TargetingType.Self:
@@ -38,14 +38,21 @@ public class TargeterMaster : MonoBehaviour
                 break;
             case TargetingType.All:
             default:
-                Debug.Log($"[TargeterMaster] TargeterType unhandled {abilitySetupSO.TargetingType}");
+                Debug.Log($"[TargeterMaster] TargeterType unhandled {ability.TargetingType}");
                 break;
         }
+
+        currentTargeter.Setup(ability.AbilitySize);
 
         inputController.TargetPointer.Any.Enable();
         inputController.TargetPointer.Execute.Enable();
 
         inputController.TargetPointer.Execute.performed += Execute_performed;
+    }
+
+    public void CancelTargeting()
+    {
+        currentTargeter?.CancelTargeting();
     }
 
     private void Execute_performed(InputAction.CallbackContext obj)

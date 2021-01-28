@@ -9,14 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9c02928f4ac4bf44eb4bbee1d85ab449, type: 3}
-  m_Name: KnightRestoreSelfSkill
+  m_Script: {fileID: 11500000, guid: 56ab9a5ba14113d478c3cb8c610a7b29, type: 3}
+  m_Name: AttackUnitCommand
   m_EditorClassIdentifier: 
-  AbilityName: Motivation
-  TargetingType: 4
-  AbilitySize: 0
-  AbilityEffects:
-  - AbilityEffectType: 1
-    AbilityLenght: 0
-    AbilityPower: 100
-  CommandQueue: []

@@ -8,13 +8,17 @@ public class UnitAbility
     public TargetingType TargetingType { get; private set; }
     public AbilitySize AbilitySize { get; private set; }
     public List<ActionEffect> AbilityEffects { get; private set; }
+    public Queue<AbstractUnitCommand> AbilityCommandQueue { get; private set; }
 
-    public UnitAbility(string abilityName, TargetingType targetingType, AbilitySize abilitySize, List<ActionEffect> abilityEffects)
+    public UnitAbility(string abilityName, TargetingType targetingType, AbilitySize abilitySize, List<ActionEffect> abilityEffects, List<AbstractUnitCommand> commands)
     {
         AbilityName = abilityName;
         TargetingType = targetingType;
         AbilitySize = abilitySize;
         AbilityEffects = abilityEffects;
+        AbilityCommandQueue = new Queue<AbstractUnitCommand>();
+        foreach (var command in commands)
+            AbilityCommandQueue.Enqueue(command);
     }
 
 }
@@ -30,7 +34,7 @@ public static class UnitAbilityFactory
             actionEffects.Add(ActionEffectFactory.GetActionEffect(actionEffectData));
         }
 
-        return new UnitAbility(abilitySetupSO.AbilityName, abilitySetupSO.TargetingType, abilitySetupSO.AbilitySize, actionEffects);
+        return new UnitAbility(abilitySetupSO.AbilityName, abilitySetupSO.TargetingType, abilitySetupSO.AbilitySize, actionEffects, abilitySetupSO.CommandQueue);
     }
 
     public static List<UnitAbility> GetUnitAbilities(UnitDataSO unitDataSO)

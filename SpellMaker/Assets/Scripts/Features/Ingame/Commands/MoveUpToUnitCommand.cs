@@ -3,18 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MoveUpToUnitCommand : IUnitCommand
+[CreateAssetMenu(fileName = "MoveUpToUnitCommand", menuName = "ScriptableObjects/Commands/Movement/MoveUpToUnitCommand")]
+public class MoveUpToUnitCommand : AbstractUnitCommand
 {
-    private IUnit targetUnit;
-    public MoveUpToUnitCommand(BaseCharacterMaster activeCharacter, IUnit targetUnit) : base(activeCharacter)
+    public override void Execute(CommonCommandData commandData, OptionalCommandData optionalCommandData = null)
     {
-        this.targetUnit = targetUnit;
+        commandData.actor.TriggerMoveToUnit(commandData.targets[0], commandData.onCommandCompletedCallback);
     }
-
-    public override void Execute(Action onCommandFinished)
-    {
-        activeCharacter.TriggerMoveToUnit(targetUnit, onCommandFinished);
-    }
-
-
 }

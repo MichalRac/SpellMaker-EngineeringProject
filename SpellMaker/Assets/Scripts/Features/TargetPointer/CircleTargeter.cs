@@ -2,20 +2,22 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AreaTargeter : MonoBehaviour, ITargeter
+public class CircleTargeter : MonoBehaviour, ITargeter
 {
     private List<BaseCharacterMaster> unitsInArea;
     private Quaternion rotation;
     [SerializeField] private SamDriver.Decal.DecalMesh decal;
     [SerializeField] private TargeterScaleSO targeterScaleSO;
 
-    public List<BaseCharacterMaster> GetTargets()
+    public List<BaseCharacterMaster> ExecuteTargeting()
     {
+        transform.parent.gameObject.SetActive(false);
         return unitsInArea;
     }
 
     public void Setup(AbilitySize abilitySize)
     {
+        transform.parent.gameObject.SetActive(true);
         var targeterScale = targeterScaleSO.GetAbilityTargeterScale(abilitySize);
         transform.parent.localScale = new Vector3(targeterScale, 1f, targeterScale);
     }
@@ -68,8 +70,13 @@ public class AreaTargeter : MonoBehaviour, ITargeter
         }
     }
 
-    public void Move(Vector3 target)
+    public void Move(Vector3 deltaPosition)
     {
-        transform.position = target;
+        transform.parent.position = transform.parent.position + deltaPosition;
+    }
+
+    public void CancelTargeting()
+    {
+        transform.parent.gameObject.SetActive(false);
     }
 }

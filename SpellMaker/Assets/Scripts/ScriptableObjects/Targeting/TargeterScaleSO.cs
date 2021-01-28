@@ -34,6 +34,8 @@ public class TargeterScaleSO : ScriptableObject
 
 public enum AbilitySize
 {
+    None = -1,
+
     XS = 0,
     S = 1,
     M = 2,

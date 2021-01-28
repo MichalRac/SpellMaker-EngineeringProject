@@ -4,7 +4,8 @@ using UnityEngine;
 
 public interface ITargeter
 {
-    List<BaseCharacterMaster> GetTargets();
     void Setup(AbilitySize abilitySize);
+    List<BaseCharacterMaster> ExecuteTargeting();
+    void CancelTargeting();
     void Move(Vector3 displacement);
 }

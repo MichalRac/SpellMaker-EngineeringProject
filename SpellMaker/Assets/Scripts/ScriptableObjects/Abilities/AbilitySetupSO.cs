@@ -10,6 +10,7 @@ public class AbilitySetupSO : ScriptableObject
     public TargetingType TargetingType;
     public AbilitySize AbilitySize;
     public List<ActionEffectData> AbilityEffects;
+    public List<AbstractUnitCommand> CommandQueue;
 }
 
 [System.Serializable]

@@ -3,26 +3,29 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AttackUnitCommand : IUnitCommand
+[CreateAssetMenu(fileName = "AttackUnitCommand", menuName = "ScriptableObjects/Commands/Damage/AttackUnitCommand")]
+public class AttackUnitCommand : AbstractUnitCommand
 {
-    private IUnit targetUnit;
-
-    public AttackUnitCommand(BaseCharacterMaster activeCharacter, IUnit targetUnit) : base(activeCharacter)
+    public override void Execute(CommonCommandData commandData, OptionalCommandData optionalCommandData = null)
     {
-        this.targetUnit = targetUnit;
-    }
-
-    public override void Execute(Action onCommandFinished)
-    {
-        activeCharacter.TriggerAttackAnim(onCommandFinished, AttackReaction);
-    }
-
-    private void AttackReaction()
-    {
-        if (targetUnit is BaseCharacterMaster targetCharacterMaster)
+        if (commandData.targets.Count == 0)
         {
-            targetCharacterMaster.TriggerDamagedAnim(null);
-            targetCharacterMaster.ReciveDamage(activeCharacter.Unit.unitData.baseDamage);
+            Debug.Log("[AttackUnitCommand] Attempting to attack multiple targets with no targets");
+            return;
         }
+
+        if (commandData.targets.Count > 1)
+        {
+            Debug.Log("[AttackUnitCommand] Attempting to attack multiple targets with single AttackUnitCommand");
+        }
+
+        commandData.actor.TriggerAttackAnim(commandData.onCommandCompletedCallback, () => 
+        {
+            if (commandData.targets[0] == null)
+                return;
+
+            commandData.targets[0].TriggerDamagedAnim(null);
+            commandData.targets[0].ReciveDamage(commandData.actor.Unit.unitData.baseDamage);
+        });
     }
 }

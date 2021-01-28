@@ -5,5 +5,5 @@ using UnityEngine;
 
 public interface ICommand 
 {
-    void Execute(Action onCommandCompleted);
+    void Execute(CommonCommandData commandData, OptionalCommandData optionalData = null);
 }

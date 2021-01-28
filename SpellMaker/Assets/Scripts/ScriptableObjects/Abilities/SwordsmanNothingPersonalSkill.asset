@@ -19,3 +19,6 @@ MonoBehaviour:
   - AbilityEffectType: 0
     AbilityLenght: 0
     AbilityPower: 100
+  CommandQueue:
+  - {fileID: 11400000, guid: d7794c4545194ed489f88d2ecd675528, type: 2}
+  - {fileID: 11400000, guid: 1540dc98a0534d9429eeda1f24081352, type: 2}

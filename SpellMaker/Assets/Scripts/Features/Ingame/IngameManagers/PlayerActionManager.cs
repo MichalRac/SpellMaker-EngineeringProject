@@ -22,11 +22,12 @@ public class PlayerActionManager : MonoBehaviour
     Action onActionPhaseCompleted;
 
     [SerializeField] private ActionSelection ActionSelection;
-    [SerializeField] private TargetPointerMaster Targeting;
+    [SerializeField] private TargeterMaster Targeting;
 
-    public void SetActionMode(ActionMode actionMode)
+    public void SetActionMode(ActionMode actionMode, UnitAbility ability = null)
     {
         currentActionMode = actionMode;
+        Targeting.CancelTargeting();
 
         switch (actionMode)
         {
@@ -37,7 +38,7 @@ public class PlayerActionManager : MonoBehaviour
                 break;
             case ActionMode.Targeting:
                 Targeting.gameObject.SetActive(true);
-                Targeting.Setup(OnTargetFound);
+                Targeting.StartTargeting(ability);
                 ActionSelection.Setup(GetTargetingActions());
                 break;
             case ActionMode.PickAbility:
@@ -59,13 +60,13 @@ public class PlayerActionManager : MonoBehaviour
         activeCharacter.SetHighlight(true);
     }
 
-    public void ExecuteNextAction()
+    public void ExecuteNextAction(CommonCommandData commonCommandData, OptionalCommandData optionalCommandData)
     {
         SetActionMode(ActionMode.Disabled);
 
         if (enqueuedCommands.Count > 0)
         {
-            enqueuedCommands.Dequeue().Execute(ExecuteNextAction);
+            enqueuedCommands.Dequeue().Execute(commonCommandData, optionalCommandData);
         }
         else
         {
@@ -85,7 +86,7 @@ public class PlayerActionManager : MonoBehaviour
     {
         var results = new List<ActionSelectionEntryData>();
 
-        results.Add(new ActionSelectionEntryData("Attack", () => SetActionMode(ActionMode.Targeting), null));
+        results.Add(new ActionSelectionEntryData("Attack", () => SetActionMode(ActionMode.Targeting, GetAttackUnitAbility()), null));
         results.Add(new ActionSelectionEntryData("Ability", () => SetActionMode(ActionMode.PickAbility), null));
         results.Add(new ActionSelectionEntryData("Quit", () => Application.Quit(), null));
 
@@ -107,7 +108,7 @@ public class PlayerActionManager : MonoBehaviour
 
         foreach (var ability in activeUnitData.unitAbilities)
         {
-            results.Add(new ActionSelectionEntryData(ability.AbilityName, () => SetActionMode(ActionMode.Targeting), null));
+            results.Add(new ActionSelectionEntryData(ability.AbilityName, () => SetActionMode(ActionMode.Targeting, ability), null));
         }
 
         results.Add(new ActionSelectionEntryData("Back", () => SetActionMode(ActionMode.HUD), null));
@@ -115,18 +116,33 @@ public class PlayerActionManager : MonoBehaviour
         return results;
     }
 
-    private void OnTargetFound(IUnit selectedUnit, Vector3 position)
+    private void OnTargetsFound(List<BaseCharacterMaster> selectedUnits, Vector3 position)
     {
-        if(selectedUnit == null)
+        if(selectedUnits == null || selectedUnits.Count == 0)
         {
-            enqueuedCommands.Enqueue(new MoveUnitCommand(activeCharacter, position));
-            ExecuteNextAction();
+            enqueuedCommands.Enqueue(new MoveUnitCommand());
         }
         else
         {
-            enqueuedCommands.Enqueue(new MoveUpToUnitCommand(activeCharacter, selectedUnit));
-            enqueuedCommands.Enqueue(new AttackUnitCommand(activeCharacter, selectedUnit));
-            ExecuteNextAction();
+            enqueuedCommands.Enqueue(new MoveUpToUnitCommand());
+            enqueuedCommands.Enqueue(new AttackUnitCommand());
         }
+    }
+
+    private UnitAbility GetAttackUnitAbility()
+    {
+        return new UnitAbility("attack",
+                TargetingType.Single, AbilitySize.None,
+                new List<ActionEffect>() { new DamageEffect(0, 30) },
+                GetAttackCommandList());
+    }
+
+    private List<AbstractUnitCommand> GetAttackCommandList()
+    {
+        return new List<AbstractUnitCommand>()
+        {
+            new MoveUpToUnitCommand(),
+            new AttackUnitCommand(),
+        };
     }
 }

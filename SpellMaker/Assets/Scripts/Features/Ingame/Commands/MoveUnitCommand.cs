@@ -3,17 +3,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MoveUnitCommand : IUnitCommand
+[CreateAssetMenu(fileName = "MoveUnitCommand", menuName = "ScriptableObjects/Commands/Movement/MoveUnitCommand")]
+public class MoveUnitCommand : AbstractUnitCommand
 {
-    private Vector3 target;
-
-    public MoveUnitCommand(BaseCharacterMaster activeCharacter, Vector3 target) : base(activeCharacter) 
+    public override void Execute(CommonCommandData commandData, OptionalCommandData optionalCommandData = null)
     {
-        this.target = target;
-    }
+        if(optionalCommandData == null || optionalCommandData.position == null)
+        {
+            Debug.Log("[MoveUnitCommand] Move unit command requires OptionalCommandData object with position");
+        }
 
-    public override void Execute(Action onCommandFinished)
-    {
-        activeCharacter.TriggerMoveToEmpty(target, onCommandFinished);
+        commandData.actor.TriggerMoveToEmpty(optionalCommandData.position, commandData.onCommandCompletedCallback);
     }
 }
