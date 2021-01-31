@@ -138,6 +138,7 @@ MonoBehaviour:
   matchX: 0
   matchY: 1
   matchZ: 1
+  rotationOffset: {x: 0, y: 0, z: 0}
 --- !u!111 &1764787847
 Animation:
   m_ObjectHideFlags: 0

@@ -20,3 +20,4 @@ MonoBehaviour:
     AbilityLenght: 0
     AbilityPower: 100
   CommandQueue: []
+  AffectedCharacters: 0100000003000000

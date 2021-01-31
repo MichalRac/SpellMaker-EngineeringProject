@@ -38,7 +38,7 @@ public class PlayerActionManager : MonoBehaviour
                 break;
             case ActionMode.Targeting:
                 Targeting.gameObject.SetActive(true);
-                Targeting.StartTargeting(ability);
+                Targeting.StartTargeting(activeCharacter.transform.position, ability, null);
                 ActionSelection.Setup(GetTargetingActions());
                 break;
             case ActionMode.PickAbility:
@@ -134,7 +134,8 @@ public class PlayerActionManager : MonoBehaviour
         return new UnitAbility("attack",
                 TargetingType.Single, AbilitySize.None,
                 new List<ActionEffect>() { new DamageEffect(0, 30) },
-                GetAttackCommandList());
+                GetAttackCommandList(),
+                new List<UnitOwner> { UnitOwner.Opponent });
     }
 
     private List<AbstractUnitCommand> GetAttackCommandList()

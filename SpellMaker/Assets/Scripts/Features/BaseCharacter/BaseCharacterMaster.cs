@@ -26,6 +26,11 @@ public class BaseCharacterMaster : MonoBehaviour, IUnit
         baseUnitPresenter.SetSelect(value);
     }
 
+    public void SetTargeted(bool value)
+    {
+        baseUnitPresenter.SetTargeted(value);
+    }
+
     public void Initialize(Unit data, UnitClassMaster unitClassMaster)
     {
         Unit = data;
@@ -76,5 +81,4 @@ public class BaseCharacterMaster : MonoBehaviour, IUnit
         Unit.unitData.hp -= damage;
         baseUnitPresenter.RefreshLabel(Unit);
     }
-
 }

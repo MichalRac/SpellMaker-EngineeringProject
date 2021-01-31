@@ -6,35 +6,45 @@ using UnityEngine.InputSystem;
 
 public class TargeterMaster : MonoBehaviour
 {
+    [SerializeField] private PointTargeter basicPointTargeter;
     [SerializeField] private PointTargeter pointTargeter;
     [SerializeField] private CircleTargeter circleTargeter;
-    [SerializeField] private CircleTargeter lineTargeter;
+    [SerializeField] private LineTargeter lineTargeter;
+
     [SerializeField] private float targeterMovementSpeed = 1f;
 
     private ITargeter currentTargeter;
+    private ITargeter additionalTargeter;
+
     private InputController inputController;
     private Camera mainCamera;
+    private Action<TargetingResultData> targetingResultCallback;
 
-    private void Awake()
+
+    void Awake()
     {
         mainCamera = Camera.main;
         inputController = new InputController();
     }
 
-    public void StartTargeting(UnitAbility ability)
+    public void StartTargeting(Vector3 initPos, UnitAbility ability, Action<TargetingResultData> targetingResultCallback)
     {
+        this.targetingResultCallback = targetingResultCallback;
 
         switch (ability.TargetingType)
         {
             case TargetingType.Single:
             case TargetingType.Self:
                 currentTargeter = pointTargeter;
+                additionalTargeter = null;
                 break;
             case TargetingType.Line:
                 currentTargeter = lineTargeter;
+                additionalTargeter = basicPointTargeter;
                 break;
             case TargetingType.Circle:
                 currentTargeter = circleTargeter;
+                additionalTargeter = basicPointTargeter;
                 break;
             case TargetingType.All:
             default:
@@ -42,7 +52,9 @@ public class TargeterMaster : MonoBehaviour
                 break;
         }
 
-        currentTargeter.Setup(ability.AbilitySize);
+        
+        currentTargeter.Setup(initPos, ability.AbilitySize, ability.TargetGroup);
+        additionalTargeter?.Setup(initPos, AbilitySize.None, null);
 
         inputController.TargetPointer.Any.Enable();
         inputController.TargetPointer.Execute.Enable();
@@ -50,14 +62,20 @@ public class TargeterMaster : MonoBehaviour
         inputController.TargetPointer.Execute.performed += Execute_performed;
     }
 
+
     public void CancelTargeting()
     {
         currentTargeter?.CancelTargeting();
+        additionalTargeter?.CancelTargeting();
+        inputController?.Disable();
     }
 
     private void Execute_performed(InputAction.CallbackContext obj)
     {
-        throw new NotImplementedException();
+        var targets = currentTargeter.ExecuteTargeting();
+        additionalTargeter?.CancelTargeting();
+        targetingResultCallback?.Invoke(targets);
+        inputController.Disable();
     }
 
     private void OnDisable()
@@ -92,5 +110,6 @@ public class TargeterMaster : MonoBehaviour
         var deltaMovement = transform.position + direction * targeterMovementSpeed * Time.deltaTime;
 
         currentTargeter.Move(deltaMovement);
+        additionalTargeter?.Move(deltaMovement);
     }
 }

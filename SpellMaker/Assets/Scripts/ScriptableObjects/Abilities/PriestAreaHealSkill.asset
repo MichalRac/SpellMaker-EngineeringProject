@@ -19,3 +19,5 @@ MonoBehaviour:
   - AbilityEffectType: 0
     AbilityLenght: 0
     AbilityPower: 40
+  CommandQueue: []
+  AffectedCharacters: 0100000003000000

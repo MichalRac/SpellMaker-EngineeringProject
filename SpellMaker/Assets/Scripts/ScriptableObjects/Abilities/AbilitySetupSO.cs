@@ -11,6 +11,7 @@ public class AbilitySetupSO : ScriptableObject
     public AbilitySize AbilitySize;
     public List<ActionEffectData> AbilityEffects;
     public List<AbstractUnitCommand> CommandQueue;
+    public List<UnitOwner> AffectedCharacters;
 }
 
 [System.Serializable]

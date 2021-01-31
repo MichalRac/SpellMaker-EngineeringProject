@@ -8,11 +8,14 @@ using System;
 public class BaseUnitPresenter : MonoBehaviour, IUnit
 {
     // Start is called before the first frame update
-    [SerializeField] private GameObject selectionProjector;
     [SerializeField] private GameObject highlightProjector;
     [SerializeField] private GameObject shadowProjector;
+    [SerializeField] private GameObject redProjector;
+    [SerializeField] private GameObject circleProjector;
 
     [SerializeField] private TextMeshPro characterLabel;
+
+    private bool isHighlighted = false;
 
     // TODO cache this
     public Transform GetTransform() => GetComponent<Transform>();
@@ -36,14 +39,23 @@ public class BaseUnitPresenter : MonoBehaviour, IUnit
             : "DEAD";
     }
 
-    public void SetSelect(bool value)
-    {
-        selectionProjector.gameObject.SetActive(value);
-    }
-
     public void SetHighlight(bool value)
     {
         highlightProjector.gameObject.SetActive(value);
         shadowProjector.gameObject.SetActive(!value);
+        isHighlighted = value;
+    }
+    public void SetSelect(bool value)
+    {
+        circleProjector.gameObject.SetActive(value);
+    }
+
+    public void SetTargeted(bool value)
+    {
+        redProjector.SetActive(value);
+        if(isHighlighted)
+        {
+            highlightProjector.SetActive(!value);
+        }
     }
 }

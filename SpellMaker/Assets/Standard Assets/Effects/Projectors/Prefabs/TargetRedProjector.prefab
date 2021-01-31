@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &1057743107945369564
+--- !u!1 &3969845448416906010
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,56 +8,56 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1057743107945403388}
-  - component: {fileID: 1057743107934100766}
-  - component: {fileID: 6982533553080565030}
-  m_Layer: 0
-  m_Name: BlobAreaProjector
+  - component: {fileID: 3969845448416483130}
+  - component: {fileID: 3969845448426084824}
+  - component: {fileID: 3111350831013424091}
+  m_Layer: 10
+  m_Name: TargetRedProjector
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!4 &1057743107945403388
+  m_IsActive: 1
+--- !u!4 &3969845448416483130
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1057743107945369564}
+  m_GameObject: {fileID: 3969845448416906010}
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 4, z: 0}
+  m_LocalPosition: {x: 0, y: 2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
---- !u!119 &1057743107934100766
+--- !u!119 &3969845448426084824
 Projector:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1057743107945369564}
+  m_GameObject: {fileID: 3969845448416906010}
   m_Enabled: 1
   serializedVersion: 2
   m_NearClipPlane: 0.1
-  m_FarClipPlane: 50
+  m_FarClipPlane: 10
   m_FieldOfView: 30
   m_AspectRatio: 1
   m_Orthographic: 1
   m_OrthographicSize: 1
-  m_Material: {fileID: 2100000, guid: e9f9a4625d4fb884aa355fa114ab1e6b, type: 2}
+  m_Material: {fileID: 2100000, guid: b26dad2b4012c524b8d7793ab20d319f, type: 2}
   m_IgnoreLayers:
     serializedVersion: 2
-    m_Bits: 567
---- !u!114 &6982533553080565030
+    m_Bits: 311
+--- !u!114 &3111350831013424091
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1057743107945369564}
+  m_GameObject: {fileID: 3969845448416906010}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fa3e43c58dd834028baaf021101d7ca8, type: 3}

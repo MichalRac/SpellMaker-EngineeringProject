@@ -14,6 +14,10 @@ public static class GeneralExtensions
 
     private static System.Random rng = new System.Random();
 
+    //  Returns a random number between −1 and 1, where values around zero are more likely.
+    public static float RandomBinomial() => Random.value - Random.value;
+    public static float RandomBinomialMultiplied(float multiplier) => RandomBinomial() * multiplier;
+
     public static void Shuffle<T>(this IList<T> list)
     {
         int n = list.Count;
@@ -35,5 +39,22 @@ public static class GeneralExtensions
             queue.Enqueue(item);
         }
         return queue;
+    }
+
+    public static UnitIdentifier GetUnitIdentifier(this BaseCharacterMaster baseCharacterMaster)
+    {
+        return baseCharacterMaster.Unit.unitIdentifier;
+    }
+
+    public static List<UnitIdentifier> GetUnitIdentifiers(this List<BaseCharacterMaster> baseCharacterMasters)
+    {
+        var identifiers = new List<UnitIdentifier>();
+
+        foreach(var bcm in baseCharacterMasters)
+        {
+            identifiers.Add(bcm.Unit.unitIdentifier);
+        }
+
+        return identifiers;
     }
 }

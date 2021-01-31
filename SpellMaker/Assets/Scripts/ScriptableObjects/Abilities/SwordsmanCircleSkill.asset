@@ -10,14 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9c02928f4ac4bf44eb4bbee1d85ab449, type: 3}
-  m_Name: SwordsmanLineSkill
+  m_Name: SwordsmanCircleSkill
   m_EditorClassIdentifier: 
-  AbilityName: Magic Slash
-  TargetingType: 1
-  AbilitySize: 2
+  AbilityName: Example Circle
+  TargetingType: 2
+  AbilitySize: 4
   AbilityEffects:
   - AbilityEffectType: 0
     AbilityLenght: 0
-    AbilityPower: 20
-  CommandQueue: []
+    AbilityPower: 5
+  CommandQueue:
+  - {fileID: 11400000, guid: 0c52f9b17ef9896489c181e4d769e0e9, type: 2}
   AffectedCharacters: 0200000003000000

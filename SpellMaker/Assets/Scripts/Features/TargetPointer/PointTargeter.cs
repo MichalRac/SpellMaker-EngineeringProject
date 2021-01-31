@@ -5,15 +5,19 @@ using UnityEngine;
 public class PointTargeter : MonoBehaviour, ITargeter
 {
     private List<BaseCharacterMaster> unitsInArea;
+    private List<UnitOwner> targetGroup;
 
-    public void Setup(AbilitySize abilitySize)
+    public void Setup(Vector3 initPos, AbilitySize abilitySize, List<UnitOwner> targetGroup)
     {
-        transform.gameObject.SetActive(true);
+        gameObject.SetActive(true);
+        transform.position = new Vector3(initPos.x, transform.position.y, initPos.z);
+        this.targetGroup = targetGroup;
     }
 
-    public List<BaseCharacterMaster> ExecuteTargeting()
+    public TargetingResultData ExecuteTargeting()
     {
-        return unitsInArea;
+        gameObject.SetActive(false);
+        return new TargetingResultData(transform.position, unitsInArea.GetUnitIdentifiers());
     }
 
     public void Move(Vector3 deltaPosition)
@@ -23,7 +27,14 @@ public class PointTargeter : MonoBehaviour, ITargeter
 
     public void CancelTargeting()
     {
-        transform.gameObject.SetActive(false);
+        gameObject.SetActive(false);
+
+        foreach (var unit in unitsInArea)
+        {
+            unit.SetHighlight(false);
+        }
+        unitsInArea.Clear();
+
     }
 
     private void OnEnable()
@@ -41,8 +52,12 @@ public class PointTargeter : MonoBehaviour, ITargeter
         var bcm = other.GetComponent<BaseCharacterMaster>();
         if (bcm != null)
         {
+            if(!targetGroup.Contains(bcm.Unit.unitIdentifier.owner))
+            {
+                return;
+            }
             unitsInArea.Add(bcm);
-            bcm.SetHighlight(true);
+            bcm.SetTargeted(true);
         }
     }
 
@@ -51,8 +66,12 @@ public class PointTargeter : MonoBehaviour, ITargeter
         var bcm = other.GetComponent<BaseCharacterMaster>();
         if (bcm != null && unitsInArea.Contains(bcm))
         {
+            if (!targetGroup.Contains(bcm.Unit.unitIdentifier.owner))
+            {
+                return;
+            }
             unitsInArea.Remove(bcm);
-            bcm.SetHighlight(false);
+            bcm.SetTargeted(false);
         }
     }
 }
