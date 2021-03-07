@@ -13,8 +13,8 @@ public class BaseBattleSceneStartup : SceneStartup<BaseBattleSceneStartup, BaseB
         if (Args.OpponentCharactersIdentifiers == null || Args.PlayerCharactersIdentifiers == null)
         {
             masterManager.Initialize(BaseBattleSceneBuilder.GetBaseBattleSceneArgs(
-                new List<UnitIdentifier>() { new UnitIdentifier(UnitOwner.Player, 0, default) }, 
-                new List<UnitIdentifier>() { new UnitIdentifier(UnitOwner.Opponent, 1, default) }));
+                new List<UnitIdentifier>() { new UnitIdentifier(0, 0, default) }, 
+                new List<UnitIdentifier>() { new UnitIdentifier(1, 1, default) }));
         }
         else
         {

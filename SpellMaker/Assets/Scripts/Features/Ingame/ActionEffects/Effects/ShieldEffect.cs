@@ -13,4 +13,18 @@ public class ShieldEffect : ActionEffect
     {
 
     }
+
+    public override void Affect(BaseCharacterMaster unitAffected, bool decrementTurnsLeft)
+    {
+        base.Affect(unitAffected, decrementTurnsLeft);
+
+        unitAffected.ToggleShieldVisuals(true);
+    }
+
+    public override void OnRemoved(BaseCharacterMaster unitAffected)
+    {
+        base.OnRemoved(unitAffected);
+
+        unitAffected.ToggleShieldVisuals(false);
+    }
 }

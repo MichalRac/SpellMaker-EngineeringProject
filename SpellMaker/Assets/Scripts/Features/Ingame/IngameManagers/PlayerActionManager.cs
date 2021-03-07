@@ -13,10 +13,9 @@ public class PlayerActionManager : MonoBehaviour
         PickAbility = 3,
     }
 
-    private bool actionMakingActive = false;
-    private bool isHUDActive = false;
-
     BaseCharacterMaster activeCharacter;
+    UnitAbility activeAbility;
+
     ActionMode currentActionMode;
     Queue<ICommand> enqueuedCommands;
     Action onActionPhaseCompleted;
@@ -27,6 +26,8 @@ public class PlayerActionManager : MonoBehaviour
     public void SetActionMode(ActionMode actionMode, UnitAbility ability = null)
     {
         currentActionMode = actionMode;
+        activeAbility = ability;
+
         Targeting.CancelTargeting();
 
         switch (actionMode)
@@ -38,45 +39,56 @@ public class PlayerActionManager : MonoBehaviour
                 break;
             case ActionMode.Targeting:
                 Targeting.gameObject.SetActive(true);
-                Targeting.StartTargeting(activeCharacter.transform.position, ability, null);
+                Targeting.StartTargeting(activeCharacter.Unit.UnitIdentifier.TeamId, activeCharacter.transform.position, ability, OnTargetsChosen);
                 ActionSelection.Setup(GetTargetingActions());
                 break;
             case ActionMode.PickAbility:
                 Targeting.gameObject.SetActive(false);
                 ActionSelection.gameObject.SetActive(true);
-                ActionSelection.Setup(GetAbilityActions(activeCharacter.Unit.unitData));
+                ActionSelection.Setup(GetAbilityActions());
                 break;
         }
     }
 
+    public void OnTargetsChosen(TargetingResultData targetingResultData)
+    {
+        if(activeAbility == null)
+        {
+            Debug.LogError("[PlayerActionManager] Trying to dispatch OnTargetsChosen with no active ability!");
+            return;
+        }
+
+        Debug.Log($"Dispatching ability {activeAbility.AbilityName} on {targetingResultData.targetPoint} with {targetingResultData.unitIdentifiers.Count}");
+
+        var commandQueue = new Queue<AbstractUnitCommand>(activeAbility.AbilityCommandQueue);
+        var commonCommandData = new CommonCommandData(activeCharacter.GetUnitIdentifier(), targetingResultData.unitIdentifiers, activeAbility, null);
+        var optionalCommandData = new OptionalCommandData(targetingResultData.targetPoint);
+
+        new AbilitySequenceHandler(commandQueue, commonCommandData, optionalCommandData, EndPlayerActionPhase).Begin();
+
+    }
+
     public void BeginPlayerActionPhase(BaseCharacterMaster activeCharacter, Action onPhaseCompleted)
     {
-        actionMakingActive = true;
-
-        SetActionMode(ActionMode.HUD);
         enqueuedCommands = new Queue<ICommand>();
         onActionPhaseCompleted = onPhaseCompleted;
         this.activeCharacter = activeCharacter;
+
+        if(activeCharacter.Unit.UnitState.IsTaunted(out var tauntEffect))
+        {
+            var abilitiesCount = activeCharacter.Unit.UnitData.UnitAbilities.Count;
+            activeAbility = activeCharacter.Unit.UnitData.UnitAbilities.Find((ua) => ua.AbilityName == "Attack") ?? activeCharacter.Unit.UnitData.UnitAbilities.Random();
+            OnTargetsChosen(new TargetingResultData(Vector3.zero, new List<UnitIdentifier> { tauntEffect.OptionalTarget.GetUnitIdentifier() }));
+            return;
+        }
+
         activeCharacter.SetHighlight(true);
-    }
 
-    public void ExecuteNextAction(CommonCommandData commonCommandData, OptionalCommandData optionalCommandData)
-    {
-        SetActionMode(ActionMode.Disabled);
-
-        if (enqueuedCommands.Count > 0)
-        {
-            enqueuedCommands.Dequeue().Execute(commonCommandData, optionalCommandData);
-        }
-        else
-        {
-            EndPlayerActionPhase();
-        }
+        SetActionMode(ActionMode.HUD);
     }
 
     public void EndPlayerActionPhase()
     {
-        actionMakingActive = false;
         activeCharacter.SetHighlight(false);
         this.activeCharacter = null;
         onActionPhaseCompleted?.Invoke();
@@ -86,9 +98,35 @@ public class PlayerActionManager : MonoBehaviour
     {
         var results = new List<ActionSelectionEntryData>();
 
-        results.Add(new ActionSelectionEntryData("Attack", () => SetActionMode(ActionMode.Targeting, GetAttackUnitAbility()), null));
+        foreach(var ability in activeCharacter.Unit.UnitData.UnitAbilities)
+        {
+            if(ability.Independant)
+            {
+                results.Add(new ActionSelectionEntryData(ability.AbilityName, () => SetActionMode(ActionMode.Targeting, ability), null));
+            }
+        }
+
         results.Add(new ActionSelectionEntryData("Ability", () => SetActionMode(ActionMode.PickAbility), null));
         results.Add(new ActionSelectionEntryData("Quit", () => Application.Quit(), null));
+
+        return results;
+    }
+
+    private List<ActionSelectionEntryData> GetAbilityActions()
+    {
+        var results = new List<ActionSelectionEntryData>();
+
+        foreach (var ability in activeCharacter.Unit.UnitData.UnitAbilities)
+        {
+            if (ability.Independant)
+            {
+                continue;
+            }
+
+            results.Add(new ActionSelectionEntryData(ability.AbilityName, () => SetActionMode(ActionMode.Targeting, ability), null));
+        }
+
+        results.Add(new ActionSelectionEntryData("Back", () => SetActionMode(ActionMode.HUD), null));
 
         return results;
     }
@@ -100,50 +138,5 @@ public class PlayerActionManager : MonoBehaviour
         results.Add(new ActionSelectionEntryData("Back", () => SetActionMode(ActionMode.HUD), null));
 
         return results;
-    }
-
-    private List<ActionSelectionEntryData> GetAbilityActions(UnitData activeUnitData)
-    {
-        var results = new List<ActionSelectionEntryData>();
-
-        foreach (var ability in activeUnitData.unitAbilities)
-        {
-            results.Add(new ActionSelectionEntryData(ability.AbilityName, () => SetActionMode(ActionMode.Targeting, ability), null));
-        }
-
-        results.Add(new ActionSelectionEntryData("Back", () => SetActionMode(ActionMode.HUD), null));
-
-        return results;
-    }
-
-    private void OnTargetsFound(List<BaseCharacterMaster> selectedUnits, Vector3 position)
-    {
-        if(selectedUnits == null || selectedUnits.Count == 0)
-        {
-            enqueuedCommands.Enqueue(new MoveUnitCommand());
-        }
-        else
-        {
-            enqueuedCommands.Enqueue(new MoveUpToUnitCommand());
-            enqueuedCommands.Enqueue(new AttackUnitCommand());
-        }
-    }
-
-    private UnitAbility GetAttackUnitAbility()
-    {
-        return new UnitAbility("attack",
-                TargetingType.Single, AbilitySize.None,
-                new List<ActionEffect>() { new DamageEffect(0, 30) },
-                GetAttackCommandList(),
-                new List<UnitOwner> { UnitOwner.Opponent });
-    }
-
-    private List<AbstractUnitCommand> GetAttackCommandList()
-    {
-        return new List<AbstractUnitCommand>()
-        {
-            new MoveUpToUnitCommand(),
-            new AttackUnitCommand(),
-        };
     }
 }

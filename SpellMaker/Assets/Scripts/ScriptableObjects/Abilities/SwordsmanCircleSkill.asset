@@ -13,6 +13,8 @@ MonoBehaviour:
   m_Name: SwordsmanCircleSkill
   m_EditorClassIdentifier: 
   AbilityName: Example Circle
+  Description: '[Test] 5 point of damage to enamies in area.'
+  Independant: 0
   TargetingType: 2
   AbilitySize: 4
   AbilityEffects:

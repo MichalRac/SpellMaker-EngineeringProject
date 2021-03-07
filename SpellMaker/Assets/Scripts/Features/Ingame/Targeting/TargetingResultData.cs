@@ -4,11 +4,12 @@ using UnityEngine;
 
 public class TargetingResultData
 {
-    public Vector2 targetPoint { get; private set; }
+    public Vector3 targetPoint { get; private set; }
     public List<UnitIdentifier> unitIdentifiers { get; private set; }
 
-    public TargetingResultData(Vector2 targetPoint, List<UnitIdentifier> unitIdentifiers)
+    public TargetingResultData(Vector3 targetPoint, List<UnitIdentifier> unitIdentifiers)
     {
+        targetPoint.y = 0f;
         this.targetPoint = targetPoint;
         this.unitIdentifiers = unitIdentifiers;
     }

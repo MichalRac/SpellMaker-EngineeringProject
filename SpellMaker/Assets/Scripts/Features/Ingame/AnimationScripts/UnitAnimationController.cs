@@ -63,4 +63,23 @@ public class UnitAnimationController : MonoBehaviour, IBaseUnitAnimation
     }
 
     #endregion
+
+    #region Death Animation
+
+    private readonly int deathAnimParam = Animator.StringToHash("Death");
+    private Action onDeathAnimationFinished;
+
+
+    public void TriggerDeathAnimation(Action onDeathAnimationFinished)
+    {
+        this.onDeathAnimationFinished = onDeathAnimationFinished;
+        animator.SetTrigger(deathAnimParam);
+    }
+
+    public void OnDeathAnimationFinished()
+    {
+        onDeathAnimationFinished?.Invoke();
+    }
+
+    #endregion
 }

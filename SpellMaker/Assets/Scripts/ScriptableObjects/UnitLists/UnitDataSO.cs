@@ -12,5 +12,7 @@ public class UnitDataSO : ScriptableObject
     public int health = 50;
     public int baseDamage = 30;
 
+    public GoalOrientedBehaviourPresetSO goalOrientedBehaviourPresetSO;
+
     public List<AbilitySetupSO> abilities;
 }

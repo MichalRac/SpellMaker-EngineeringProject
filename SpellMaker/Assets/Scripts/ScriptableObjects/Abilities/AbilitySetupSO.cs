@@ -7,11 +7,13 @@ using UnityEngine;
 public class AbilitySetupSO : ScriptableObject
 {
     public string AbilityName;
+    public string Description;
+    public bool Independant;
     public TargetingType TargetingType;
     public AbilitySize AbilitySize;
     public List<ActionEffectData> AbilityEffects;
     public List<AbstractUnitCommand> CommandQueue;
-    public List<UnitOwner> AffectedCharacters;
+    public List<UnitRelativeOwner> AffectedCharacters;
 }
 
 [System.Serializable]

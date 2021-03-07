@@ -31,36 +31,36 @@ public class MatchPreparationPresenter : MonoBehaviour
         opponentSlotRoot.DestroyAllChildren();
     }
 
-    public void SetAddCharacterButton(UnitOwner owner, bool value)
+    public void SetAddCharacterButton(UnitRelativeOwner owner, bool value)
     {
-        if (owner == UnitOwner.Player)
+        if (owner == UnitRelativeOwner.Self)
             addPlayerCharacterButton.gameObject.SetActive(value);
 
-        else if (owner == UnitOwner.Opponent)
+        else if (owner == UnitRelativeOwner.Opponent)
             addOpponentCharacterButton.gameObject.SetActive(value);
 
         else
             Debug.LogError($"[MatchPreparationPresenter] Unexpected unit owner {owner}");
     }
 
-    public CharacterSlotMaster CreateSlot(int slotID, CharacterSlotMaster characterSlot, UnitOwner owner, UnityAction<UnitOwner, int> onSlotRemovedCallback)
+    public CharacterSlotMaster CreateSlot(int slotID, CharacterSlotMaster characterSlot, UnitRelativeOwner owner, UnityAction<UnitRelativeOwner, int> onSlotRemovedCallback)
     {
         switch (owner)
         {
-            case UnitOwner.Player:
+            case UnitRelativeOwner.Self:
                 {
                     var slot = Instantiate(characterSlot, playerSlotRoot);
                     slot.Setup(slotID, owner, onSlotRemovedCallback);
                     return slot;
                 }
-            case UnitOwner.Opponent:
+            case UnitRelativeOwner.Opponent:
                 {
                     var slot = Instantiate(characterSlot, opponentSlotRoot);
                     slot.Setup(slotID, owner, onSlotRemovedCallback);
                     return slot;
                 }
-            case UnitOwner.None:
-            case UnitOwner.Ally:
+            case UnitRelativeOwner.None:
+            case UnitRelativeOwner.Ally:
                 Debug.LogError($"[MatchPreparationPresenter] Trying to create character slot for unsupported owner {owner}");
                 break;
         }

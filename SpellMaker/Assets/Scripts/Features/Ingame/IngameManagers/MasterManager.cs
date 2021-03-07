@@ -11,8 +11,6 @@ public class MasterManager : MonoBehaviour
 
     public void Initialize(BaseBattleSceneArgs sceneArguments)
     {
-        var unitID = 0;
-
         foreach(var unitIdentifier in sceneArguments.PlayerCharactersIdentifiers)
         {
             unitManager.SpawnUnit(unitIdentifier);
@@ -35,15 +33,21 @@ public class MasterManager : MonoBehaviour
         unitManager.UpdateStatus(out var removedUnits);
         turnManager.UpdateStatus(removedUnits);
 
-        if(!unitManager.HasAnyCharacterLeft(UnitOwner.Player) || !unitManager.HasAnyCharacterLeft(UnitOwner.Opponent))
+        if(!unitManager.HasAnyCharacterLeft(0) || !unitManager.HasAnyCharacterLeft(1))
         {
             // Handle end game flow
             Debug.Log("Game completed!");
+            return;
         }
 
         var nextInQueue = turnManager.GetNextInQueue();
         var activeCharacter = unitManager.GetActiveCharacter(nextInQueue);
 
-        playerActionManager.BeginPlayerActionPhase(activeCharacter, BeginTurn);
+        playerActionManager.BeginPlayerActionPhase(activeCharacter, () => 
+        {
+            activeCharacter.ActivateActionEffects();
+            activeCharacter.RefreshLabel();
+            BeginTurn();
+        });
     }
 }

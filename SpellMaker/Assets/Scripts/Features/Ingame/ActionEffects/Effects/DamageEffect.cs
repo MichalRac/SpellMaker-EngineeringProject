@@ -12,9 +12,9 @@ public class DamageEffect : ActionEffect
     {
     }
 
-    public override void Affect(BaseCharacterMaster unitAffected)
+    public override void Affect(BaseCharacterMaster unitAffected, bool decrementTurnsLeft)
     {
-        base.Affect(unitAffected);
+        base.Affect(unitAffected, decrementTurnsLeft);
         unitAffected.ReciveDamage(Power);
     }
 }

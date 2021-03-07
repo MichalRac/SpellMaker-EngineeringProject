@@ -20,6 +20,8 @@ public class TargeterMaster : MonoBehaviour
     private Camera mainCamera;
     private Action<TargetingResultData> targetingResultCallback;
 
+    private TargetingType currentTargetingType;
+    private List<UnitRelativeOwner> currentTargetGroup;
 
     void Awake()
     {
@@ -27,13 +29,18 @@ public class TargeterMaster : MonoBehaviour
         inputController = new InputController();
     }
 
-    public void StartTargeting(Vector3 initPos, UnitAbility ability, Action<TargetingResultData> targetingResultCallback)
+    public void StartTargeting(int casterTeamId, Vector3 initPos, UnitAbility ability, Action<TargetingResultData> targetingResultCallback)
     {
         this.targetingResultCallback = targetingResultCallback;
+        currentTargetingType = ability.TargetingType;
+        currentTargetGroup = ability.TargetGroup;
 
         switch (ability.TargetingType)
         {
             case TargetingType.Single:
+                currentTargeter = pointTargeter;
+                additionalTargeter = null;
+                break;
             case TargetingType.Self:
                 currentTargeter = pointTargeter;
                 additionalTargeter = null;
@@ -53,12 +60,14 @@ public class TargeterMaster : MonoBehaviour
         }
 
         
-        currentTargeter.Setup(initPos, ability.AbilitySize, ability.TargetGroup);
-        additionalTargeter?.Setup(initPos, AbilitySize.None, null);
+        currentTargeter?.Setup(casterTeamId, initPos, ability.AbilitySize, ability.TargetGroup);
+        additionalTargeter?.Setup(casterTeamId, initPos, AbilitySize.None, null);
 
-        inputController.TargetPointer.Any.Enable();
+        if(ability.TargetingType != TargetingType.Self)
+        {
+            inputController.TargetPointer.Any.Enable();
+        }
         inputController.TargetPointer.Execute.Enable();
-
         inputController.TargetPointer.Execute.performed += Execute_performed;
     }
 
@@ -73,9 +82,20 @@ public class TargeterMaster : MonoBehaviour
     private void Execute_performed(InputAction.CallbackContext obj)
     {
         var targets = currentTargeter.ExecuteTargeting();
-        additionalTargeter?.CancelTargeting();
+
+        if(currentTargetingType == TargetingType.Single && currentTargetGroup.Contains(UnitRelativeOwner.None) && targets.unitIdentifiers.Count > 0)
+        {
+            Debug.Log("[TargeterMaster] Targeter expecting space you can walk to and no targets");
+            return;
+        }
+        else if(!currentTargetGroup.Contains(UnitRelativeOwner.None) && targets.unitIdentifiers.Count == 0)
+        {
+            Debug.Log("[TargeterMaster] Targeter at least one Unit target");
+            return;
+        }
+
+        CancelTargeting();
         targetingResultCallback?.Invoke(targets);
-        inputController.Disable();
     }
 
     private void OnDisable()

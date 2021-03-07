@@ -22,21 +22,31 @@ public class BaseUnitPresenter : MonoBehaviour, IUnit
 
     public void Initialize(Unit unit, UnitClassMaster unitClassMaster)
     {
-        unitClassMaster.SetTeamColor(unit.unitIdentifier.owner);
+        unitClassMaster.SetTeamColor(unit.UnitIdentifier.TeamId);
         Setup(unit);
     }
 
     public void Setup(Unit unit)
     {
-        characterLabel.color = unit.unitData.color;
-        characterLabel.text = $"ID: {unit.unitIdentifier.uniqueId}\nHP: {unit.unitData.hp}\nClass: {unit.unitIdentifier.unitClass}";
+        characterLabel.color = unit.UnitData.Color;
+        characterLabel.text = $"ID: {unit.UnitIdentifier.UniqueId}\nHP: {unit.UnitState.CurrentHp}/{unit.UnitData.MaxHp}\nClass: {unit.UnitIdentifier.UnitClass}";
     }
 
     public void RefreshLabel(Unit unit)
     {
-        characterLabel.text = unit.unitData.hp > 0 
-            ? $"ID: {unit.unitIdentifier.uniqueId}\nHP: {unit.unitData.hp}\nClass: {unit.unitIdentifier.unitClass}"
-            : "DEAD";
+        if(!unit.UnitState.IsAlive)
+        {
+            characterLabel.text = "Dead";
+        }
+
+        var text = $"ID: {unit.UnitIdentifier.UniqueId}\nHP: {unit.UnitState.CurrentHp}/{unit.UnitData.MaxHp}\nClass: {unit.UnitIdentifier.UnitClass}";
+
+        if (unit.UnitState.IsTaunted(out _))
+        {
+            text += "\nANGRY!";
+        }
+
+        characterLabel.text = text;
     }
 
     public void SetHighlight(bool value)
@@ -45,6 +55,7 @@ public class BaseUnitPresenter : MonoBehaviour, IUnit
         shadowProjector.gameObject.SetActive(!value);
         isHighlighted = value;
     }
+
     public void SetSelect(bool value)
     {
         circleProjector.gameObject.SetActive(value);

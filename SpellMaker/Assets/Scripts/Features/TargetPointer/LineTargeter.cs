@@ -1,29 +1,37 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class LineTargeter : MonoBehaviour, ITargeter
 {
+    private int CurrentTeamId { get; set; }
     private List<BaseCharacterMaster> unitsInArea;
     private Quaternion rotation;
-    private List<UnitOwner> targetGroup;
+    private List<UnitRelativeOwner> targetGroup;
     [SerializeField] private SamDriver.Decal.DecalMesh decal;
     [SerializeField] private TargeterScaleSO targeterScaleSO;
 
-    private Vector3 targetDirection;
+    private Vector3 basicTargeterPlacement;
+    private float targetRotation;
 
-    public void Setup(Vector3 initPos, AbilitySize abilitySize, List<UnitOwner> targetGroup)
+    public void Setup(int currentTeamId, Vector3 initPos, AbilitySize abilitySize, List<UnitRelativeOwner> targetGroup)
     {
         this.targetGroup = targetGroup;
-        targetDirection = initPos;
+        basicTargeterPlacement = initPos;
+        targetRotation = transform.parent.rotation.y;
         transform.parent.position = new Vector3(initPos.x, transform.parent.position.y, initPos.z);
+        var targeterScale = targeterScaleSO.GetAbilityTargeterScale(abilitySize);
+        transform.parent.localScale = new Vector3(targeterScale, 1f, transform.parent.localScale.z);
         transform.parent.gameObject.SetActive(true);
+        CurrentTeamId = currentTeamId;
     }
 
     public void CancelTargeting()
     {
         foreach (var unit in unitsInArea)
         {
+            unit.SetTargeted(false);
             unit.SetTargeted(false);
         }
 
@@ -32,8 +40,8 @@ public class LineTargeter : MonoBehaviour, ITargeter
 
     public TargetingResultData ExecuteTargeting()
     {
-        transform.parent.gameObject.SetActive(false);
-        return new TargetingResultData(transform.position, unitsInArea.GetUnitIdentifiers());
+        var unitsIdentifiers = unitsInArea.GetUnitIdentifiers();
+        return new TargetingResultData(transform.position, unitsIdentifiers);
     }
 
     private void OnEnable()
@@ -42,12 +50,14 @@ public class LineTargeter : MonoBehaviour, ITargeter
         rotation = transform.rotation;
         decal.GenerateProjectedMeshImmediate();
         StartCoroutine(UpdateDecal());
+        StartCoroutine(AdjustRotation());
     }
 
     private void OnDisable()
     {
         unitsInArea.Clear();
         StopCoroutine(UpdateDecal());
+        StopCoroutine(AdjustRotation());
     }
 
     private IEnumerator UpdateDecal()
@@ -64,20 +74,32 @@ public class LineTargeter : MonoBehaviour, ITargeter
         }
     }
 
-
     public void Move(Vector3 displacement)
     {
-        targetDirection += displacement;
-        var newRotation = -Mathf.Atan2(transform.parent.position.z - targetDirection.z, transform.parent.position.x - targetDirection.x) * Mathf.Rad2Deg - 90;
-        transform.parent.rotation = Quaternion.Euler(0f, newRotation, 0f);
+        basicTargeterPlacement += displacement;
+
+        targetRotation = -Mathf.Atan2(transform.parent.position.z - basicTargeterPlacement.z, transform.parent.position.x - basicTargeterPlacement.x) * Mathf.Rad2Deg - 90;
+        
+        transform.parent.rotation = Quaternion.Euler(0f, targetRotation, 0f);
     }
+
+    public IEnumerator AdjustRotation()
+    {
+
+        while (gameObject.activeInHierarchy)
+        {
+            yield return new WaitForSeconds(0.25f);
+        }
+        yield return null;
+    }
+
 
     private void OnTriggerEnter(Collider other)
     {
         var bcm = other.GetComponent<BaseCharacterMaster>();
         if (bcm != null)
         {
-            if (!targetGroup.Contains(bcm.Unit.unitIdentifier.owner))
+            if (!targetGroup.Contains(UnitHelpers.GetRelativeOwner(CurrentTeamId, bcm.Unit.UnitIdentifier.TeamId)))
             {
                 return;
             }

@@ -13,14 +13,17 @@ MonoBehaviour:
   m_Name: KnightTauntAreaSkill
   m_EditorClassIdentifier: 
   AbilityName: Taunt
+  Description: Taunt enemy into attacking only you.
+  Independant: 0
   TargetingType: 2
   AbilitySize: 1
   AbilityEffects:
-  - AbilityEffectType: 0
+  - AbilityEffectType: 2
     AbilityLenght: 3
     AbilityPower: 0
   - AbilityEffectType: 0
     AbilityLenght: 5
     AbilityPower: 0
-  CommandQueue: []
+  CommandQueue:
+  - {fileID: 11400000, guid: e24b319d5b05f82469128373c4fcbe55, type: 2}
   AffectedCharacters: 0200000003000000

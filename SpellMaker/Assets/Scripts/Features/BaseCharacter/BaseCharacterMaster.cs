@@ -16,6 +16,19 @@ public class BaseCharacterMaster : MonoBehaviour, IUnit
     // TODO cache this
     public Transform GetTransform() => GetComponent<Transform>();
 
+    public void ActivateActionEffects()
+    {
+        for(int i = Unit.UnitState.ActiveActionEffects.Count - 1; i >= 0; i--)
+        {
+            Unit.UnitState.ActiveActionEffects[i].Affect(this, true);
+            if(Unit.UnitState.ActiveActionEffects[i].IsFinished())
+            {
+                Unit.UnitState.ActiveActionEffects[i].OnRemoved(this);
+                Unit.UnitState.ActiveActionEffects.RemoveAt(i);
+            }
+        }
+    }
+
     public void SetHighlight(bool value)
     {
         baseUnitPresenter.SetHighlight(value);
@@ -29,6 +42,16 @@ public class BaseCharacterMaster : MonoBehaviour, IUnit
     public void SetTargeted(bool value)
     {
         baseUnitPresenter.SetTargeted(value);
+    }
+
+    public void ToggleShieldVisuals(bool value)
+    {
+        unitClassMaster.ToggleShieldColor(value);
+    }
+
+    public void RefreshLabel()
+    {
+        baseUnitPresenter.RefreshLabel(Unit);
     }
 
     public void Initialize(Unit data, UnitClassMaster unitClassMaster)
@@ -76,9 +99,34 @@ public class BaseCharacterMaster : MonoBehaviour, IUnit
         unitClassMaster.UnitAnimationController.TriggerDamagedAnimation(onCommandFinished);
     }
 
+    public void TriggerDeathAnim(Action onCommandFinished)
+    {
+        unitClassMaster.UnitAnimationController.TriggerDeathAnimation(onCommandFinished);
+    }
+
     public void ReciveDamage(int damage)
     {
-        Unit.unitData.hp -= damage;
+        if (damage == 0)
+        {
+            return;
+        }
+
+        Unit.UnitState.ApplyDamage(damage);
+        baseUnitPresenter.RefreshLabel(Unit);
+
+        if(Unit.UnitState.IsAlive)
+        {
+            TriggerDamagedAnim(null);
+        }
+        else
+        {
+            TriggerDeathAnim(null);
+        }
+    }
+
+    public void ReciveHeal(int healValue)
+    {
+        Unit.ApplyHeal(healValue);
         baseUnitPresenter.RefreshLabel(Unit);
     }
 }

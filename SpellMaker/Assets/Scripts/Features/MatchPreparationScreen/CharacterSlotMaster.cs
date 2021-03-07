@@ -7,26 +7,25 @@ public class CharacterSlotMaster : MonoBehaviour
 {
     [SerializeField] CharacterSlotPresenter characterSlotPresenter;
 
-    private int slotID;
-
-    public UnitOwner UnitOwner { get; private set; }
+    public int SlotID { get; private set; }
+    public UnitRelativeOwner UnitOwner { get; private set; }
     public UnitClass UnitClass { get; private set; }
     public UnitIdentifier UnitIdentifier { get; private set; }
 
-    private UnityAction<UnitOwner, int> onCharacterRemoved;
+    private UnityAction<UnitRelativeOwner, int> onCharacterRemoved;
 
-    public void Setup(int slotID, UnitOwner owner, UnityAction<UnitOwner, int> onCharacterRemoved)
+    public void Setup(int slotID, UnitRelativeOwner owner, UnityAction<UnitRelativeOwner, int> onCharacterRemoved)
     {
-        this.slotID = slotID;
+        this.SlotID = slotID;
         this.onCharacterRemoved = onCharacterRemoved;
         this.UnitOwner = owner;
         this.UnitClass = default;
 
-        this.UnitIdentifier = new UnitIdentifier(owner, slotID, default);
+        this.UnitIdentifier = new UnitIdentifier(owner == UnitRelativeOwner.Self ? 0 : 1, slotID, default);
 
         UpdateDescription();
 
-        if (owner == UnitOwner.Opponent)
+        if (owner == UnitRelativeOwner.Opponent)
         {
             characterSlotPresenter.OverrideColorScheme();
         }
@@ -34,7 +33,7 @@ public class CharacterSlotMaster : MonoBehaviour
 
     public void DecrementSlotId()
     {
-        slotID--;
+        SlotID--;
     }
 
     public void UpdateDescription()
@@ -42,25 +41,27 @@ public class CharacterSlotMaster : MonoBehaviour
         characterSlotPresenter.UpdateDescription(UnitClass);
     }
     
+    // used implicitly
     public void NextClass()
     {
         var enumLenght = System.Enum.GetNames(typeof(UnitClass)).Length;
         UnitClass = (int)UnitClass == enumLenght - 1 ? (UnitClass)0 : UnitClass + 1;
-        UnitIdentifier.unitClass = UnitClass;
+        UnitIdentifier.SwitchClass(UnitClass);
         UpdateDescription();
     }
 
+    // used implicitly
     public void PreviousClass()
     {
         var enumLenght = System.Enum.GetNames(typeof(UnitClass)).Length;
         UnitClass = (int)UnitClass == 0 ? (UnitClass)enumLenght - 1 : UnitClass - 1;
-        UnitIdentifier.unitClass = UnitClass;
+        UnitIdentifier.SwitchClass(UnitClass);
         UpdateDescription();
     }
 
     public void RemoveCharacter()
     {
-        onCharacterRemoved?.Invoke(UnitOwner, slotID);
+        onCharacterRemoved?.Invoke(UnitOwner, SlotID);
     }
 
     public void SetRemoveButtonActive(bool value)

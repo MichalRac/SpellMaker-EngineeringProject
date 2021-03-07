@@ -16,6 +16,9 @@ MonoBehaviour:
   unitClassMaster: {fileID: 3381964551250889944, guid: 274c4c35ed05ea14c87492064b3cadfd, type: 3}
   health: 40
   baseDamage: 10
+  goalOrientedBehaviourPresetSO: {fileID: 11400000, guid: 52112146be4d24d469471f09733ee0db, type: 2}
   abilities:
   - {fileID: 11400000, guid: f43316d6422b8164cac61ff0946ccf0d, type: 2}
   - {fileID: 11400000, guid: 856af5ea5c7e1c846bec2a6193a9e863, type: 2}
+  - {fileID: 11400000, guid: acdf93e72771383419ad888d7059764c, type: 2}
+  - {fileID: 11400000, guid: b238228131ec6094595a1b576a35d7cd, type: 2}

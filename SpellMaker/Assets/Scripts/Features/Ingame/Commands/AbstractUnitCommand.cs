@@ -6,23 +6,35 @@ using UnityEngine;
 public abstract class AbstractUnitCommand : ScriptableObject, ICommand
 {
     public abstract void Execute(CommonCommandData commandData, OptionalCommandData optionalData = null);
+
+    public virtual float GetGoalChange(Goal goal)
+    {
+        return 0f;
+    }
 }
 
 public class CommonCommandData
 {
-    public BaseCharacterMaster actor;
-    public List<BaseCharacterMaster> targets;
+    public UnitIdentifier actor;
+    public List<UnitIdentifier> targetsIdentifiers;
+    public UnitAbility unitAbility;
     public Action onCommandCompletedCallback;
 
-    public CommonCommandData(BaseCharacterMaster actor, List<BaseCharacterMaster> targets, Action onCommandCompletedCallback)
+    public CommonCommandData(UnitIdentifier actor, List<UnitIdentifier> targetsIdentifiers, UnitAbility unitAbility, Action onCommandCompletedCallback)
     {
         this.actor = actor;
-        this.targets = targets;
+        this.targetsIdentifiers = targetsIdentifiers;
+        this.unitAbility = unitAbility;
         this.onCommandCompletedCallback = onCommandCompletedCallback;
     }
 }
 
 public class OptionalCommandData
 {
-    public Vector3 position { get; private set; }
+    public Vector3 Position { get; private set; }
+
+    public OptionalCommandData(Vector3 position)
+    {
+        Position = position;
+    }
 }

@@ -8,11 +8,13 @@ public class MoveUnitCommand : AbstractUnitCommand
 {
     public override void Execute(CommonCommandData commandData, OptionalCommandData optionalCommandData = null)
     {
-        if(optionalCommandData == null || optionalCommandData.position == null)
+        if(optionalCommandData == null || optionalCommandData.Position == null)
         {
             Debug.Log("[MoveUnitCommand] Move unit command requires OptionalCommandData object with position");
         }
 
-        commandData.actor.TriggerMoveToEmpty(optionalCommandData.position, commandData.onCommandCompletedCallback);
+        var actor = UnitManager.Instance.GetActiveCharacter(commandData.actor);
+        var targetPosition = optionalCommandData.Position;
+        actor.TriggerMoveToEmpty(targetPosition, commandData.onCommandCompletedCallback);
     }
 }

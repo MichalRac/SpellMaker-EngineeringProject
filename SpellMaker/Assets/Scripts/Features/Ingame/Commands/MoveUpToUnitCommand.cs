@@ -8,6 +8,8 @@ public class MoveUpToUnitCommand : AbstractUnitCommand
 {
     public override void Execute(CommonCommandData commandData, OptionalCommandData optionalCommandData = null)
     {
-        commandData.actor.TriggerMoveToUnit(commandData.targets[0], commandData.onCommandCompletedCallback);
+        var actor = UnitManager.Instance.GetActiveCharacter(commandData.actor);
+        var target = UnitManager.Instance.GetActiveCharacter(commandData.targetsIdentifiers[0]);
+        actor.TriggerMoveToUnit(target, commandData.onCommandCompletedCallback);
     }
 }

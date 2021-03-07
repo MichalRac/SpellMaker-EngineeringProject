@@ -22,10 +22,19 @@ public abstract class ActionEffect : IActionEffect
         Power = actionEffectData.AbilityPower;
     }
 
+
     // Happens on turn finished
-    public virtual void Affect(BaseCharacterMaster unitAffected)
+    public virtual void Affect(BaseCharacterMaster unitAffected, bool decrementTurnsLeft)
     {
-        TurnsLeftAffected--;
+        if(decrementTurnsLeft)
+        {
+           TurnsLeftAffected--;
+        }
+    }
+
+    public virtual void OnRemoved(BaseCharacterMaster unitAffected)
+    {
+
     }
 
     public bool IsFinished() => TurnsLeftAffected <= 0;

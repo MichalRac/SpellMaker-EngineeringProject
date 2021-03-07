@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum UnitOwner
+public enum UnitRelativeOwner
 {
     None = 0,
-    Player = 1,
+    Self = 1,
     Opponent = 2,
     Ally = 3,
 }

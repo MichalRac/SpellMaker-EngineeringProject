@@ -5,15 +5,17 @@ using UnityEngine;
 public class UnitAbility
 {
     public string AbilityName { get; private set; }
+    public bool Independant { get; private set; }
     public TargetingType TargetingType { get; private set; }
     public AbilitySize AbilitySize { get; private set; }
     public List<ActionEffect> AbilityEffects { get; private set; }
     public Queue<AbstractUnitCommand> AbilityCommandQueue { get; private set; }
-    public List<UnitOwner> TargetGroup { get; private set; }
+    public List<UnitRelativeOwner> TargetGroup { get; private set; }
 
-    public UnitAbility(string abilityName, TargetingType targetingType, AbilitySize abilitySize, List<ActionEffect> abilityEffects, List<AbstractUnitCommand> commands, List<UnitOwner> AffectedCharacters)
+    public UnitAbility(string abilityName, bool independant, TargetingType targetingType, AbilitySize abilitySize, List<ActionEffect> abilityEffects, List<AbstractUnitCommand> commands, List<UnitRelativeOwner> AffectedCharacters)
     {
         AbilityName = abilityName;
+        Independant = independant;
         TargetingType = targetingType;
         AbilitySize = abilitySize;
         AbilityEffects = abilityEffects;
@@ -36,7 +38,7 @@ public static class UnitAbilityFactory
             actionEffects.Add(ActionEffectFactory.GetActionEffect(actionEffectData));
         }
 
-        return new UnitAbility(abilitySetupSO.AbilityName, abilitySetupSO.TargetingType, abilitySetupSO.AbilitySize, actionEffects, abilitySetupSO.CommandQueue, abilitySetupSO.AffectedCharacters);
+        return new UnitAbility(abilitySetupSO.AbilityName, abilitySetupSO.Independant, abilitySetupSO.TargetingType, abilitySetupSO.AbilitySize, actionEffects, abilitySetupSO.CommandQueue, abilitySetupSO.AffectedCharacters);
     }
 
     public static List<UnitAbility> GetUnitAbilities(UnitDataSO unitDataSO)

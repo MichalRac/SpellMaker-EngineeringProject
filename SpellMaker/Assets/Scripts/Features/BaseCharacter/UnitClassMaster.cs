@@ -6,6 +6,8 @@ using UnityEngine;
 [RequireComponent(typeof(UnitAbilityManager))]
 public class UnitClassMaster : MonoBehaviour
 {
+    private static readonly int PLAYER_TEAM_ID = 0;
+    private Color defaultColor;
     [SerializeField] private SkinnedMeshRenderer characterMeshRenderer;
 
     public UnitAbilityManager UnitAbilityManager { get; private set; }
@@ -17,9 +19,15 @@ public class UnitClassMaster : MonoBehaviour
         UnitAnimationController = GetComponent<UnitAnimationController>();
     }
 
-    public void SetTeamColor(UnitOwner owner)
+    public void SetTeamColor(int teamId)
     {
-        characterMeshRenderer.material.color = owner == UnitOwner.Player ? Color.green : Color.red;
+        defaultColor = teamId == PLAYER_TEAM_ID ? Color.green : Color.red;
+        characterMeshRenderer.material.color = defaultColor;
+    }
+
+    public void ToggleShieldColor(bool value)
+    {
+        characterMeshRenderer.material.color = value ? Color.blue : defaultColor;
     }
 
 

@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// 
 public class TauntEffect : ActionEffect
 {
-    public BaseCharacterMaster tauntTarget { get; private set; }
+    public BaseCharacterMaster tauntTarget { get; set; }
 
     public TauntEffect(ActionEffectData actionEffectData, BaseCharacterMaster tauntTarget) : base(actionEffectData)
     {
@@ -17,8 +16,9 @@ public class TauntEffect : ActionEffect
         this.tauntTarget = tauntTarget;
     }
 
-    public override void Affect(BaseCharacterMaster unitAffected)
+    public override void Affect(BaseCharacterMaster unitAffected, bool decrementTurnsLeft)
     {
-        base.Affect(unitAffected);
+        base.Affect(unitAffected, decrementTurnsLeft);
+        unitAffected.RefreshLabel();
     }
 }

@@ -8,9 +8,9 @@ public class HealEffect : ActionEffect
 
     public HealEffect(int turnLenght, int power) : base(turnLenght, power) { }
 
-    public override void Affect(BaseCharacterMaster unitAffected)
+    public override void Affect(BaseCharacterMaster unitAffected, bool decrementTurnsLeft)
     {
-        base.Affect(unitAffected);
-        unitAffected.ReciveDamage(-Power);
+        base.Affect(unitAffected, decrementTurnsLeft);
+        unitAffected.ReciveHeal(Power);
     }
 }

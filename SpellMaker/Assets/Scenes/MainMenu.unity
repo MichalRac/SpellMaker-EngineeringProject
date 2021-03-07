@@ -172,6 +172,7 @@ GameObject:
   - component: {fileID: 229123646}
   - component: {fileID: 229123645}
   - component: {fileID: 229123647}
+  - component: {fileID: 229123648}
   m_Layer: 5
   m_Name: Underlay
   m_TagString: Untagged
@@ -211,7 +212,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.033775367, g: 0.103773594, b: 0.0903124, a: 1}
+  m_Color: {r: 0.3490566, g: 0.0058176103, b: 0, a: 1}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -252,6 +253,20 @@ Animation:
   m_PlayAutomatically: 1
   m_AnimatePhysics: 0
   m_CullingType: 0
+--- !u!114 &229123648
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 229123643}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff1b4847df8af7c41bdf7592ee0ad577, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  image: {fileID: 229123645}
+  color: {r: 0.13725491, g: 0.42745098, b: 0.42352942, a: 1}
 --- !u!1 &399419043
 GameObject:
   m_ObjectHideFlags: 0
@@ -436,6 +451,7 @@ GameObject:
   - component: {fileID: 1308641786}
   - component: {fileID: 1308641785}
   - component: {fileID: 1308641784}
+  - component: {fileID: 1308641787}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -508,6 +524,37 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1308641787
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1308641783}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a79441f348de89743a2939f4d699eac1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_RenderShadows: 1
+  m_RequiresDepthTextureOption: 2
+  m_RequiresOpaqueTextureOption: 2
+  m_CameraType: 0
+  m_Cameras: []
+  m_RendererIndex: -1
+  m_VolumeLayerMask:
+    serializedVersion: 2
+    m_Bits: 1
+  m_VolumeTrigger: {fileID: 0}
+  m_RenderPostProcessing: 0
+  m_Antialiasing: 0
+  m_AntialiasingQuality: 2
+  m_StopNaN: 0
+  m_Dithering: 0
+  m_ClearDepth: 1
+  m_RequiresDepthTexture: 0
+  m_RequiresColorTexture: 0
+  m_Version: 2
 --- !u!1 &1442065266
 GameObject:
   m_ObjectHideFlags: 0

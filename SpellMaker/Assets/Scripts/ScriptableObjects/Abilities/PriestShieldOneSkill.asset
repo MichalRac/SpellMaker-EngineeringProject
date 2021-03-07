@@ -13,11 +13,14 @@ MonoBehaviour:
   m_Name: PriestShieldOneSkill
   m_EditorClassIdentifier: 
   AbilityName: Shield Target
+  Description: Temporarly shield target from all damage.
+  Independant: 0
   TargetingType: 0
   AbilitySize: 0
   AbilityEffects:
-  - AbilityEffectType: 0
+  - AbilityEffectType: 3
     AbilityLenght: 2
     AbilityPower: 0
-  CommandQueue: []
+  CommandQueue:
+  - {fileID: 11400000, guid: e24b319d5b05f82469128373c4fcbe55, type: 2}
   AffectedCharacters: 0100000003000000

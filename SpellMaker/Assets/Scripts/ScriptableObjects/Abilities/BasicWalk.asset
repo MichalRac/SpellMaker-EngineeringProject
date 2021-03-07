@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c02928f4ac4bf44eb4bbee1d85ab449, type: 3}
+  m_Name: BasicWalk
+  m_EditorClassIdentifier: 
+  AbilityName: Walk
+  Description: Move towards selected area.
+  Independant: 1
+  TargetingType: 0
+  AbilitySize: 0
+  AbilityEffects: []
+  CommandQueue:
+  - {fileID: 11400000, guid: 0c52f9b17ef9896489c181e4d769e0e9, type: 2}
+  AffectedCharacters: 00000000

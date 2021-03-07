@@ -13,11 +13,14 @@ MonoBehaviour:
   m_Name: SwordsmanLineSkill
   m_EditorClassIdentifier: 
   AbilityName: Magic Slash
+  Description: Damage all enemies in a line.
+  Independant: 0
   TargetingType: 1
-  AbilitySize: 2
+  AbilitySize: 3
   AbilityEffects:
   - AbilityEffectType: 0
     AbilityLenght: 0
     AbilityPower: 20
-  CommandQueue: []
+  CommandQueue:
+  - {fileID: 11400000, guid: e24b319d5b05f82469128373c4fcbe55, type: 2}
   AffectedCharacters: 0200000003000000

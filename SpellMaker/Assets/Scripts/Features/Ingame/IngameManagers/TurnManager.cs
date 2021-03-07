@@ -7,7 +7,7 @@ public class TurnManager : MonoBehaviour
     // Manage turns
     public static int turn = 0;
     public Queue<UnitIdentifier> queue { get; private set; } = new Queue<UnitIdentifier>() ;
-    public UnitIdentifier current { get; private set; }
+    public UnitIdentifier active { get; private set; }
 
     public void PrepareQueue(Dictionary<UnitIdentifier, BaseCharacterMaster> allUnits)
     {
@@ -25,12 +25,12 @@ public class TurnManager : MonoBehaviour
 
     public UnitIdentifier GetNextInQueue()
     {
-        if(current != null) // TODO Can probably be avoided
+        if(active != null) // TODO Can probably be avoided
         {
-            queue.Enqueue(current);
+            queue.Enqueue(active);
         }
-        current = queue.Dequeue();
-        return current;
+        active = queue.Dequeue();
+        return active;
     }
 
     public void UpdateStatus(List<UnitIdentifier> unitsToRemove)
@@ -41,9 +41,9 @@ public class TurnManager : MonoBehaviour
             if (!unitsToRemove.Contains(unit))
                 newQueue.Enqueue(unit);
         }
-        if(unitsToRemove.Contains(current))
+        if(unitsToRemove.Contains(active))
         {
-            current = null;
+            active = null;
         }
         queue = newQueue;
     }
