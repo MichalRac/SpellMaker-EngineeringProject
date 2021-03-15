@@ -17,6 +17,7 @@ MonoBehaviour:
   Independant: 0
   TargetingType: 0
   AbilitySize: 0
+  TargeterScaleSo: {fileID: 11400000, guid: 66bced1201b7b2e49ac5bbee8c3a4d55, type: 2}
   AbilityEffects:
   - AbilityEffectType: 3
     AbilityLenght: 2

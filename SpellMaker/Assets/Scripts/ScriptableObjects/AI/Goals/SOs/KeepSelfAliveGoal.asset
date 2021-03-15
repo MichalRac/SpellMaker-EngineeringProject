@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3b50bfa5eae05ae4883dd39fc88e5c18, type: 3}
-  m_Name: KeepOpponentsTaunted
+  m_Script: {fileID: 11500000, guid: 2249cb5324d3cc44abbc8b2a12cbe1ce, type: 3}
+  m_Name: KeepSelfAliveGoal
   m_EditorClassIdentifier: 
-  Urgency: 5
+  UrgencyPower: 5

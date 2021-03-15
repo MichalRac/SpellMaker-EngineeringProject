@@ -13,4 +13,10 @@ public class HealEffect : ActionEffect
         base.Affect(unitAffected, decrementTurnsLeft);
         unitAffected.ReciveHeal(Power);
     }
+
+    public override void SimulateAffect(Unit unitToAffect, bool decrementTurnsLeft)
+    {
+        base.SimulateAffect(unitToAffect, decrementTurnsLeft);
+        unitToAffect.UnitState.ApplyHeal(Power);
+    }
 }

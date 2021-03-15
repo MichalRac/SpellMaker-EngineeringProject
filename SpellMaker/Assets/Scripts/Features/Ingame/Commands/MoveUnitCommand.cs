@@ -17,4 +17,17 @@ public class MoveUnitCommand : AbstractUnitCommand
         var targetPosition = optionalCommandData.Position;
         actor.TriggerMoveToEmpty(targetPosition, commandData.onCommandCompletedCallback);
     }
+
+    public override void Simulate(CommonCommandData commandData, OptionalCommandData optionalData = null)
+    {
+        var CurrentWorldModelLayer = WorldModelService.Instance.GetCurrentWorldModelLayer();
+        if (CurrentWorldModelLayer.TryGetUnit(commandData.actor, out var actor))
+        {
+            actor.UnitData.Position = optionalData.Position;
+        }
+        else
+        {
+            Debug.LogError($"Couldn't find actor Unit with {commandData.actor} UnitIdentifier");
+        }
+    }
 }

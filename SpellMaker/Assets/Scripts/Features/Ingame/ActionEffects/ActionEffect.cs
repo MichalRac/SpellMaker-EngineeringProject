@@ -32,6 +32,14 @@ public abstract class ActionEffect : IActionEffect
         }
     }
 
+    public virtual void SimulateAffect(Unit unitToAffect, bool decrementTurnsLeft)
+    {
+        if (decrementTurnsLeft)
+        {
+            TurnsLeftAffected--;
+        }
+    }
+
     public virtual void OnRemoved(BaseCharacterMaster unitAffected)
     {
 

@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: SwordsmanGOB
   m_EditorClassIdentifier: 
   goals:
-  - {fileID: 11400000, guid: 2b67e962552afbf408c2e982680a24ad, type: 2}
-  - {fileID: 11400000, guid: 81e04b797440b604c90f60f586b7e19d, type: 2}
+  - {fileID: 11400000, guid: d4feb3ab29208364f81047680cbc20ce, type: 2}
+  - {fileID: 11400000, guid: 9be3312d35a222847950569b7a8def39, type: 2}

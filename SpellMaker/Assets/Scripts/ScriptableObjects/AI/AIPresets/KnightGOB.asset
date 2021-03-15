@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: KnightGOB
   m_EditorClassIdentifier: 
   goals:
-  - {fileID: 11400000, guid: cd14b465fd1dd024f9be958c2e1da013, type: 2}
-  - {fileID: 11400000, guid: f51f08f64348ec34fba7ac068f9cb371, type: 2}
-  - {fileID: 11400000, guid: 2b67e962552afbf408c2e982680a24ad, type: 2}
-  - {fileID: 11400000, guid: 81e04b797440b604c90f60f586b7e19d, type: 2}
+  - {fileID: 11400000, guid: d4feb3ab29208364f81047680cbc20ce, type: 2}
+  - {fileID: 11400000, guid: 3b0e884cad3de0947aaa8416549f0976, type: 2}
+  - {fileID: 11400000, guid: f107bbf9f77f17e45911f417b6b2748a, type: 2}
+  - {fileID: 11400000, guid: 9be3312d35a222847950569b7a8def39, type: 2}

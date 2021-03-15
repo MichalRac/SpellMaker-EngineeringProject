@@ -18,12 +18,11 @@ public class CircleTargeter : MonoBehaviour, ITargeter
         return new TargetingResultData(transform.position, unitsIdentifiers);
     }
 
-    public void Setup(int currentTeamId, Vector3 initPos, AbilitySize abilitySize, List<UnitRelativeOwner> targetGroup)
+    public void Setup(int currentTeamId, Vector3 initPos, float abilitySize, List<UnitRelativeOwner> targetGroup)
     {
         transform.parent.gameObject.SetActive(true);
         transform.parent.position = new Vector3(initPos.x, transform.position.y, initPos.z);
-        var targeterScale = targeterScaleSO.GetAbilityTargeterScale(abilitySize);
-        transform.parent.localScale = new Vector3(targeterScale, 1f, targeterScale);
+        transform.parent.localScale = new Vector3(abilitySize, 1f, abilitySize);
         CurrentTeamId = currentTeamId;
         this.targetGroup = targetGroup;
     }

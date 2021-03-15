@@ -38,16 +38,19 @@ public class UnitManager : MonoBehaviour
     {
         var character = Instantiate(baseCharacterMaster, unitRoot);
         
+        var initialPosition = unitIdentifier.TeamId == 0
+            ? spawnpointFetcher.GetNextPlayerStartPosition()
+            : spawnpointFetcher.GetNextEnemyStartPosition();
+
         var unitDataSO = UnitListSO.GetUnitDataSO(unitIdentifier.UnitClass);
-        var unit = UnitFactory.GetUnit(unitIdentifier, unitDataSO);
+        var unit = UnitFactory.GetUnit(unitIdentifier, unitDataSO, initialPosition);
         
         character.Initialize(unit, unitDataSO.unitClassMaster);
 
-        character.transform.position = unitIdentifier.TeamId == 0
-            ? spawnpointFetcher.GetNextPlayerStartPosition() 
-            : spawnpointFetcher.GetNextEnemyStartPosition();
-    
-        if(unitIdentifier.TeamId == 1)
+        character.transform.position = initialPosition;
+
+
+        if (unitIdentifier.TeamId == 1)
             character.transform.rotation = Quaternion.Euler(0f, 180f, 0f);
 
         if (!ActiveCharacters.ContainsKey(unitIdentifier))
@@ -94,4 +97,13 @@ public class UnitManager : MonoBehaviour
         turnManager.AddToQueue(newUnitIdentifier);
     }
 
+    public List<Unit> PrepareUnitCopiesForWorldModel()
+    {
+        var results = new List<Unit>();
+        foreach (var activeCharacter in ActiveCharacters)
+        {
+            results.Add( (Unit)activeCharacter.Value.Unit.Clone() );
+        }
+        return results;
+    }
 }

@@ -9,5 +9,6 @@ public interface IActionEffect
     int Power { get; }
 
     void Affect(BaseCharacterMaster unitToAffect, bool decrementTurnsLeft);
+    void SimulateAffect(Unit unitToAffect, bool decrementTurnsLeft);
     bool IsFinished();
 }

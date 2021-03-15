@@ -61,7 +61,7 @@ public class TargeterMaster : MonoBehaviour
 
         
         currentTargeter?.Setup(casterTeamId, initPos, ability.AbilitySize, ability.TargetGroup);
-        additionalTargeter?.Setup(casterTeamId, initPos, AbilitySize.None, null);
+        additionalTargeter?.Setup(casterTeamId, initPos, 1f, null);
 
         if(ability.TargetingType != TargetingType.Self)
         {

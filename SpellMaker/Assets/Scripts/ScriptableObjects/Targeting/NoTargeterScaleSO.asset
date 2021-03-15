@@ -9,7 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3b50bfa5eae05ae4883dd39fc88e5c18, type: 3}
-  m_Name: KillEnemies
+  m_Script: {fileID: 11500000, guid: 85a6ba030680e064c99c0f24d2f8af1f, type: 3}
+  m_Name: NoTargeterScaleSO
   m_EditorClassIdentifier: 
-  Urgency: 10
+  scaleXS: 1
+  scaleS: 1
+  scaleM: 1
+  scaleL: 1
+  scaleXL: 1

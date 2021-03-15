@@ -6,7 +6,7 @@ using UnityEngine;
 public class BaseCharacterMaster : MonoBehaviour, IUnit
 {
     private const float STOP_AT_TARGET_DISTANCE = 0.05f;
-    private const float STOP_BEFORE_TARGET_DISTANCE = 1.1f;
+    private const float STOP_BEFORE_TARGET_DISTANCE = 2f;
 
     [SerializeField] private BaseUnitPresenter baseUnitPresenter;
     [SerializeField] private UnitClassMaster unitClassMaster;
@@ -61,24 +61,46 @@ public class BaseCharacterMaster : MonoBehaviour, IUnit
         baseUnitPresenter.Initialize(data, this.unitClassMaster);
     }
 
-    public void TriggerMoveToEmpty(Vector3 target, Action onMovementFinishedCallback)
+    public void TriggerMoveToEmpty(Vector3 target, Action onMovementFinishedCallback, bool immiediatly = false)
     {
-        StartCoroutine(MoveTowards(target, STOP_AT_TARGET_DISTANCE, onMovementFinishedCallback));
+        Unit.UnitData.Position = target;
+        Debug.Log($"New Position is: {Unit.UnitData.Position}");
+        if (immiediatly)
+        {
+            transform.position = target;
+            onMovementFinishedCallback?.Invoke();
+        }
+        else
+        {
+            StartCoroutine(MoveTowards(Unit.UnitData.Position, onMovementFinishedCallback));
+        }
     }
 
-    public void TriggerMoveToUnit(IUnit target, Action onMovementFinishedCallback)
+    public void TriggerMoveToUnit(IUnit target, Action onMovementFinishedCallback, bool immiediately = false)
     {
-        StartCoroutine(MoveTowards(target.GetTransform().position, STOP_BEFORE_TARGET_DISTANCE, onMovementFinishedCallback));
+        var deltaPosNormalized = transform.GetDeltaPositionNormalized(target.GetTransform());
+        Unit.UnitData.Position = target.GetTransform().position + deltaPosNormalized * STOP_BEFORE_TARGET_DISTANCE;
+        Debug.Log($"New Position is: {Unit.UnitData.Position}");
+
+        if (immiediately)
+        {
+            transform.position = Unit.UnitData.Position;
+            onMovementFinishedCallback?.Invoke();
+        }
+        else
+        {
+            StartCoroutine(MoveTowards(Unit.UnitData.Position, onMovementFinishedCallback));
+        }
     }
 
     // TODO replace with NavMesh
-    private IEnumerator MoveTowards(Vector3 target, float stopDistance, Action onMovementFinishedCallback)
+    private IEnumerator MoveTowards(Vector3 target, Action onMovementFinishedCallback)
     {
         unitClassMaster.UnitAnimationController.SetWalkingAnimation(true);
 
         transform.LookAt(target);
 
-        while(Vector3.Magnitude(transform.position - target) > stopDistance)
+        while(Vector3.Magnitude(transform.position - target) > STOP_AT_TARGET_DISTANCE)
         {
             var velocity = (target - transform.position).normalized * characterSpeed * Time.deltaTime;
             transform.position = transform.position + velocity;
@@ -111,7 +133,6 @@ public class BaseCharacterMaster : MonoBehaviour, IUnit
             return;
         }
 
-        Unit.UnitState.ApplyDamage(damage);
         baseUnitPresenter.RefreshLabel(Unit);
 
         if(Unit.UnitState.IsAlive)

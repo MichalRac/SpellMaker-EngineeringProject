@@ -6,7 +6,7 @@ public static class GeneralExtensions
 {
     public static void DestroyAllChildren(this Transform transform)
     {
-        foreach(Transform child in transform)
+        foreach (Transform child in transform)
         {
             GameObject.Destroy(child.gameObject);
         }
@@ -39,10 +39,11 @@ public static class GeneralExtensions
     public static Queue<T> ToQueue<T>(this IList<T> list)
     {
         Queue<T> queue = new Queue<T>();
-        foreach(T item in list)
+        foreach (T item in list)
         {
             queue.Enqueue(item);
         }
+
         return queue;
     }
 
@@ -55,11 +56,22 @@ public static class GeneralExtensions
     {
         var identifiers = new List<UnitIdentifier>();
 
-        foreach(var bcm in baseCharacterMasters)
+        foreach (var bcm in baseCharacterMasters)
         {
             identifiers.Add(bcm.Unit.UnitIdentifier);
         }
 
         return identifiers;
+    }
+
+    public static Vector3 GetDeltaPositionNormalized(this Transform caster, Transform target)
+    {
+        return (caster.position - target.position).normalized;
+    }
+
+    public static float GetDistanceFromLine(Vector3 point, Vector3 linePointA, Vector3 linePointB)
+    {
+        return Mathf.Abs((linePointB.x - linePointA.x) * (linePointA.z - point.z) - (linePointA.x - point.x) * (linePointB.z - linePointA.z))
+               / Mathf.Sqrt(Mathf.Pow(linePointB.x - linePointA.x, 2) + Mathf.Pow(linePointB.z - linePointA.z, 2));
     }
 }

@@ -9,7 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3b50bfa5eae05ae4883dd39fc88e5c18, type: 3}
-  m_Name: KeepSelfAlive
+  m_Script: {fileID: 11500000, guid: 0d1ceb456860eed49932f9eb876ef22c, type: 3}
+  m_Name: KillEnemiesGoal
   m_EditorClassIdentifier: 
-  Urgency: 15
+  UrgencyPower: 10

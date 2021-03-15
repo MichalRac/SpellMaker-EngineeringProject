@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,9 +6,18 @@ public abstract class AbstractUnitCommand : ScriptableObject, ICommand
 {
     public abstract void Execute(CommonCommandData commandData, OptionalCommandData optionalData = null);
 
-    public virtual float GetGoalChange(Goal goal)
+    public abstract void Simulate(CommonCommandData commandData, OptionalCommandData optionalData = null);
+
+    public virtual float GetCommandDeltaDiscontentment(List<Goal> goals, CommonCommandData ccd, OptionalCommandData ocd = null)
     {
-        return 0f;
+        var disconentment = 0f;
+        foreach (var goal in goals)
+        {
+            var goalValueAfterAction = goal.UrgencyPower + goal.GetDiscontentmentChange(this, ccd, ocd);
+
+            disconentment += goal.GetDisconentment(goalValueAfterAction);
+        }
+        return disconentment;
     }
 }
 

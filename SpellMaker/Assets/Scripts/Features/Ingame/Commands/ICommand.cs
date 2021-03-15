@@ -7,5 +7,5 @@ public interface ICommand
 {
     void Execute(CommonCommandData commandData, OptionalCommandData optionalData = null);
 
-    float GetGoalChange(Goal goal);
+    float GetCommandDeltaDiscontentment(List<Goal> goals, CommonCommandData ccd, OptionalCommandData ocd = null);
 }

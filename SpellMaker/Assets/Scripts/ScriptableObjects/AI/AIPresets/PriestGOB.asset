@@ -13,8 +13,7 @@ MonoBehaviour:
   m_Name: PriestGOB
   m_EditorClassIdentifier: 
   goals:
-  - {fileID: 11400000, guid: 81e04b797440b604c90f60f586b7e19d, type: 2}
-  - {fileID: 11400000, guid: 2b67e962552afbf408c2e982680a24ad, type: 2}
-  - {fileID: 11400000, guid: 2dc2637c9b6e7204fb88ec538f47388a, type: 2}
-  - {fileID: 11400000, guid: 48e567a89f13ea545954dde57a05ac43, type: 2}
-  - {fileID: 11400000, guid: f51f08f64348ec34fba7ac068f9cb371, type: 2}
+  - {fileID: 11400000, guid: d4feb3ab29208364f81047680cbc20ce, type: 2}
+  - {fileID: 11400000, guid: 9c285b595623f30449a70fb8f69242df, type: 2}
+  - {fileID: 11400000, guid: 3b0e884cad3de0947aaa8416549f0976, type: 2}
+  - {fileID: 11400000, guid: 89b6188f1b14e6a43b7623b88e7dcc7c, type: 2}

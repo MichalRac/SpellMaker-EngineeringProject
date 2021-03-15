@@ -20,7 +20,7 @@ public class ShieldEffect : ActionEffect
 
         unitAffected.ToggleShieldVisuals(true);
     }
-
+    
     public override void OnRemoved(BaseCharacterMaster unitAffected)
     {
         base.OnRemoved(unitAffected);

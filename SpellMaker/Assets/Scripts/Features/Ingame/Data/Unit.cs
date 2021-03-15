@@ -4,7 +4,7 @@ using UnityEngine;
 using System;
 
 [Serializable]
-public class Unit
+public class Unit : ICloneable
 {
     public UnitIdentifier UnitIdentifier { get; }
     public UnitData UnitData { get; }
@@ -26,6 +26,18 @@ public class Unit
         {
             UnitState.ApplyDamage(UnitState.CurrentHp - maxHP);
         }
+    }
+
+    private Unit(UnitIdentifier unitIdentifier, UnitData unitData, UnitState unitState)
+    {
+        UnitIdentifier = unitIdentifier;
+        UnitData = unitData;
+        UnitState = unitState;
+    }
+
+    public object Clone()
+    {
+        return new Unit(UnitIdentifier, (UnitData)UnitData.Clone(), (UnitState)UnitState.Clone());
     }
 }
 
@@ -61,25 +73,44 @@ public class UnitIdentifier : IEquatable<UnitIdentifier>
 }
 
 [Serializable]
-public class UnitData
+public class UnitData : ICloneable
 {
     public int MaxHp { get; private set; }
     public int BaseDamage { get; }
+    public Vector3 Position { get; set; }
 
     public Color Color { get; }
     public List<UnitAbility> UnitAbilities { get; }
 
-    public UnitData(UnitDataSO unitDataSO, List<UnitAbility> unitAbilities, Color color)
+    public UnitData(UnitDataSO unitDataSO, List<UnitAbility> unitAbilities, Color color, Vector3 initialPosition)
     {
         MaxHp = unitDataSO.health;
         BaseDamage = unitDataSO.baseDamage;
         Color = color;
         UnitAbilities = unitAbilities;
+        Position = initialPosition;
+    }
+
+    //For deep copy purposes
+    private UnitData(int maxHp, int baseDamage, Vector2 position, Color color, List<UnitAbility> unitAbilities)
+    {
+        MaxHp = maxHp;
+        BaseDamage = baseDamage;
+        Position = position;
+        Color = color;
+        UnitAbilities = unitAbilities;
+    }
+
+    public object Clone()
+    {
+        return MemberwiseClone();
+        //For the time being we don't need deep copy
+        //return new UnitData(MaxHp, BaseDamage, Position, Color, UnitAbilities);
     }
 }
 
 [Serializable]
-public class UnitState
+public class UnitState : ICloneable
 {
     public bool IsAlive { get; private set; } = true;
     public int CurrentHp { get; private set; }
@@ -90,6 +121,21 @@ public class UnitState
         CurrentHp = currentHp;
         ActiveActionEffects = new List<ActionEffect>();
     }
+
+    private UnitState(bool isAlive, int currentHp, List<ActionEffect> activeActionEffects)
+    {
+        IsAlive = isAlive;
+        CurrentHp = currentHp;
+        ActiveActionEffects = activeActionEffects;
+    }
+
+    public object Clone()
+    {
+        return MemberwiseClone();
+        //For the time being we don't need deep copy
+        //return new UnitState(IsAlive, CurrentHp, ActiveActionEffects);
+    }
+
 
     public void AddActionEffect(ActionEffect actionEffect)
     {
@@ -141,10 +187,10 @@ public class UnitState
 
 public static class UnitFactory
 {
-    public static Unit GetUnit(UnitIdentifier unitIdentifier, UnitDataSO unitDataSO)
+    public static Unit GetUnit(UnitIdentifier unitIdentifier, UnitDataSO unitDataSO, Vector3 initialPosition)
     {
         return new Unit(unitIdentifier, 
-            new UnitData(unitDataSO, UnitAbilityFactory.GetUnitAbilities(unitDataSO), unitIdentifier.TeamId == 0 ? Color.green : Color.red));
+            new UnitData(unitDataSO, UnitAbilityFactory.GetUnitAbilities(unitDataSO), unitIdentifier.TeamId == 0 ? Color.green : Color.red, initialPosition));
     }
 }
 
@@ -153,6 +199,11 @@ public static class UnitHelpers
     public static UnitRelativeOwner GetRelativeOwner(int teamId, int otherTeamId)
     {
         return teamId == otherTeamId ? UnitRelativeOwner.Self : UnitRelativeOwner.Opponent;
+    }
+
+    public static float GetDistanceBetweenUnits(Unit targetA, Unit targetB)
+    {
+        return Vector3.Distance(targetA.UnitData.Position, targetB.UnitData.Position);
     }
 
 }

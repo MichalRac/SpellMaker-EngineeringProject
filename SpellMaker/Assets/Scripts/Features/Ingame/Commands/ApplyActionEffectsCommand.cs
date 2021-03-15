@@ -28,4 +28,34 @@ public class ApplyActionEffectsCommand : AbstractUnitCommand
         }
         commandData.onCommandCompletedCallback?.Invoke();
     }
+
+    public override void Simulate(CommonCommandData commandData, OptionalCommandData optionalData = null)
+    {
+        var currentWorldModel = WorldModelService.Instance.GetCurrentWorldModelLayer();
+        foreach (var targetsIdentifier in commandData.targetsIdentifiers)
+        {
+            if (currentWorldModel.TryGetUnit(targetsIdentifier, out var target))
+            {
+                foreach (var effect in commandData.unitAbility.AbilityEffects)
+                {
+                    if(effect is TauntEffect tauntEffect)
+                    {
+                        tauntEffect.OptionalTarget = UnitManager.Instance.GetActiveCharacter(commandData.actor);
+                        tauntEffect.tauntTarget = tauntEffect.OptionalTarget;
+                        target.UnitState.AddActionEffect(effect);
+                        continue;
+                    }
+
+                    target.UnitState.AddActionEffect(effect);
+                    effect.SimulateAffect(target, false);
+                }
+
+            }
+            else
+            {
+                Debug.LogError($"Couldn't apply ActionEffects to unit {targetsIdentifier} as it doesn't exist in current world model");
+            }
+        }
+        Execute(commandData, optionalData);
+    }
 }

@@ -8,7 +8,7 @@ public class PointTargeter : MonoBehaviour, ITargeter
     private List<UnitRelativeOwner> targetGroup;
     private int CurrentTeamId { get; set; }
 
-    public void Setup(int currentTeamId, Vector3 initPos, AbilitySize abilitySize, List<UnitRelativeOwner> targetGroup)
+    public void Setup(int currentTeamId, Vector3 initPos, float abilitySize, List<UnitRelativeOwner> targetGroup)
     {
         gameObject.SetActive(true);
         transform.position = new Vector3(initPos.x, transform.position.y, initPos.z);

@@ -11,6 +11,7 @@ public class AbilitySetupSO : ScriptableObject
     public bool Independant;
     public TargetingType TargetingType;
     public AbilitySize AbilitySize;
+    public TargeterScaleSO TargeterScaleSo;
     public List<ActionEffectData> AbilityEffects;
     public List<AbstractUnitCommand> CommandQueue;
     public List<UnitRelativeOwner> AffectedCharacters;

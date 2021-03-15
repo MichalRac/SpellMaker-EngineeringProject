@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 [CreateAssetMenu(fileName = "AttackUnitCommand", menuName = "ScriptableObjects/Commands/Damage/AttackUnitCommand")]
 public class AttackUnitCommand : AbstractUnitCommand
 {
+    // TODO this wouldn't be needed if there was a command for just animation handling
     [SerializeField] private bool applyBaseDamage;
 
     public override void Execute(CommonCommandData commandData, OptionalCommandData optionalCommandData = null)
@@ -27,10 +25,41 @@ public class AttackUnitCommand : AbstractUnitCommand
             commandData.onCommandCompletedCallback?.Invoke();
 
             if (commandData.targetsIdentifiers[0] == null)
+            {
+                Debug.LogError($"[AttackUnitCommand] Missing target in command data");
                 return;
-
+            }
+            
             var target = UnitManager.Instance.GetActiveCharacter(commandData.targetsIdentifiers[0]);
             target.ReciveDamage(applyBaseDamage ? actor.Unit.UnitData.BaseDamage : 0);
         });
+    }
+
+    public override void Simulate(CommonCommandData commandData, OptionalCommandData optionalData = null)
+    {
+        var currentWorldModel = WorldModelService.Instance.GetCurrentWorldModelLayer();
+
+        if (currentWorldModel.TryGetUnit(commandData.targetsIdentifiers[0], out var target))
+        {
+            if (applyBaseDamage)
+            {
+                if (currentWorldModel.TryGetUnit(commandData.actor, out var actor))
+                {
+                    target.UnitState.ApplyDamage(actor.UnitData.BaseDamage);
+                }
+                else
+                {
+                    Debug.LogError($"Couldn't find actor Unit with {commandData.actor} UnitIdentifier");
+                }
+            }
+            else
+            {
+                target.UnitState.ApplyDamage(0);
+            }
+        }
+        else
+        {
+            Debug.LogError($"Couldn't find target Unit with {commandData.targetsIdentifiers[0]} UnitIdentifier");
+        }
     }
 }

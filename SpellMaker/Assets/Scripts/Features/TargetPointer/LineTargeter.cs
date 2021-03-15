@@ -15,14 +15,13 @@ public class LineTargeter : MonoBehaviour, ITargeter
     private Vector3 basicTargeterPlacement;
     private float targetRotation;
 
-    public void Setup(int currentTeamId, Vector3 initPos, AbilitySize abilitySize, List<UnitRelativeOwner> targetGroup)
+    public void Setup(int currentTeamId, Vector3 initPos, float abilitySize, List<UnitRelativeOwner> targetGroup)
     {
         this.targetGroup = targetGroup;
         basicTargeterPlacement = initPos;
         targetRotation = transform.parent.rotation.y;
         transform.parent.position = new Vector3(initPos.x, transform.parent.position.y, initPos.z);
-        var targeterScale = targeterScaleSO.GetAbilityTargeterScale(abilitySize);
-        transform.parent.localScale = new Vector3(targeterScale, 1f, transform.parent.localScale.z);
+        transform.parent.localScale = new Vector3(abilitySize, 1f, transform.parent.localScale.z);
         transform.parent.gameObject.SetActive(true);
         CurrentTeamId = currentTeamId;
     }

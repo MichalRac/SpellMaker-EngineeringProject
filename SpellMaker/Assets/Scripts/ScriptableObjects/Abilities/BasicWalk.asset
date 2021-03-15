@@ -17,6 +17,7 @@ MonoBehaviour:
   Independant: 1
   TargetingType: 0
   AbilitySize: 0
+  TargeterScaleSo: {fileID: 11400000, guid: 66bced1201b7b2e49ac5bbee8c3a4d55, type: 2}
   AbilityEffects: []
   CommandQueue:
   - {fileID: 11400000, guid: 0c52f9b17ef9896489c181e4d769e0e9, type: 2}
