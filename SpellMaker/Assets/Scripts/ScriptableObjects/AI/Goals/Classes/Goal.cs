@@ -5,27 +5,19 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Goal", menuName = "ScriptableObjects/AI/Goal")]
 public class Goal : ScriptableObject
 {
+    protected const float MAX_GOAL_URGENCY = 5f;
     [SerializeField] public float UrgencyPower;
-
-/*    public float GetCurrentDiscontentment()
+    
+    public virtual float GetDiscontentmentValue(Unit unit, WorldModel worldModel)
     {
-        return Mathf.Pow(Urgency, 2);
+        return ProcessDiscontentmentValue(0f);
     }
-
-    public float GetDeltaDiscontentment(float deltaUrgency)
-    {
-        return Mathf.Pow(Urgency + deltaUrgency, 2) - GetCurrentDiscontentment();
-    }*/
-
-    public virtual float GetDisconentment(float urgencyValue)
+    
+    public float ProcessDiscontentmentValue(float urgencyValue)
     {
         return urgencyValue * urgencyValue;
     }
 
-    public virtual float GetDiscontentmentChange<T>(T command, CommonCommandData ccd, OptionalCommandData ocd) where T : AbstractUnitCommand
-    {
-        return 0f;
-    }
 }
 
 /*

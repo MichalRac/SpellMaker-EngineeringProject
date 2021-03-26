@@ -27,6 +27,18 @@ public class Unit : ICloneable
             UnitState.ApplyDamage(UnitState.CurrentHp - maxHP);
         }
     }
+    
+    public void SimulateActivateActionEffects()
+    {
+        for(int i = UnitState.ActiveActionEffects.Count - 1; i >= 0; i--)
+        {
+            UnitState.ActiveActionEffects[i].SimulateAffect(this, true);
+            if(UnitState.ActiveActionEffects[i].IsFinished())
+            {
+                UnitState.ActiveActionEffects.RemoveAt(i);
+            }
+        }
+    }
 
     private Unit(UnitIdentifier unitIdentifier, UnitData unitData, UnitState unitState)
     {
@@ -81,24 +93,27 @@ public class UnitData : ICloneable
 
     public Color Color { get; }
     public List<UnitAbility> UnitAbilities { get; }
+    public List<Goal> Goals { get; }
 
-    public UnitData(UnitDataSO unitDataSO, List<UnitAbility> unitAbilities, Color color, Vector3 initialPosition)
+    public UnitData(UnitDataSO unitDataSO, List<UnitAbility> unitAbilities, List<Goal> goals, Color color, Vector3 initialPosition)
     {
         MaxHp = unitDataSO.health;
         BaseDamage = unitDataSO.baseDamage;
         Color = color;
         UnitAbilities = unitAbilities;
+        Goals = goals;
         Position = initialPosition;
     }
 
     //For deep copy purposes
-    private UnitData(int maxHp, int baseDamage, Vector2 position, Color color, List<UnitAbility> unitAbilities)
+    private UnitData(int maxHp, int baseDamage, Vector2 position, Color color, List<UnitAbility> unitAbilities, List<Goal> goals)
     {
         MaxHp = maxHp;
         BaseDamage = baseDamage;
         Position = position;
         Color = color;
         UnitAbilities = unitAbilities;
+        Goals = goals;
     }
 
     public object Clone()
@@ -141,7 +156,7 @@ public class UnitState : ICloneable
     {
         ActiveActionEffects.Add(actionEffect);
     }
-
+    
     public void ApplyDamage(int value)
     {
         foreach(var effect in ActiveActionEffects)
@@ -189,8 +204,16 @@ public static class UnitFactory
 {
     public static Unit GetUnit(UnitIdentifier unitIdentifier, UnitDataSO unitDataSO, Vector3 initialPosition)
     {
-        return new Unit(unitIdentifier, 
-            new UnitData(unitDataSO, UnitAbilityFactory.GetUnitAbilities(unitDataSO), unitIdentifier.TeamId == 0 ? Color.green : Color.red, initialPosition));
+        return 
+            new Unit(unitIdentifier, 
+                new UnitData(unitDataSO, 
+                    UnitAbilityFactory.GetUnitAbilities(unitDataSO), 
+                    unitDataSO.goalOrientedBehaviourPresetSO.goals, 
+                    unitIdentifier.TeamId == 0 
+                        ? Color.green 
+                        : Color.red, 
+                    initialPosition)
+                );
     }
 }
 

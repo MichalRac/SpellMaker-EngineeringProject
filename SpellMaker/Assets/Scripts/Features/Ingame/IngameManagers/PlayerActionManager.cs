@@ -60,11 +60,10 @@ public class PlayerActionManager : MonoBehaviour
 
         Debug.Log($"Dispatching ability {activeAbility.AbilityName} on {targetingResultData.targetPoint} with {targetingResultData.unitIdentifiers.Count}");
 
-        var commandQueue = new Queue<AbstractUnitCommand>(activeAbility.AbilityCommandQueue);
         var commonCommandData = new CommonCommandData(activeCharacter.GetUnitIdentifier(), targetingResultData.unitIdentifiers, activeAbility, null);
         var optionalCommandData = new OptionalCommandData(targetingResultData.targetPoint);
 
-        new AbilitySequenceHandler(commandQueue, commonCommandData, optionalCommandData, EndPlayerActionPhase).Begin();
+        new AbilitySequenceHandler(activeAbility.AbilityCommandQueue, commonCommandData, optionalCommandData, EndPlayerActionPhase).Begin();
 
     }
 

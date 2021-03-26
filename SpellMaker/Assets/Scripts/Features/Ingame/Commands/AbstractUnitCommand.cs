@@ -7,18 +7,6 @@ public abstract class AbstractUnitCommand : ScriptableObject, ICommand
     public abstract void Execute(CommonCommandData commandData, OptionalCommandData optionalData = null);
 
     public abstract void Simulate(CommonCommandData commandData, OptionalCommandData optionalData = null);
-
-    public virtual float GetCommandDeltaDiscontentment(List<Goal> goals, CommonCommandData ccd, OptionalCommandData ocd = null)
-    {
-        var disconentment = 0f;
-        foreach (var goal in goals)
-        {
-            var goalValueAfterAction = goal.UrgencyPower + goal.GetDiscontentmentChange(this, ccd, ocd);
-
-            disconentment += goal.GetDisconentment(goalValueAfterAction);
-        }
-        return disconentment;
-    }
 }
 
 public class CommonCommandData

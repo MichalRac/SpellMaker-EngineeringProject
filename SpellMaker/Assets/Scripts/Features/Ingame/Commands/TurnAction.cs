@@ -12,16 +12,4 @@ public class TurnAction
         CommonCommandData = commonCommandData;
         OptionalCommandData = optionalCommandData;
     }
-
-    public float GetGoalChange(List<Goal> characterGoals, CommonCommandData ccd, OptionalCommandData ocd)
-    {
-        var totalChange = 0f;
-
-        foreach(var command in QueueOfCommands)
-        {
-            totalChange += command.GetCommandDeltaDiscontentment(characterGoals, ccd, ocd);
-        }
-
-        return totalChange;
-    }
 }

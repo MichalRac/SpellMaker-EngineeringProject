@@ -25,7 +25,7 @@ public class MasterManager : MonoBehaviour
 
         turnManager.PrepareQueue(unitManager.GetAllActiveCharacters());
         
-        WorldModelService.Instance.Initialize( unitManager.PrepareUnitCopiesForWorldModel() );
+        WorldModelService.Instance.Initialize( unitManager.PrepareUnitCopiesForWorldModel(), turnManager.queue, turnManager.active );
 
         BeginTurn();
     }
@@ -46,24 +46,46 @@ public class MasterManager : MonoBehaviour
 
         var nextInQueue = turnManager.GetNextInQueue();
         var activeCharacter = unitManager.GetActiveCharacter(nextInQueue);
-
         
-        WorldModelService.Instance.Initialize( unitManager.PrepareUnitCopiesForWorldModel() );
-        foreach (var unitAbility in activeCharacter.Unit.UnitData.UnitAbilities)
+        /*foreach (var unitAbility in activeCharacter.Unit.UnitData.UnitAbilities)
         {
             var possibleAbilityUses = unitAbility.GetPossibleAbilityUses(activeCharacter.Unit, WorldModelService.Instance.GetCurrentWorldModelLayer());
 
             foreach (var possibleAbilityUse in possibleAbilityUses)
             {
-                Debug.Log( $"Can use ability {unitAbility.AbilityName} on {possibleAbilityUse.commonCommandData.targetsIdentifiers[0].UniqueId} with {possibleAbilityUse.commonCommandData.targetsIdentifiers.Count} hits");
+                if (possibleAbilityUse.commonCommandData.targetsIdentifiers.Count > 0)
+                {
+                    Debug.Log(
+                        $"Can use ability {unitAbility.AbilityName} at {possibleAbilityUse.optionalCommandData.Position} on {possibleAbilityUse.commonCommandData.targetsIdentifiers[0].UniqueId} with {possibleAbilityUse.commonCommandData.targetsIdentifiers.Count} targets");
+                }
+                else
+                {
+                    Debug.Log(
+                        $"An ability {unitAbility.AbilityName} with {possibleAbilityUse.commonCommandData.targetsIdentifiers.Count} hits has been found as viable");
+                }
             }
-        }
+        }*/
 
-        playerActionManager.BeginPlayerActionPhase(activeCharacter, () => 
+        if (activeCharacter.Unit.UnitIdentifier.TeamId == 0)
         {
-            activeCharacter.ActivateActionEffects();
-            activeCharacter.RefreshLabel();
-            BeginTurn();
-        });
+            playerActionManager.BeginPlayerActionPhase(activeCharacter, () => 
+            {
+                activeCharacter.ActivateActionEffects();
+                activeCharacter.RefreshLabel();
+                BeginTurn();
+            });
+
+        }
+        else
+        {
+            WorldModelService.Instance.Initialize( unitManager.PrepareUnitCopiesForWorldModel(), turnManager.queue, nextInQueue);
+            new AbilitySequenceHandler(WorldModelService.Instance.CalculateAIAction(activeCharacter.Unit), () =>
+            {
+                activeCharacter.ActivateActionEffects();
+                activeCharacter.RefreshLabel();
+                BeginTurn();
+            }).Begin();
+
+        }
     }
 }

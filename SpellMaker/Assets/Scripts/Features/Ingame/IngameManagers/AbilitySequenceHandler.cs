@@ -12,7 +12,7 @@ public class AbilitySequenceHandler
 
     public AbilitySequenceHandler(Queue<AbstractUnitCommand> abilityQueue, CommonCommandData commonCommandData, OptionalCommandData optionalCommandData, Action onAbilitySequenceFinished)
     {
-        currentQueue = abilityQueue;
+        currentQueue = new Queue<AbstractUnitCommand>(abilityQueue);
         this.commonCommandData = commonCommandData;
         this.optionalCommandData = optionalCommandData;
         this.onAbilitySequenceFinished = onAbilitySequenceFinished;
@@ -20,7 +20,7 @@ public class AbilitySequenceHandler
 
     public AbilitySequenceHandler(TurnAction turnAction, Action onAbilitySequenceFinished)
     {
-        currentQueue = turnAction.QueueOfCommands;
+        currentQueue = new Queue<AbstractUnitCommand>(turnAction.QueueOfCommands);
         commonCommandData = turnAction.CommonCommandData;
         optionalCommandData = turnAction.OptionalCommandData;
         this.onAbilitySequenceFinished = onAbilitySequenceFinished;
@@ -45,7 +45,7 @@ public class AbilitySequenceHandler
         nextCommand.Execute(commonCommandData, optionalCommandData);
     }
 
-    public void BeginSimulate()
+    public void Simulate()
     {
         commonCommandData.onCommandCompletedCallback += SimulateNextCommand;
         SimulateNextCommand();
@@ -55,7 +55,7 @@ public class AbilitySequenceHandler
     {
         if (currentQueue.Count == 0)
         {
-            commonCommandData.onCommandCompletedCallback -= ProcessNextCommand;
+            commonCommandData.onCommandCompletedCallback -= SimulateNextCommand;
             onAbilitySequenceFinished?.Invoke();
             return;
         }

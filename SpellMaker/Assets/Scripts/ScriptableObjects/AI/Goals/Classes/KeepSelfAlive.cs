@@ -11,4 +11,12 @@ public class TemplateGoal : Goal
 [CreateAssetMenu(fileName = "KeepSelfAlive", menuName = "ScriptableObjects/AI/Goals/KeepSelfAlive")]
 public class KeepSelfAlive : Goal
 {
+     public override float GetDiscontentmentValue(Unit unit, WorldModel worldModel)
+    {
+        if (!unit.UnitState.IsAlive)
+            return 0f;
+
+        return ProcessDiscontentmentValue((float)unit.UnitState.CurrentHp / unit.UnitData.MaxHp * MAX_GOAL_URGENCY);
+    }
+
 }
