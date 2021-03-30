@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 574e0bed1f96c1f42a325613a8faf3df, type: 3}
   m_Name: KeepTeamShieldedGoal
   m_EditorClassIdentifier: 
-  UrgencyPower: 5
+  UrgencyPower: 100

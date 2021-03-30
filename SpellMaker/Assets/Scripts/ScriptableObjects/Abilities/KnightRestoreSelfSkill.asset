@@ -21,7 +21,9 @@ MonoBehaviour:
   AbilityEffects:
   - AbilityEffectType: 1
     AbilityLenght: 0
-    AbilityPower: 100
+    AbilityPower: 50
   CommandQueue:
   - {fileID: 11400000, guid: e24b319d5b05f82469128373c4fcbe55, type: 2}
+  - {fileID: 11400000, guid: 8bca557f7dd32e64186f7e8f23c8d36f, type: 2}
+  - {fileID: 11400000, guid: b5afc859c89258f499ff12ed0977c97c, type: 2}
   AffectedCharacters: 0100000003000000

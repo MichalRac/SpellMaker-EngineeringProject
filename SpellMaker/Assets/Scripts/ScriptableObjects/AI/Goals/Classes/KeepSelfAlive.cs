@@ -16,7 +16,7 @@ public class KeepSelfAlive : Goal
         if (!unit.UnitState.IsAlive)
             return 0f;
 
-        return ProcessDiscontentmentValue((float)unit.UnitState.CurrentHp / unit.UnitData.MaxHp * MAX_GOAL_URGENCY);
+        return ProcessDiscontentmentValue(MAX_GOAL_URGENCY - (float)unit.UnitState.CurrentHp / unit.UnitData.MaxHp * MAX_GOAL_URGENCY);
     }
 
 }

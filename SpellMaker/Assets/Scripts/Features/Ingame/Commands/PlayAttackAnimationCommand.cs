@@ -16,5 +16,6 @@ public class PlayAttackAnimationCommand : AbstractUnitCommand
 
     public override void Simulate(CommonCommandData commandData, OptionalCommandData optionalData = null)
     {
+        commandData.onCommandCompletedCallback?.Invoke();
     }
 }

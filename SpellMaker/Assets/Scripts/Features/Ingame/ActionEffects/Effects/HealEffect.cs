@@ -17,6 +17,6 @@ public class HealEffect : ActionEffect
     public override void SimulateAffect(Unit unitToAffect, bool decrementTurnsLeft)
     {
         base.SimulateAffect(unitToAffect, decrementTurnsLeft);
-        unitToAffect.UnitState.ApplyHeal(Power);
+        unitToAffect.ApplyHeal(Power);
     }
 }

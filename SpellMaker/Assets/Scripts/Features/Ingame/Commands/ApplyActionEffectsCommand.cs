@@ -56,5 +56,6 @@ public class ApplyActionEffectsCommand : AbstractUnitCommand
                 Debug.LogError($"Couldn't apply ActionEffects to unit {targetsIdentifier} as it doesn't exist in current world model");
             }
         }
+        commandData.onCommandCompletedCallback?.Invoke();
     }
 }

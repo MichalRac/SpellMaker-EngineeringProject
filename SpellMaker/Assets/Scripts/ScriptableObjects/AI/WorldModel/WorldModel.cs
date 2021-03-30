@@ -24,6 +24,8 @@ public class WorldModel
             yield return viableActionsCache[index++];
         }
     }
+    
+    public bool IsProcessed { get; set; }
 
     public WorldModel(List<Unit> modelActiveCharacters, Queue<UnitIdentifier> queue, UnitIdentifier activeUnit)
     {
@@ -74,6 +76,11 @@ public class WorldModel
     {
         if (TryGetUnit(CurrentlyActiveUnit, out var unit))
         {
+            if (!unit.UnitState.IsAlive)
+            {
+                return new List<TurnAction>();
+            }
+            
             return GetAllViableActions(unit);
         }
         
@@ -84,10 +91,36 @@ public class WorldModel
     private List<TurnAction> GetAllViableActions(Unit unit)
     {
         var viableActions = new List<TurnAction>();
+        var currentWorldModelLayer = WorldModelService.Instance.GetCurrentWorldModelLayer();
+
+        if (unit.UnitState.IsTaunted(out var tauntEffect))
+        {
+            var fittingUnits = WorldModelService.Instance.GetCurrentWorldModelLayer().GetUnitsFittingRequirement(unit, new List<UnitRelativeOwner> {UnitRelativeOwner.Opponent});
+            var target = tauntEffect.tauntTarget.Unit.UnitState.IsAlive
+                ? tauntEffect.tauntTarget.Unit.UnitIdentifier
+                : fittingUnits.Count > 0
+                    ? fittingUnits[0].UnitIdentifier
+                    : null;
+
+            if (target == null)
+                return viableActionsCache;
+
+            currentWorldModelLayer.TryGetUnit(target, out var targetUnit);
+            
+            var basicAttackAbility = unit.UnitData.UnitAbilities.Find((ua) => ua.AbilityName == "Attack");
+            viableActions.Add(new TurnAction(
+                    basicAttackAbility.AbilityCommandQueue,
+                    new CommonCommandData(unit.UnitIdentifier, new List<UnitIdentifier> {target}, basicAttackAbility, null), 
+                    new OptionalCommandData(targetUnit.UnitData.Position)
+                    ));
+
+            return viableActions;
+        }
+
 
         foreach (var ability in unit.UnitData.UnitAbilities)
         {
-            var possibleAbilityUses = ability.GetPossibleAbilityUses(unit, WorldModelService.Instance.GetCurrentWorldModelLayer());
+            var possibleAbilityUses = ability.GetPossibleAbilityUses(unit, currentWorldModelLayer);
             
             foreach (var possibleAbilityUse in possibleAbilityUses)
             {
@@ -123,7 +156,12 @@ public class WorldModel
             if (!unitRelativeOwners.Contains(UnitHelpers.GetRelativeOwner(actor.UnitIdentifier.TeamId, modelActiveCharacter.UnitIdentifier.TeamId)))
             {
                 continue;
-            }            
+            }
+
+            if (!modelActiveCharacter.UnitState.IsAlive)
+            {
+                continue;
+            }
             
             fittingUnits.Add(modelActiveCharacter);
         }
@@ -147,5 +185,49 @@ public class WorldModel
         }
         
         return discontentment;
+    }
+
+    public bool DidTeamWin(int teamId)
+    {
+        int alliesAlive = 0;
+        int opponentsAlive = 0;
+        foreach (var modelActiveCharacter in ModelActiveCharacters)
+        {
+            if (!modelActiveCharacter.UnitState.IsAlive)
+                continue;
+            
+            if (UnitHelpers.GetRelativeOwner(modelActiveCharacter.UnitIdentifier.TeamId, teamId) == UnitRelativeOwner.Self)
+            {
+                alliesAlive++;
+            }
+            else
+            {
+                opponentsAlive++;
+            }
+        }
+
+        return alliesAlive > 0 && opponentsAlive == 0;
+    }
+    
+    public bool DidTeamLose(int teamId)
+    {
+        int alliesAlive = 0;
+        int opponentsAlive = 0;
+        foreach (var modelActiveCharacter in ModelActiveCharacters)
+        {
+            if (!modelActiveCharacter.UnitState.IsAlive)
+                continue;
+            
+            if (UnitHelpers.GetRelativeOwner(modelActiveCharacter.UnitIdentifier.TeamId, teamId) == UnitRelativeOwner.Self)
+            {
+                alliesAlive++;
+            }
+            else
+            {
+                opponentsAlive++;
+            }
+        }
+
+        return alliesAlive == 0 && opponentsAlive > 0;
     }
 }

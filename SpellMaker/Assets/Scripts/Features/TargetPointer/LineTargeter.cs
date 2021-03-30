@@ -96,7 +96,7 @@ public class LineTargeter : MonoBehaviour, ITargeter
     private void OnTriggerEnter(Collider other)
     {
         var bcm = other.GetComponent<BaseCharacterMaster>();
-        if (bcm != null)
+        if (bcm != null && bcm.Unit.UnitState.IsAlive)
         {
             if (!targetGroup.Contains(UnitHelpers.GetRelativeOwner(CurrentTeamId, bcm.Unit.UnitIdentifier.TeamId)))
             {

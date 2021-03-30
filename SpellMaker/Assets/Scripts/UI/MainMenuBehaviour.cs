@@ -1,11 +1,18 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class MainMenuBehaviour : MonoBehaviour
 {
     [SerializeField] GameObject gameCreator;
+
+    private void Awake()
+    {
+        DOTween.Init();
+    }
 
     public void OnPlayButtonClicked()
     {

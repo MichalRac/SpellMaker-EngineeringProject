@@ -33,4 +33,11 @@ public class CameraController : MonoBehaviour
             transform.Rotate(new Vector3(0f, cameraRotation * speed * Time.deltaTime, 0f));
         }
     }
+
+    public void SwapSide(int teamId)
+    {
+        var newRotation = transform.rotation;
+        newRotation.y = teamId == 0 ? 0f : 180f;
+        transform.rotation = newRotation;
+    }
 }

@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5db99402c05fa594e9e61b09a1690a3e, type: 3}
   m_Name: KeepOpponentsTauntedGoal
   m_EditorClassIdentifier: 
-  UrgencyPower: 5
+  UrgencyPower: 10

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using DG.Tweening;
 using UnityEngine;
 
 public class PlayerActionManager : MonoBehaviour
@@ -16,22 +18,24 @@ public class PlayerActionManager : MonoBehaviour
     BaseCharacterMaster activeCharacter;
     UnitAbility activeAbility;
 
-    ActionMode currentActionMode;
-    Queue<ICommand> enqueuedCommands;
     Action onActionPhaseCompleted;
 
     [SerializeField] private ActionSelection ActionSelection;
     [SerializeField] private TargeterMaster Targeting;
+    [SerializeField] private GameObject TauntInfo;
 
     public void SetActionMode(ActionMode actionMode, UnitAbility ability = null)
     {
-        currentActionMode = actionMode;
         activeAbility = ability;
 
         Targeting.CancelTargeting();
 
         switch (actionMode)
         {
+            case ActionMode.Disabled:
+                Targeting.gameObject.SetActive(false);
+                ActionSelection.gameObject.SetActive(false);
+                break;
             case ActionMode.HUD:
                 Targeting.gameObject.SetActive(false);
                 ActionSelection.gameObject.SetActive(true);
@@ -69,16 +73,21 @@ public class PlayerActionManager : MonoBehaviour
 
     public void BeginPlayerActionPhase(BaseCharacterMaster activeCharacter, Action onPhaseCompleted)
     {
-        enqueuedCommands = new Queue<ICommand>();
         onActionPhaseCompleted = onPhaseCompleted;
         this.activeCharacter = activeCharacter;
 
         if(activeCharacter.Unit.UnitState.IsTaunted(out var tauntEffect))
         {
-            var abilitiesCount = activeCharacter.Unit.UnitData.UnitAbilities.Count;
-            activeAbility = activeCharacter.Unit.UnitData.UnitAbilities.Find((ua) => ua.AbilityName == "Attack") ?? activeCharacter.Unit.UnitData.UnitAbilities.Random();
-            OnTargetsChosen(new TargetingResultData(Vector3.zero, new List<UnitIdentifier> { tauntEffect.OptionalTarget.GetUnitIdentifier() }));
-            return;
+            var tauntTargetUnit = UnitManager.Instance.GetActiveCharacter(tauntEffect.tauntTarget.GetUnitIdentifier());
+            if (tauntTargetUnit != null)
+            {
+                TauntInfo.SetActive(true);
+                DOVirtual.DelayedCall(2.5f, () => TauntInfo.SetActive(false));
+
+                activeAbility = activeCharacter.Unit.UnitData.UnitAbilities.Find((ua) => ua.AbilityName == "Attack") ?? activeCharacter.Unit.UnitData.UnitAbilities.Random();
+                OnTargetsChosen(new TargetingResultData(Vector3.zero, new List<UnitIdentifier> { tauntEffect.OptionalTarget.GetUnitIdentifier() }));
+                return;
+            }
         }
 
         activeCharacter.SetHighlight(true);
@@ -90,6 +99,7 @@ public class PlayerActionManager : MonoBehaviour
     {
         activeCharacter.SetHighlight(false);
         this.activeCharacter = null;
+        SetActionMode(ActionMode.Disabled);
         onActionPhaseCompleted?.Invoke();
     }
 

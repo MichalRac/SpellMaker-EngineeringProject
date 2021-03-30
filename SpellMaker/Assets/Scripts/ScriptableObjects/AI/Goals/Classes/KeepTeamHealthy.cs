@@ -11,7 +11,7 @@ public class KeepTeamHealthy : Goal
         
         foreach (var modelUnit in worldModel.ModelActiveCharacters)
         {
-            if (UnitHelpers.GetRelativeOwner(unitTeam, modelUnit.UnitIdentifier.TeamId) == UnitRelativeOwner.Ally)
+            if (UnitHelpers.GetRelativeOwner(unitTeam, modelUnit.UnitIdentifier.TeamId) == UnitRelativeOwner.Self)
             {
                 alliesTotalHealth += modelUnit.UnitData.MaxHp;
                 alliesCurrentHealth += modelUnit.UnitState.CurrentHp;

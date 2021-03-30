@@ -47,4 +47,5 @@ public abstract class ActionEffect : IActionEffect
 
     public bool IsFinished() => TurnsLeftAffected <= 0;
 
+    public object Clone() => MemberwiseClone();
 }

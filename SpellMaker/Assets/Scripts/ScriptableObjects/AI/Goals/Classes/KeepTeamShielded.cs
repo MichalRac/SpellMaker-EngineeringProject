@@ -11,7 +11,7 @@ public class KeepTeamShielded : Goal
         
         foreach (var modelUnit in worldModel.ModelActiveCharacters)
         {
-            if (UnitHelpers.GetRelativeOwner(unitTeam, modelUnit.UnitIdentifier.TeamId) == UnitRelativeOwner.Ally)
+            if (UnitHelpers.GetRelativeOwner(unitTeam, modelUnit.UnitIdentifier.TeamId) == UnitRelativeOwner.Self)
             {
                 allies++;
 
@@ -25,7 +25,7 @@ public class KeepTeamShielded : Goal
             return ProcessDiscontentmentValue(0f);
         }
         
-        return ProcessDiscontentmentValue(MAX_GOAL_URGENCY - (float)allies / shieldedAllies * MAX_GOAL_URGENCY);
+        return ProcessDiscontentmentValue(MAX_GOAL_URGENCY - (float) shieldedAllies / allies * MAX_GOAL_URGENCY);
     }
 
 }

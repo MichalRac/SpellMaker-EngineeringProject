@@ -32,10 +32,13 @@ public class Unit : ICloneable
     {
         for(int i = UnitState.ActiveActionEffects.Count - 1; i >= 0; i--)
         {
-            UnitState.ActiveActionEffects[i].SimulateAffect(this, true);
             if(UnitState.ActiveActionEffects[i].IsFinished())
             {
                 UnitState.ActiveActionEffects.RemoveAt(i);
+            }
+            else
+            {
+                UnitState.ActiveActionEffects[i].SimulateAffect(this, true);
             }
         }
     }
@@ -106,11 +109,11 @@ public class UnitData : ICloneable
     }
 
     //For deep copy purposes
-    private UnitData(int maxHp, int baseDamage, Vector2 position, Color color, List<UnitAbility> unitAbilities, List<Goal> goals)
+    private UnitData(int maxHp, int baseDamage, Vector3 position, Color color, List<UnitAbility> unitAbilities, List<Goal> goals)
     {
         MaxHp = maxHp;
         BaseDamage = baseDamage;
-        Position = position;
+        Position = new Vector3(position.x, position.y, position.z);
         Color = color;
         UnitAbilities = unitAbilities;
         Goals = goals;
@@ -118,9 +121,7 @@ public class UnitData : ICloneable
 
     public object Clone()
     {
-        return MemberwiseClone();
-        //For the time being we don't need deep copy
-        //return new UnitData(MaxHp, BaseDamage, Position, Color, UnitAbilities);
+        return new UnitData(MaxHp, BaseDamage, Position, Color, UnitAbilities, Goals);
     }
 }
 
@@ -146,9 +147,12 @@ public class UnitState : ICloneable
 
     public object Clone()
     {
-        return MemberwiseClone();
-        //For the time being we don't need deep copy
-        //return new UnitState(IsAlive, CurrentHp, ActiveActionEffects);
+        var copiedEffects = new List<ActionEffect>();
+        foreach (var activeActionEffect in ActiveActionEffects)
+        {
+            copiedEffects.Add((ActionEffect)activeActionEffect.Clone());
+        }
+        return new UnitState(IsAlive, CurrentHp, copiedEffects);
     }
 
 
@@ -157,13 +161,16 @@ public class UnitState : ICloneable
         ActiveActionEffects.Add(actionEffect);
     }
     
-    public void ApplyDamage(int value)
+    public void ApplyDamage(int value, bool ignoreShield = false)
     {
-        foreach(var effect in ActiveActionEffects)
+        if (!ignoreShield)
         {
-            if(effect is ShieldEffect)
+            foreach(var effect in ActiveActionEffects)
             {
-                return;
+                if(effect is ShieldEffect)
+                {
+                    return;
+                }
             }
         }
         CurrentHp -= value;
@@ -178,10 +185,6 @@ public class UnitState : ICloneable
     public void ApplyHeal(int value)
     {
         CurrentHp += value;
-        if(CurrentHp > 100)
-        {
-            CurrentHp = 100;
-        }
     }
 
     public bool IsTaunted(out TauntEffect tauntEffect)

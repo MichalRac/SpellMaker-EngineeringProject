@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2cb546567db42b04bbd369349dd4be33, type: 3}
   m_Name: KeepTeamHealthyGoal
   m_EditorClassIdentifier: 
-  UrgencyPower: 5
+  UrgencyPower: 15

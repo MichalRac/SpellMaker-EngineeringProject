@@ -1,0 +1,15 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1efe4fe3fa1d1114b8ef3a1eb0dc1057, type: 3}
+  m_Name: CreateSlashParticlesFromTargetTowardOptionalTargetCommand
+  m_EditorClassIdentifier: 
+  ParticlePrefab: {fileID: 7447048527560981333, guid: 156eb7568b3dd5e4f981807185ebdeb4, type: 3}

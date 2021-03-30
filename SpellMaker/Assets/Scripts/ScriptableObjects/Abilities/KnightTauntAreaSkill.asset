@@ -20,11 +20,13 @@ MonoBehaviour:
   TargeterScaleSo: {fileID: 11400000, guid: ab87ad1bf815650438cb35e2dcabba01, type: 2}
   AbilityEffects:
   - AbilityEffectType: 2
-    AbilityLenght: 3
+    AbilityLenght: 2
     AbilityPower: 0
   - AbilityEffectType: 0
-    AbilityLenght: 5
+    AbilityLenght: 25
     AbilityPower: 0
   CommandQueue:
   - {fileID: 11400000, guid: e24b319d5b05f82469128373c4fcbe55, type: 2}
-  AffectedCharacters: 0200000003000000
+  - {fileID: 11400000, guid: 8bca557f7dd32e64186f7e8f23c8d36f, type: 2}
+  - {fileID: 11400000, guid: 47bbddf95b24f9749a9559a7aecb2187, type: 2}
+  AffectedCharacters: 02000000

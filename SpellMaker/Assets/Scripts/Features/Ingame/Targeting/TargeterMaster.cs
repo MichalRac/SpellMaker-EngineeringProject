@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -10,6 +11,9 @@ public class TargeterMaster : MonoBehaviour
     [SerializeField] private PointTargeter pointTargeter;
     [SerializeField] private CircleTargeter circleTargeter;
     [SerializeField] private LineTargeter lineTargeter;
+
+    [SerializeField] private GameObject targeterInfoGO;
+    [SerializeField] private GameObject invalidTargetInfoGO;
 
     [SerializeField] private float targeterMovementSpeed = 1f;
 
@@ -34,6 +38,7 @@ public class TargeterMaster : MonoBehaviour
         this.targetingResultCallback = targetingResultCallback;
         currentTargetingType = ability.TargetingType;
         currentTargetGroup = ability.TargetGroup;
+        targeterInfoGO.SetActive(true);
 
         switch (ability.TargetingType)
         {
@@ -77,6 +82,7 @@ public class TargeterMaster : MonoBehaviour
         currentTargeter?.CancelTargeting();
         additionalTargeter?.CancelTargeting();
         inputController?.Disable();
+        targeterInfoGO.SetActive(false);
     }
 
     private void Execute_performed(InputAction.CallbackContext obj)
@@ -85,11 +91,15 @@ public class TargeterMaster : MonoBehaviour
 
         if(currentTargetingType == TargetingType.Single && currentTargetGroup.Contains(UnitRelativeOwner.None) && targets.unitIdentifiers.Count > 0)
         {
+            invalidTargetInfoGO.SetActive(true);
+            DOVirtual.DelayedCall(1f, () => invalidTargetInfoGO.SetActive(false));
             Debug.Log("[TargeterMaster] Targeter expecting space you can walk to and no targets");
             return;
         }
         else if(!currentTargetGroup.Contains(UnitRelativeOwner.None) && targets.unitIdentifiers.Count == 0)
         {
+            invalidTargetInfoGO.SetActive(true);
+            DOVirtual.DelayedCall(1f, () => invalidTargetInfoGO.SetActive(false));
             Debug.Log("[TargeterMaster] Targeter at least one Unit target");
             return;
         }

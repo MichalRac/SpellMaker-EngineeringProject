@@ -27,5 +27,6 @@ public class MoveUpToUnitCommand : AbstractUnitCommand
         {
             Debug.LogError($"Couldn't find actor Unit with {commandData.actor} UnitIdentifier or target Unit with {commandData.targetsIdentifiers[0]} UnitIdentifier");
         }
+        commandData.onCommandCompletedCallback?.Invoke();
     }
 }

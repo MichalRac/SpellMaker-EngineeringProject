@@ -58,7 +58,10 @@ public static class GeneralExtensions
 
         foreach (var bcm in baseCharacterMasters)
         {
-            identifiers.Add(bcm.Unit.UnitIdentifier);
+            if (bcm.Unit.UnitState.IsAlive)
+            {
+                identifiers.Add(bcm.Unit.UnitIdentifier);
+            }
         }
 
         return identifiers;

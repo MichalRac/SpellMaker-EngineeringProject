@@ -23,6 +23,7 @@ MonoBehaviour:
     AbilityLenght: 0
     AbilityPower: 20
   CommandQueue:
-  - {fileID: 11400000, guid: e24b319d5b05f82469128373c4fcbe55, type: 2}
   - {fileID: 11400000, guid: 8bca557f7dd32e64186f7e8f23c8d36f, type: 2}
+  - {fileID: 11400000, guid: 69726bc90f29bd546b5c3a79063a2b1c, type: 2}
+  - {fileID: 11400000, guid: e24b319d5b05f82469128373c4fcbe55, type: 2}
   AffectedCharacters: 0200000003000000

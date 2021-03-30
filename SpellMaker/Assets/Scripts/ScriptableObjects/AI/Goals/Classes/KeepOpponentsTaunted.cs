@@ -25,7 +25,7 @@ public class KeepOpponentsTaunted : Goal
             return 0f;
         }
         
-        return ProcessDiscontentmentValue(MAX_GOAL_URGENCY - (float)enemies / tauntedEnemies * MAX_GOAL_URGENCY);
+        return ProcessDiscontentmentValue(MAX_GOAL_URGENCY - (float)tauntedEnemies / enemies * MAX_GOAL_URGENCY);
     }
 
 }

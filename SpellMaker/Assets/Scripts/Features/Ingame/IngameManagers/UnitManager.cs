@@ -15,7 +15,16 @@ public class UnitManager : MonoBehaviour
     [SerializeField] private TurnManager turnManager;
 
     private Dictionary<UnitIdentifier, BaseCharacterMaster> ActiveCharacters;
-    public BaseCharacterMaster GetActiveCharacter(UnitIdentifier unitIdentifier) => ActiveCharacters[unitIdentifier];
+    public BaseCharacterMaster GetActiveCharacter(UnitIdentifier unitIdentifier)
+    {
+        if (!ActiveCharacters.TryGetValue(unitIdentifier, out var bcm))
+        {
+            Debug.Log($"[UnitManager] Attempted to fetch unitId: {unitIdentifier.UniqueId} which does not exists/was removed");
+            return null;
+        }
+        return bcm;
+    }
+
     public Dictionary<UnitIdentifier, BaseCharacterMaster> GetAllActiveCharacters() => ActiveCharacters;
 
 

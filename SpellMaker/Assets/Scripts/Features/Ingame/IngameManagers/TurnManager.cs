@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class TurnManager : MonoBehaviour
 {
-    // Manage turns
-    public static int turn = 0;
     public Queue<UnitIdentifier> queue { get; private set; } = new Queue<UnitIdentifier>() ;
     public UnitIdentifier active { get; private set; }
 

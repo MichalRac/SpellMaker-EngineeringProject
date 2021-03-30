@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 public class WorldModelService
 {
-    private static readonly int DEFAULT_AI_DEPTH = 4;
+    private static readonly int DEFAULT_AI_DEPTH = 6;
     
     public static WorldModelService Instance;
 
@@ -31,7 +32,7 @@ public class WorldModelService
         WorldModelStack.Push(new WorldModel(unitCopies, queue, activeUnit));
     }
 
-    public TurnAction CalculateAIAction(Unit unit, int AIDepth = -1)
+    public TurnAction WIP_CalculateGOAPAction(Unit unit, int AIDepth = -1)
     {
         var rootWorldModel = GetCurrentWorldModelLayer();
         var currentWorldModel = new WorldModel(rootWorldModel.ModelActiveCharacters, rootWorldModel.Queue, rootWorldModel.CurrentlyActiveUnit);
@@ -41,7 +42,6 @@ public class WorldModelService
         {
             AIDepth = DEFAULT_AI_DEPTH;
         }
-        AIDepth *= WorldModelStack.Peek().ModelActiveCharacters.Count;
         int currentDepth = 0;
 
         var possibleActions = GetAllViableActions(unit);
@@ -51,75 +51,135 @@ public class WorldModelService
         var bestAction = possibleActions[0];
         var bestDiscontentmentValue = float.MaxValue;
 
+        bool victoryActionPlanFound = false;
+        int leastStepsToWin = Int32.MaxValue;
+        
+        var DEBUG_loops = 0;
+        var DEBUG_timestampStart = Time.realtimeSinceStartup;
         do
         {
-            if (WorldModelStack.Count >= AIDepth)
+            DEBUG_loops++;
+
+            var isVictoryPlan = currentWorldModel.DidTeamWin(unit.UnitIdentifier.TeamId);
+            var isLostPlan = currentWorldModel.DidTeamLose(unit.UnitIdentifier.TeamId);
+            
+            if (WorldModelStack.Count >= AIDepth ||  isVictoryPlan || isLostPlan)
             {
                 var currentDiscontentment = currentWorldModel.GetDiscontentmentForUnit(unit);
-
-                if (currentDiscontentment < bestDiscontentmentValue)
+                
+                // Basically after finding a VictoryPlan stop considering those plans that don't end in likely victory
+                if (!isVictoryPlan && victoryActionPlanFound)
                 {
-                    bestAction = currentInitialMove;
+                    continue;
+                }
+                else if (!isVictoryPlan && !victoryActionPlanFound)
+                {
+                    if (currentDiscontentment < bestDiscontentmentValue)
+                    {
+                        bestAction = currentInitialMove;
+                        bestDiscontentmentValue = currentDiscontentment;
+                    }
+                }
+                else if (isVictoryPlan && !victoryActionPlanFound)
+                {
+                    victoryActionPlanFound = true;
                     bestDiscontentmentValue = currentDiscontentment;
+                    leastStepsToWin = currentActionSequence.Count;
+
+                }
+                else if (isVictoryPlan && victoryActionPlanFound)
+                {
+                    if (currentDiscontentment < bestDiscontentmentValue)
+                    {
+                        if (leastStepsToWin > currentActionSequence.Count)
+                        {
+                            leastStepsToWin = currentActionSequence.Count;
+                            bestAction = currentInitialMove;
+                            bestDiscontentmentValue = currentDiscontentment;
+                        }
+                    }
                 }
 
+                try
+                {
+                    currentActionSequence.Pop();
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    throw;
+                }
                 WorldModelStack.Pop();
                 currentWorldModel = WorldModelStack.Peek();
             }
             else
             {
-                var nextActionEnumerator = currentWorldModel.GetNextActionEnumerator();
-
-                if (nextActionEnumerator.MoveNext())
+                // We should assume AI opponent (player) will make optimal moves as well, we do this at minimum depth to avoid bottlenecks (only checking state right after action)
+                if (UnitHelpers.GetRelativeOwner(currentWorldModel.CurrentlyActiveUnit.TeamId, unit.UnitIdentifier.TeamId) == UnitRelativeOwner.Opponent)
                 {
-                    if (currentActionSequence.Count == 0)
+                    if (!currentWorldModel.IsProcessed)
                     {
-                        currentInitialMove = nextActionEnumerator.Current;
+                        if (currentWorldModel.TryGetUnit(currentWorldModel.CurrentlyActiveUnit, out var independentUnit))
+                        {
+                            var nextAction = CalculateGOBAction(independentUnit, currentWorldModel);
+                            currentActionSequence.Push(nextAction);
+
+                            var nextQueueState = currentWorldModel.GetNextQueueState();
+                            var nextWorldState = new WorldModel(currentWorldModel.CopyUnits(), nextQueueState.Queue, nextQueueState.CurrentlyActiveUnit);
+                            WorldModelStack.Push(nextWorldState);
+                            nextWorldState.ApplyTurnAction(nextAction);
+
+                            currentWorldModel.IsProcessed = true;
+                        }
                     }
-
-                    currentActionSequence.Push(nextActionEnumerator.Current);
-
-                    var nextQueueState = currentWorldModel.GetNextQueueState();
-                    WorldModelStack.Push(new WorldModel(currentWorldModel.CopyUnits(), nextQueueState.Queue, nextQueueState.CurrentlyActiveUnit));
-                    currentWorldModel = WorldModelStack.Peek();
-
-                    currentWorldModel.ApplyTurnAction(nextActionEnumerator.Current);
+                    else
+                    {
+                        if (currentActionSequence.Count > 0)
+                        {
+                            currentActionSequence.Pop();
+                        }
+                        WorldModelStack.Pop();
+                        currentWorldModel = WorldModelStack.Count > 0 ? WorldModelStack.Peek() : null;
+                    }
                 }
                 else
                 {
-                    nextActionEnumerator.Dispose();
-                    currentActionSequence.Pop();
-                    WorldModelStack.Pop();
-                    currentWorldModel = WorldModelStack.Count > 0 ? WorldModelStack.Peek() : null;
+                    var nextActionEnumerator = currentWorldModel.GetNextActionEnumerator();
+
+                    if (nextActionEnumerator.MoveNext())
+                    {
+                        if (currentActionSequence.Count == 0)
+                        {
+                            currentInitialMove = nextActionEnumerator.Current;
+                        }
+
+                        currentActionSequence.Push(nextActionEnumerator.Current);
+
+                        var nextQueueState = currentWorldModel.GetNextQueueState();
+                        WorldModelStack.Push(new WorldModel(currentWorldModel.CopyUnits(), nextQueueState.Queue, nextQueueState.CurrentlyActiveUnit));
+                        currentWorldModel = WorldModelStack.Peek();
+
+                        currentWorldModel.ApplyTurnAction(nextActionEnumerator.Current);
+                    }
+                    else
+                    {
+                        nextActionEnumerator.Dispose();
+                        if (currentActionSequence.Count > 0)
+                        {
+                            currentActionSequence.Pop();
+                        }
+                        WorldModelStack.Pop();
+                        currentWorldModel = WorldModelStack.Count > 0 ? WorldModelStack.Peek() : null;
+                    }
                 }
             }
-        } while (WorldModelStack.Count >= 1);
+        } while (WorldModelStack.Count > 1);
         
-        /*foreach (var ability in unit.UnitData.UnitAbilities)
-        {
-            var possibleAbilityUses = ability.GetPossibleAbilityUses(unit, GetCurrentWorldModelLayer());
-            
-            foreach (var possibleAbilityUse in possibleAbilityUses)
-            {
-                possibleActions.Add(new TurnAction(ability.AbilityCommandQueue, possibleAbilityUse.commonCommandData, possibleAbilityUse.optionalCommandData));
-                /*
-                 var potentialTurnAction = new TurnAction(ability.AbilityCommandQueue, possibleAbilityUse.commonCommandData, possibleAbilityUse.optionalCommandData);
-                
-                var abilitySequenceHandler = new AbilitySequenceHandler(potentialTurnAction, null);
-                abilitySequenceHandler.Simulate();
-                #1#
-                
-                //potentialTurnAction.GetGoalChange();
-
-                // Heuretic assumptions for oprimization
-                // if(goalChange < 0) continue
-            }
-        }*/
-
+        Debug.Log($"AI Calculation Report: loops: {DEBUG_loops}, time: {Time.realtimeSinceStartup - DEBUG_timestampStart}, action taken: {bestAction.CommonCommandData.unitAbility.AbilityName}");
 
         return bestAction;
     }
-    
+
     private List<TurnAction> GetAllViableActions(Unit unit)
     {
         var viableActions = new List<TurnAction>();
@@ -137,9 +197,30 @@ public class WorldModelService
         return viableActions;
     }
 
-    public WorldModel ApplyAction(TurnAction action)
+    public TurnAction CalculateGOBAction(Unit unit, WorldModel currentWorldModel)
     {
-        var abilitySequenceHandler = new AbilitySequenceHandler(action, null);
-        return new WorldModel(new List<Unit>(), null, null);
+        var nextQueueState = currentWorldModel.GetNextQueueState();
+
+        TurnAction bestAction = null;
+        float bestDiscontentment = float.MaxValue;
+        
+        foreach (var viableAction in currentWorldModel.GetNextAction())
+        {
+            var nextWorldState = new WorldModel(currentWorldModel.CopyUnits(), nextQueueState.Queue, nextQueueState.CurrentlyActiveUnit);
+            WorldModelStack.Push(nextWorldState);
+            nextWorldState.ApplyTurnAction(viableAction);
+
+            var discontentmentForUnit =  nextWorldState.GetDiscontentmentForUnit(unit);
+            if (discontentmentForUnit < bestDiscontentment)
+            {
+                bestAction = viableAction;
+                bestDiscontentment = discontentmentForUnit;
+            }
+
+            WorldModelStack.Pop();
+        }
+        
+
+        return bestAction;
     }
 }

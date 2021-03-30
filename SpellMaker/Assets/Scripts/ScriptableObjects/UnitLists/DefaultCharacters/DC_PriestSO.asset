@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   unitClass: 2
   unitClassMaster: {fileID: 3381964551250889944, guid: 274c4c35ed05ea14c87492064b3cadfd, type: 3}
-  health: 40
+  health: 55
   baseDamage: 10
   goalOrientedBehaviourPresetSO: {fileID: 11400000, guid: 52112146be4d24d469471f09733ee0db, type: 2}
   abilities:

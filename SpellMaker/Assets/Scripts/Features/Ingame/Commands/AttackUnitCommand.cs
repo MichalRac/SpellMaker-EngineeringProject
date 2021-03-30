@@ -31,7 +31,10 @@ public class AttackUnitCommand : AbstractUnitCommand
             }
             
             var target = UnitManager.Instance.GetActiveCharacter(commandData.targetsIdentifiers[0]);
-            target.ReciveDamage(applyBaseDamage ? actor.Unit.UnitData.BaseDamage : 0);
+            if (target != null)
+            {
+                target.ReciveDamage(applyBaseDamage ? actor.Unit.UnitData.BaseDamage : 0);
+            }
         });
     }
 
@@ -61,5 +64,6 @@ public class AttackUnitCommand : AbstractUnitCommand
         {
             Debug.LogError($"Couldn't find target Unit with {commandData.targetsIdentifiers[0]} UnitIdentifier");
         }
+        commandData.onCommandCompletedCallback?.Invoke();
     }
 }

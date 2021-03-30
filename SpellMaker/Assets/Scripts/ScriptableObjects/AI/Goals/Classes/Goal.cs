@@ -13,9 +13,9 @@ public class Goal : ScriptableObject
         return ProcessDiscontentmentValue(0f);
     }
     
-    public float ProcessDiscontentmentValue(float urgencyValue)
+    protected float ProcessDiscontentmentValue(float urgencyValue)
     {
-        return urgencyValue * urgencyValue;
+        return UrgencyPower * urgencyValue * urgencyValue;
     }
 
 }

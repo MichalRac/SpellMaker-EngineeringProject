@@ -1,13 +1,13 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class MasterManager : MonoBehaviour
 {
     [SerializeField] TurnManager turnManager;
     [SerializeField] UnitManager unitManager;
-    [SerializeField] BattleSceneManager battleSceneManager;
     [SerializeField] PlayerActionManager playerActionManager;
+    [SerializeField] private CameraController cameraController;
+    [SerializeField] private GameCompletedPopup gameCompletedPopup;
 
     public void Initialize(BaseBattleSceneArgs sceneArguments)
     {
@@ -27,65 +27,67 @@ public class MasterManager : MonoBehaviour
         
         WorldModelService.Instance.Initialize( unitManager.PrepareUnitCopiesForWorldModel(), turnManager.queue, turnManager.active );
 
-        BeginTurn();
+        StartCoroutine(BeginTurn());
     }
 
 
 
-    public void BeginTurn()
+    private IEnumerator BeginTurn()
     {
         unitManager.UpdateStatus(out var removedUnits);
         turnManager.UpdateStatus(removedUnits);
-        
-        if(!unitManager.HasAnyCharacterLeft(0) || !unitManager.HasAnyCharacterLeft(1))
+
+        if(!unitManager.HasAnyCharacterLeft(0))
         {
-            // Handle end game flow
-            Debug.Log("Game completed!");
-            return;
+            gameCompletedPopup.Show(false);
         }
-
-        var nextInQueue = turnManager.GetNextInQueue();
-        var activeCharacter = unitManager.GetActiveCharacter(nextInQueue);
-        
-        /*foreach (var unitAbility in activeCharacter.Unit.UnitData.UnitAbilities)
+        else if(!unitManager.HasAnyCharacterLeft(1))
         {
-            var possibleAbilityUses = unitAbility.GetPossibleAbilityUses(activeCharacter.Unit, WorldModelService.Instance.GetCurrentWorldModelLayer());
-
-            foreach (var possibleAbilityUse in possibleAbilityUses)
-            {
-                if (possibleAbilityUse.commonCommandData.targetsIdentifiers.Count > 0)
-                {
-                    Debug.Log(
-                        $"Can use ability {unitAbility.AbilityName} at {possibleAbilityUse.optionalCommandData.Position} on {possibleAbilityUse.commonCommandData.targetsIdentifiers[0].UniqueId} with {possibleAbilityUse.commonCommandData.targetsIdentifiers.Count} targets");
-                }
-                else
-                {
-                    Debug.Log(
-                        $"An ability {unitAbility.AbilityName} with {possibleAbilityUse.commonCommandData.targetsIdentifiers.Count} hits has been found as viable");
-                }
-            }
-        }*/
-
-        if (activeCharacter.Unit.UnitIdentifier.TeamId == 0)
-        {
-            playerActionManager.BeginPlayerActionPhase(activeCharacter, () => 
-            {
-                activeCharacter.ActivateActionEffects();
-                activeCharacter.RefreshLabel();
-                BeginTurn();
-            });
-
+            gameCompletedPopup.Show(true);
         }
         else
         {
-            WorldModelService.Instance.Initialize( unitManager.PrepareUnitCopiesForWorldModel(), turnManager.queue, nextInQueue);
-            new AbilitySequenceHandler(WorldModelService.Instance.CalculateAIAction(activeCharacter.Unit), () =>
-            {
-                activeCharacter.ActivateActionEffects();
-                activeCharacter.RefreshLabel();
-                BeginTurn();
-            }).Begin();
+            var nextInQueue = turnManager.GetNextInQueue();
+            var activeCharacter = unitManager.GetActiveCharacter(nextInQueue);
+        
+            cameraController.SwapSide(activeCharacter.Unit.UnitIdentifier.TeamId);
 
+            if (activeCharacter.Unit.UnitIdentifier.TeamId == 0)
+            {
+                playerActionManager.BeginPlayerActionPhase(activeCharacter, () => 
+                {
+                    activeCharacter.ActivateActionEffects();
+                    activeCharacter.RefreshLabel();
+                    StartCoroutine(BeginTurn());
+                });
+
+            }
+            else
+            {
+                yield return new WaitForSeconds(0.5f);
+                WorldModelService.Instance.Initialize(unitManager.PrepareUnitCopiesForWorldModel(), turnManager.queue, nextInQueue);
+                
+                new AbilitySequenceHandler(WorldModelService.Instance.CalculateGOBAction(activeCharacter.Unit, WorldModelService.Instance.GetCurrentWorldModelLayer()), () =>
+                {
+                    activeCharacter.ActivateActionEffects();
+                    activeCharacter.RefreshLabel();
+
+                    StartCoroutine(BeginTurn());
+                }).Begin(); 
+
+                /*
+                 // GOAP approach
+                 new AbilitySequenceHandler(WorldModelService.Instance.WIP_CalculateGOAPAction(activeCharacter.Unit), () =>
+                {
+                    activeCharacter.ActivateActionEffects();
+                    activeCharacter.RefreshLabel();
+
+                    StartCoroutine(BeginTurn());
+                }).Begin(); 
+                */
+            };
+            
+            yield return new WaitForSeconds(0.5f);
         }
     }
 }

@@ -20,11 +20,14 @@ public class BaseCharacterMaster : MonoBehaviour, IUnit
     {
         for(int i = Unit.UnitState.ActiveActionEffects.Count - 1; i >= 0; i--)
         {
-            Unit.UnitState.ActiveActionEffects[i].Affect(this, true);
             if(Unit.UnitState.ActiveActionEffects[i].IsFinished())
             {
                 Unit.UnitState.ActiveActionEffects[i].OnRemoved(this);
                 Unit.UnitState.ActiveActionEffects.RemoveAt(i);
+            }
+            else
+            {
+                Unit.UnitState.ActiveActionEffects[i].Affect(this, true);
             }
         }
     }

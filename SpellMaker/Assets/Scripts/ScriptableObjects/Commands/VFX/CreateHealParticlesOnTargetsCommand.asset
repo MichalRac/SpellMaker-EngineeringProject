@@ -1,0 +1,15 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b485f4d44a2d1094580010e09e1fec68, type: 3}
+  m_Name: CreateHealParticlesOnTargetsCommand
+  m_EditorClassIdentifier: 
+  ParticlePrefab: {fileID: 4547522567576296900, guid: 4555581b782345344bd28f61a26bce7d, type: 3}
